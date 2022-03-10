@@ -5,68 +5,82 @@ import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 public class Percolation {
 
     //Global Variables
-    boolean site[][]; //2D array containing objects
-    int size; //n variable that is passed to constructor, assigned only once at instantiation.
+    private boolean site[][]; //2D array containing objects
+    private int size; //n variable that is passed to constructor, assigned only once at
+    // instantiation.
+    private int openSites;
+    private WeightedQuickUnionUF uf;
 
     // creates n-by-n grid, with all sites initially blocked
     public Percolation(int n) {
-        try {
-            site = new boolean[n][n];
-            size = n;
-        }
-        catch (IllegalArgumentException e){
-            System.out.print("error" + e.toString());
-        }
+        if (n<1) throw new IllegalArgumentException();
+
+        site = new boolean[n][n];
+        size = n;
+        openSites = 0;
+
+        // Instantiation of n^2 number of cells + 2 virtual upper & lower cells
+        uf = new WeightedQuickUnionUF(n*n+2);
     }
     /*
     TODO!!
-     1. Corner cases:
-        a. By convention, the row and column indices are integers between 1 and n,
-     where (1, 1) is the upper-left site: Throw an IllegalArgumentException if any argument to open(), isOpen(), or isFull() is outside its prescribed range.
-      b. Throw an IllegalArgumentException in the constructor if n ≤ 0.
-     2. Performance requirements.  The constructor must take time proportional to n2; all instance methods must take constant time plus a constant number of calls to union() and find().
+     1. Performance requirements. The constructor must take time proportional to n2; all instance methods must take constant time plus a constant number of calls to union() and find().
      */
     // opens the site (row, col) if it is not open already
     public void open (int row, int col) {
-        if ((row < 1 || row > size) || (col < 1 || col > size)) {
-            throw new IllegalArgumentException();
-        }
+        checkCellValidity (row, col);
+
         //starting count from 0 instead of 1
         row -= 1;
         col -= 1;
 
+        site[row][col] = true; //Opening site
     }
 
     // is the site (row, col) open?
     public boolean isOpen(int row, int col) {
-        if ((row < 1 || row > size) || (col < 1 || col > size)) {
-            throw new IllegalArgumentException();
-        }
+        checkCellValidity (row, col);
 
-        //starting count from 0 instead of 1
-        row -= 1;
-        col -= 1;
+        return site[row][col]; //check if site is open (return it)
     }
 
     // is the site (row, col) full?
+    //i.e., is this site connected to the virtual upper or lower site?
     public boolean isFull(int row, int col) {
-        if ((row < 1 || row > size) || (col < 1 || col > size)) {
-            throw new IllegalArgumentException();
-        }
+        checkCellValidity (row, col);
 
         //starting count from 0 instead of 1
         row -= 1;
         col -= 1;
+
+        // check if the cell is open before we check it is connected to upper/lower
+        if (!isOpen(row, col)) {
+
+            //check if current point is connected to virtual uppper/lower
+
+            return false;
+        }
+        else {
+            return false;
+        }
     }
 
     // returns the number of open sites
     public int numberOfOpenSites() {
-
+        return openSites;
     }
 
     // does the system percolate?
+    //i.e., is the virtual upper point connected to virtual bottom point?
     public boolean percolates() {
+        return false;
+    }
 
+    // Determine if it is a valid cell (lies between 1 & n)
+    private void checkCellValidity (int row, int col) {
+        if (row < 1 || row > size || col < 1 || col > size) {
+            throw new java.lang.IllegalArgumentException();
+        }
     }
 
     // test client (optional)
