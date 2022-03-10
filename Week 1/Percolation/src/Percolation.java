@@ -5,10 +5,10 @@ import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 public class Percolation {
 
     //Global Variables
-    private boolean site[][]; //2D array containing objects
+    private boolean site[][]; //2D array containing cells
     private int size; //n variable that is passed to constructor, assigned only once at
     // instantiation.
-    private int openSites;
+    private int openSites; //number of open cells in the 2D array
     private WeightedQuickUnionUF uf;
 
     // creates n-by-n grid, with all sites initially blocked
