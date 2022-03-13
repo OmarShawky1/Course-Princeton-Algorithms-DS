@@ -11,7 +11,6 @@ public class Percolation {
     private int openSitesNumber; //number of open cells in the 2D array
     private WeightedQuickUnionUF uf;
 
-    // TODO: Performance requirements. The constructor must take time proportional to n2;
     // creates n-by-n grid, with all sites initially blocked
     public Percolation(int n) {
         if (n<1) throw new IllegalArgumentException(); //required error by assignment
@@ -22,13 +21,7 @@ public class Percolation {
         // in site
         size = n;
         openSitesNumber = 0;
-
     }
-
-    /*
-    TODO: all instance methods must take constant time plus a constant number of calls to union()
-      and find().
-     */
 
     /*
         //Unit test for open, put them in main
@@ -92,18 +85,19 @@ public class Percolation {
     // is the site (row, col) full?
     //i.e., is this site connected to the virtual upper or lower site?
     public boolean isFull(int row, int col) {
-        return false;
+        return uf.find(row*size+col) == uf.find(0);
     }
 
     // returns the number of open sites
-    public int numberOfOpenSites() {
+    public int getOpenSitesNumber() {
         return openSitesNumber;
     }
 
-    // does the system percolte?
+    // does the system percolate?
     //i.e., is the virtual upper point connected to virtual bottom point?
-    public boolean percoltes() {
-        return false;
+    public boolean percolates() {
+        return uf.find(0) == uf.find(size*size+2-1); // Virtual top (at 0) connected to virtual bottom
+        // at array end (size^2+1)?
     }
 
     //Validate input
@@ -118,6 +112,17 @@ public class Percolation {
 
     // test client (optional)
     public static void main(String args[]) {
+
+        //Instance
+        Percolation percolation = new Percolation(2);
+
+        //Test cases for open
+        percolation.open(0,0);
+        percolation.open(0,1);
+        percolation.open(1,0);
+        percolation.open(1,1);
+
+        //Testing the entire class
 
     }
 }
