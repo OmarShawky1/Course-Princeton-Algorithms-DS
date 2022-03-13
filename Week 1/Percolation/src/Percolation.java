@@ -47,32 +47,37 @@ public class Percolation {
 
         site[row][col] = true; //Opening site
 
-        // connect sites that has been opened from left, right, up & down.
+        // connect cell to sites that are opened from left, right, up & down.
 
         //connect left
         //check first if we are at the far left, so we don't reach out of bound error
-        if (checkCellValidity(row, col-1) && isOpen(row, col-1)){
+        if (cellValidAndOpen(row, col-1)){
             uf.union((row*size)+col, (row*size)+(col-1));
         }
 
         //connect right
         //check first if we are at the far right, so we don't reach out of bound error
-        if (checkCellValidity(row, col+1) && isOpen(row, col+1)){
+        if (cellValidAndOpen(row, col+1)){
             uf.union((row*size)+col, (row*size)+(col+1));
         }
 
         //connect up
         //check first if we are at the top, so we don't reach out of bound error
-        if (checkCellValidity(row-1, col) && isOpen(row-1, col)){
+        if (cellValidAndOpen(row-1, col)){
             uf.union(((row-1)*size)+col, (row*size)+col);
         }
 
         //connect bottom
         //check first if we are at the bottom, so we don't reach out of bound error
-        if (checkCellValidity(row+1, col) && isOpen(row+1, col)) {
+        if (cellValidAndOpen(row+1, col)) {
             uf.union(((row+1)*size)+col, (row*size)+col);
         }
 
+    }
+
+    //check if the cell is valid and open, used only in "Open" function to union two nodes
+    private boolean cellValidAndOpen (int row, int col){
+        return checkCellValidity(row, col) && isOpen(row, col);
     }
 
     // is the site (row, col) open?
