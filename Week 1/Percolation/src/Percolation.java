@@ -35,6 +35,33 @@ public class Percolation {
         col -= 1;
 
         site[row][col] = true; //Opening site
+
+        // connect sites that has been opened from left, right, up & down.
+
+        //connect left
+        //check first if we are at the far left, so we don't reach out of bound error
+        if (row!=0 && isOpen(row, col-1)){
+            uf.union((row*size)+col, (row*size)+(col-1));
+        }
+
+        //connect right
+        //check first if we are at the far right, so we don't reach out of bound error
+        if (row!=size && isOpen(row, col+1)){
+            uf.union((row*size)+col, (row*size)+(col+1));
+        }
+
+        //connect up
+        //check first if we are at the top, so we don't reach out of bound error
+        if (col!=0 && isOpen(row, col-1)){
+            uf.union(((row-1)*size)+col, (row*size)+col);
+        }
+
+        //connect bottom
+        //check first if we are at the bottom, so we don't reach out of bound error
+        if (col!=size && isOpen(row, col+1)) {
+            uf.union(((row+1)*size)+col, (row*size)+col);
+        }
+
     }
 
     // is the site (row, col) open?
@@ -86,33 +113,5 @@ public class Percolation {
     // test client (optional)
     public static void main(String args[]) {
 //        System.out.print("Hello World");
-
-        //Top-to-bottom approach
-
-        // New percolation for testing
-        Percolation percolation = new Percolation(3);
-
-        //TODO: Continue from here.
-
-        // Create random open sites in the board
-        //Problem: did not know how to use this probability to create a random open sites.
-        double prob = 0.6; // Use percolation probability from assignment itself
-
-        //Problem: cannot use Random library (prohibited in the assignment)
-        /*
-        for (int i=0; i<10; i++){
-
-        }
-        */
-
-        /*
-        //loop on percolation until it percolates
-        while (!percolation.percolates()){
-            //TODO: write the logic on how to open new site.
-
-
-
-        }
-         */
     }
 }
