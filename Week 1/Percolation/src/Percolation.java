@@ -14,27 +14,38 @@ public class Percolation {
     // TODO: Performance requirements. The constructor must take time proportional to n2;
     // creates n-by-n grid, with all sites initially blocked
     public Percolation(int n) {
-        if (n<1) throw new IllegalArgumentException();
-
-        n++;
+        if (n<1) throw new IllegalArgumentException(); //required error by assignment
 
         // Instantiation of n^2 number of cells + 2 virtual upper & lower cells initially blocked.
         uf = new WeightedQuickUnionUF((n*n+2));
-        site = new boolean[n][n]; // do not think it is necessary but kept in case it is
-
+        site = new boolean[n][n]; //no 2 because they are virtual and should not be represented
+        // in site
         size = n;
         openSitesNumber = 0;
 
     }
+
     /*
     TODO: all instance methods must take constant time plus a constant number of calls to union()
       and find().
      */
+
+    /*
+        //Unit test for open, put them in main
+        //Instance
+        Percolation percolation = new Percolation(2);
+
+        //Test cases for open
+        percolation.open(0,0);
+        percolation.open(0,1);
+        percolation.open(1,0);
+        percolation.open(1,1);
+     */
     // opens the site (row, col) if it is not open already
     public void open (int row, int col) {
-        if (!checkCellValidity (row, col)) throw new IllegalArgumentException();
+        validateInput(row, col);
 
-        site[row-1][col-1] = true; //Opening site
+        site[row][col] = true; //Opening site
 
         // connect sites that has been opened from left, right, up & down.
 
@@ -69,14 +80,13 @@ public class Percolation {
             // check first if index is in bound, return false otherwise
             return checkCellValidity (row, col) &&
             //if it is in bound, check if it is true/false
-                    site[row - 1][col - 1]; //check if site is open
+                    site[row][col]; //check if site is open
 
     }
 
     // is the site (row, col) full?
     //i.e., is this site connected to the virtual upper or lower site?
     public boolean isFull(int row, int col) {
-        checkCellValidity (row, col);
         return false;
     }
 
@@ -91,20 +101,18 @@ public class Percolation {
         return false;
     }
 
-    // Determine if it is a valid cell (lies between 1 & n)
+    //Validate input
+    private void validateInput(int row, int col){
+        if (!checkCellValidity (row, col)) throw new IllegalArgumentException();
+    }
+
+    // Determine if it is a valid cell (lies between 0 & n-1)
     private boolean checkCellValidity (int row, int col) {
-        return row >= 1 && row <= size && col >= 1 && col <= size;
+        return row >= 0 && row < size && col >= 0 && col < size;
     }
 
     // test client (optional)
     public static void main(String args[]) {
 
-        //Instance
-        Percolation percolation = new Percolation(2);
-
-        percolation.open(1,1);
-        percolation.open(1,2);
-        percolation.open(2,1);
-        percolation.open(2,2);
     }
 }
