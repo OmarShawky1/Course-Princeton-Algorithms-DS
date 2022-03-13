@@ -84,8 +84,10 @@ public class Percolation {
 
     // is the site (row, col) full?
     //i.e., is this site connected to the virtual upper or lower site?
+    //TODO: where & what to do with this unused function?
     public boolean isFull(int row, int col) {
-        return uf.find(row*size+col) == uf.find(0);
+        return cellValidAndOpen(row, col) && uf.find(row*size+col) == uf.find(0); //find if point
+        // has root of virtual top in case the cell is valid and open
     }
 
     // returns the number of open sites
@@ -95,6 +97,7 @@ public class Percolation {
 
     // does the system percolate?
     //i.e., is the virtual upper point connected to virtual bottom point?
+    //TODO: where & what to do with this unused function?
     public boolean percolates() {
         return uf.find(0) == uf.find(size*size+2-1); // Virtual top (at 0) connected to virtual bottom
         // at array end (size^2+1)?
@@ -123,6 +126,6 @@ public class Percolation {
         percolation.open(1,1);
 
         //Testing the entire class
-
+        //TODO: How to create the test cases logic?
     }
 }
