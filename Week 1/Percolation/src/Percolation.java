@@ -4,18 +4,18 @@ import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 public class Percolation {
 
-    //Global Variables
+    // Global Variables
     private boolean site[][]; //2D array containing cells
     private int size; //n variable that is passed to constructor, assigned only once at
     // instantiation.
     private int openSitesNumber; //number of open cells in the 2D array
-    private WeightedQuickUnionUF uf;
+    private WeightedQuickUnionUF uf; //relation array that connects, unions nodes
 
     // creates n-by-n grid, with all sites initially blocked
     public Percolation(int n) {
         if (n<1) throw new IllegalArgumentException(); //required error by assignment
 
-        // Instantiation of n^2 number of cells + 2 virtual upper & lower cells initially blocked.
+        // Instantiation of n^2 number of cells + 2 virtual top & bottom cells initially blocked.
         uf = new WeightedQuickUnionUF((n*n+2));
         site = new boolean[n][n]; //no 2 because they are virtual and should not be represented
         // in site
@@ -23,18 +23,8 @@ public class Percolation {
         openSitesNumber = 0;
     }
 
-    /*
-        //Unit test for open, put them in main
-        //Instance
-        Percolation percolation = new Percolation(2);
-
-        //Test cases for open
-        percolation.open(0,0);
-        percolation.open(0,1);
-        percolation.open(1,0);
-        percolation.open(1,1);
-     */
     // opens the site (row, col) if it is not open already
+    //TODO increase the openSitesNumber after opening new one.
     public void open (int row, int col) {
         validateInput(row, col);
 
@@ -44,50 +34,40 @@ public class Percolation {
 
         //connect left
         //check first if we are at the far left, so we don't reach out of bound error
-        if (cellValidAndOpen(row, col-1)){
+        if (isOpen(row, col-1)){
             uf.union((row*size)+col, (row*size)+(col-1));
         }
 
         //connect right
         //check first if we are at the far right, so we don't reach out of bound error
-        if (cellValidAndOpen(row, col+1)){
+        if (isOpen(row, col+1)){
             uf.union((row*size)+col, (row*size)+(col+1));
         }
 
         //connect up
         //check first if we are at the top, so we don't reach out of bound error
-        if (cellValidAndOpen(row-1, col)){
+        if (isOpen(row-1, col)){
             uf.union(((row-1)*size)+col, (row*size)+col);
         }
 
         //connect bottom
         //check first if we are at the bottom, so we don't reach out of bound error
-        if (cellValidAndOpen(row+1, col)) {
+        if (isOpen(row+1, col)) {
             uf.union(((row+1)*size)+col, (row*size)+col);
         }
-
-    }
-
-    //check if the cell is valid and open, used only in "Open" function to union two nodes
-    private boolean cellValidAndOpen (int row, int col){
-        return checkCellValidity(row, col) && isOpen(row, col);
     }
 
     // is the site (row, col) open?
     public boolean isOpen(int row, int col) {
-            // check first if index is in bound, return false otherwise
-            return checkCellValidity (row, col) &&
-            //if it is in bound, check if it is true/false
-                    site[row][col]; //check if site is open
-
+            return checkCellValidity (row, col) && site[row][col];
     }
 
-    // is the site (row, col) full?
-    //i.e., is this site connected to the virtual upper or lower site?
-    //TODO: where & what to do with this unused function?
+    // is the site (row, col) isOpenfull?
+    // i.e., is this site connected to the virtual upper site?
+    // TODO: where & what to do with this unused function?
     public boolean isFull(int row, int col) {
-        return cellValidAndOpen(row, col) && uf.find(row*size+col) == uf.find(0); //find if point
-        // has root of virtual top in case the cell is valid and open
+        return isOpen(row, col) && uf.find(row*size+col) == uf.find(0); //cell connected to top?
+//        return isOpen(row, col) && uf.connected(row*size+col,0);
     }
 
     // returns the number of open sites
@@ -96,11 +76,11 @@ public class Percolation {
     }
 
     // does the system percolate?
-    //i.e., is the virtual upper point connected to virtual bottom point?
-    //TODO: where & what to do with this unused function?
+    // i.e., is the virtual upper point connected to virtual bottom point?
+    // TODO: where & what to do with this unused function?
     public boolean percolates() {
-        return uf.find(0) == uf.find(size*size+2-1); // Virtual top (at 0) connected to virtual bottom
-        // at array end (size^2+1)?
+        return uf.find(0) == uf.find(size*size+2-1); // is virtual top (at 0) connected to virtual
+        // bottom at array end (size^2+1)?
     }
 
     //Validate input
@@ -108,24 +88,13 @@ public class Percolation {
         if (!checkCellValidity (row, col)) throw new IllegalArgumentException();
     }
 
-    // Determine if it is a valid cell (lies between 0 & n-1)
+    // check if index is in bound (lies between 0 & n-1), return false otherwise
     private boolean checkCellValidity (int row, int col) {
         return row >= 0 && row < size && col >= 0 && col < size;
     }
 
     // test client (optional)
     public static void main(String args[]) {
-
-        //Instance
-        Percolation percolation = new Percolation(2);
-
-        //Test cases for open
-        percolation.open(0,0);
-        percolation.open(0,1);
-        percolation.open(1,0);
-        percolation.open(1,1);
-
-        //Testing the entire class
-        //TODO: How to create the test cases logic?
+        
     }
 }
