@@ -16,7 +16,7 @@ public class Percolation {
         if (n<1) throw new IllegalArgumentException(); //required error by assignment
 
         // Instantiation of n^2 number of cells + 2 virtual top & bottom cells initially blocked.
-        uf = new WeightedQuickUnionUF((n*n+2));
+        uf = new WeightedQuickUnionUF(n*n+2);
         site = new boolean[n][n]; //no 2 because they are virtual and should not be represented
         // in site
         size = n;
@@ -66,8 +66,9 @@ public class Percolation {
     // i.e., is this site connected to the virtual upper site?
     // TODO: where & what to do with this unused function?
     public boolean isFull(int row, int col) {
-        return isOpen(row, col) && uf.find(row*size+col) == uf.find(0); //cell connected to top?
-//        return isOpen(row, col) && uf.connected(row*size+col,0);
+        return isOpen(row, col) && uf.find(row*size+col) == uf.find(size*size); //cell connected to
+        // top?
+        return isOpen(row, col) && uf.connected(row*size+col,0);
     }
 
     // returns the number of open sites
@@ -79,7 +80,8 @@ public class Percolation {
     // i.e., is the virtual upper point connected to virtual bottom point?
     // TODO: where & what to do with this unused function?
     public boolean percolates() {
-        return uf.find(0) == uf.find(size*size+2-1); // is virtual top (at 0) connected to virtual
+        return uf.find(size*size) == uf.find(size*size+1); // is virtual top (at 0) connected to
+        // virtual
         // bottom at array end (size^2+1)?
     }
 
@@ -95,6 +97,46 @@ public class Percolation {
 
     // test client (optional)
     public static void main(String args[]) {
-        
+
+        // Instance
+        int n = 2;
+        Percolation percolation = new Percolation(n);
+        System.out.println("virtual top parent: " + percolation.uf.find(0));
+
+        // Test open
+//        System.out.println(percolation.isOpen(0,0)); // False, before opening
+        percolation.open(0,0);
+        System.out.println("virtual top parent: 2- " + percolation.uf.find(0));
+
+//        System.out.println(percolation.isOpen(0,0)); // True, after opening
+
+        // Test union (within open)
+        percolation.open(0,1);
+        System.out.println("virtual top parent: 3- " + percolation.uf.find(0));
+//        System.out.println(percolation.isFull(0,1)); // True
+//        System.out.println(percolation.isFull(1,1)); // False (not opened yet)
+
+        // Test percolates()
+        percolation.open(1,0);
+        System.out.println("virtual top parent: 4- " + percolation.uf.find(0));
+        System.out.println("index (0,1) connected to top? " + percolation.isFull(1,0)); // True
+
+        System.out.println("virtual top parent: 5- " + percolation.uf.find(0));
+        System.out.println("percolation.uf.find(1*n+0): " + percolation.uf.find(1*n+0)); //1
+
+        //It appears that any top cell is connected by default to virtual top but not the same
+        // for bottom
+        System.out.println("percolation.uf.find(1*n+n+1): " + percolation.uf.find(1*n+n+1));
+        System.out.println("0,1 connected to bottom? " +
+                (percolation.uf.find(1*n+0) == percolation.uf.find(1*n+n+1))); // connected to bottom?
+
+//        System.out.println("uf.find(size*size+2-1: " + percolation.uf.find(n*n+1)); //5 // virtual
+//        bottom
+//        System.out.println("percolation.percolates(): " + percolation.percolates()); //false,
+//        should've been true
+        percolation.open(1,1);
+
+        //Testing all at once
+        //TODO: create entire testing logic
     }
 }
