@@ -1,5 +1,3 @@
-import edu.princeton.cs.algs4.StdRandom;
-import edu.princeton.cs.algs4.StdStats;
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 public class Percolation {
@@ -70,7 +68,6 @@ public class Percolation {
     }
 
     // is the site (row, col) isOpenfull?
-    // TODO: where & what to do with this unused function?
     public boolean isFull(int row, int col) {
         return isOpen(row, col) && uf.connected(row*size+col,0); // is site connected to virtualTop?
     }
@@ -81,7 +78,6 @@ public class Percolation {
     }
 
     // does the system percolate?
-    // TODO: where & what to do with this unused function?
     public boolean percolates() {
         return uf.connected(virtualTop, virtualBottom); // is virtualTop connected to virtualBottom?
     }
@@ -102,31 +98,27 @@ public class Percolation {
 
     // test client (optional)
     public static void main(String args[]) {
-        /*
-        // Instance
-        int n = 2;
-        Percolation percolation = new Percolation(n);
 
-        // Test open
-        System.out.println(percolation.isOpen(0,0)); // False, before opening
-        percolation.open(0,0);
-
-        System.out.println(percolation.isOpen(0,0)); // True, after opening
-
-        // Test union (within open)
-        percolation.open(0,1);
-        System.out.println(percolation.isFull(0,1)); // True
-        System.out.println(percolation.isFull(1,1)); // False (not opened yet)
-
-        // Test percolates()
-        percolation.open(1,0);
-        System.out.println("index (0,1) connected to top? " + percolation.isFull(1,0)); // True
-        System.out.println("index (1,0) connected to bottom? " + (percolation.uf.find(1*n+1) == percolation.uf.find(percolation.virtualBottom))); // connected to bottom?
-        System.out.println("percolation.percolates(): " + percolation.percolates()); // True
-        percolation.open(1,1);
-         */
-
-        //Testing all at once
-        //TODO: create entire testing logic
+//        // Instance
+//        int n = 2;
+//        Percolation percolation = new Percolation(n);
+//
+//        // Test open
+//        System.out.println(percolation.isOpen(0,0)); // False, before opening
+//        percolation.open(0,0);
+//
+//        System.out.println(percolation.isOpen(0,0)); // True, after opening
+//
+//        // Test union (within open)
+//        percolation.open(0,1);
+//        System.out.println(percolation.isFull(0,1)); // True
+//        System.out.println(percolation.isFull(1,1)); // False (not opened yet)
+//
+//        // Test percolates()
+//        percolation.open(1,0);
+//        System.out.println("index (0,1) connected to top? " + percolation.isFull(1,0)); // True
+//        System.out.println("index (1,0) connected to bottom? " + (percolation.uf.find(1*n+1) == percolation.uf.find(percolation.virtualBottom))); // connected to bottom?
+//        System.out.println("percolation.percolates(): " + percolation.percolates()); // True
+//        percolation.open(1,1);
     }
 }
