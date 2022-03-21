@@ -3,14 +3,14 @@ import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 public class Percolation {
 
     // Global Variables
-    final private boolean[][] site; //2D array containing cells
+    private final boolean[][] site; //2D array containing cells
 
     //n variable that is passed to constructor, assigned only once at instantiation
-    final private int size;
+    private final int size;
 
-    final private WeightedQuickUnionUF uf; //relation array that connects, unions nodes
-    final private int  virtualTop;
-    final private int virtualBottom;
+    private final WeightedQuickUnionUF uf; //relation array that connects, unions nodes
+    private final int  virtualTop;
+    private final int virtualBottom;
     private int opensitesCount; //number of open cells in the 2D array
 
     // creates n-by-n grid, with all sites initially blocked
@@ -108,19 +108,19 @@ public class Percolation {
         return (row * size) + (col + 1); // col + 1 because we start at 1 not 0, as 0 is virtualTop
     }
 
-    private void testCreator(int row, int col) {
-        System.out.println("isOpen(" + row + ", " + col +") Before opening: " + isOpen(row, col));
-        System.out.println("isFull(" + row + ", " + col +") Before opening: " + isFull(row, col));
+/*    private void testCreator(int row, int col) {
+        System.out.println("isOpen(" + row + ", " + col + ") Before opening: " + isOpen(row, col));
+        System.out.println("isFull(" + row + ", " + col + ") Before opening: " + isFull(row, col));
         System.out.println("percolates(): " + percolates());
-        System.out.println("Opening Index(" + row + "," + col+ ")"); open(row, col);
-        System.out.println("isOpen(" + row + ", " + col +") After opening: " + isOpen(row, col));
-        System.out.println("isFull(" + row + ", " + col +") After opening: " + isFull(row, col));
+        System.out.println("Opening Index(" + row + "," + col + ")"); open(row, col);
+        System.out.println("isOpen(" + row + ", " + col + ") After opening: " + isOpen(row, col));
+        System.out.println("isFull(" + row + ", " + col + ") After opening: " + isFull(row, col));
         System.out.println("percolates(): " + percolates());
         System.out.println("####################################");
     }
 
 
-    private void testCreator(int row, int col, int row2, int col2){
+    private void testCreator(int row, int col, int row2, int col2) {
 
         testCreator(row, col);
         testCreator(row2, col2);
@@ -128,7 +128,7 @@ public class Percolation {
                 col2)));
         System.out.println();
 
-    }
+    }*/
 
     // test client (optional)
     public static void main(String[] args) {
@@ -159,7 +159,8 @@ public class Percolation {
 
         System.out.println();
 //        System.out.println("True; index (1,0) connected to bottom? "
-//                + (percolation.uf.find(percolation.indexOf(1,0)) == percolation.uf.find(percolation.virtualBottom)));
+//                + (percolation.uf.find(percolation.indexOf(1,0)) ==
+                    percolation.uf.find(percolation.virtualBottom)));
         System.out.println("True; index (1,0) connected to bottom? "
                 + percolation.uf.connected(percolation.indexOf(1,0), percolation.virtualBottom));
         System.out.println();
@@ -178,6 +179,8 @@ public class Percolation {
         percolation.testCreator(1,0);
         percolation.testCreator(2,0);
         percolation.testCreator(3,0);
-        System.out.println("VirtualBottom & (3,0) connected? " + percolation.uf.connected(percolation.virtualBottom, percolation.indexOf(3,0)));*/
+        System.out.println("VirtualBottom & (3,0) connected? " +
+                            percolation.uf.connected(percolation.virtualBottom,
+                            percolation.indexOf(3,0)));*/
     }
 }

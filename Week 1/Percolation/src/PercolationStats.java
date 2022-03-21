@@ -3,12 +3,13 @@ import edu.princeton.cs.algs4.*;
 public class PercolationStats {
 
     // Global Variables
-    final private int trials;
-    final private double[] percolations;
-    final private double confidenceIntervalValue = 1.96;
+//    final private int trials;
+    private final int trials;
+    private final double[] percolations;
+    private final double confidenceIntervalValue = 1.96;
 
     // perform independent trials on an n-by-n grid
-    public PercolationStats(int n, int trials){
+    public PercolationStats(int n, int trials) {
         //required error by assignment
         if (n < 1 || trials < 1) {
             throw new IllegalArgumentException();
@@ -51,7 +52,7 @@ public class PercolationStats {
     // test client (see below)
     public static void main(String[] args){
 
-        // Obtain n & t values
+/*        // Obtain n & t values
         int n = Integer.parseInt(args[0]);
         int t = Integer.parseInt(args[1]);
 
@@ -62,7 +63,8 @@ public class PercolationStats {
         Stopwatch sw = new Stopwatch();
         StdOut.println("mean                   = " + percolationStats.mean());
         StdOut.println("stddev                 = " + percolationStats.stddev());
-        StdOut.println("95% confidence interval= [" + percolationStats.confidenceLo() + "," + percolationStats.confidenceHi() + "]");
-        System.out.printf("Total time: %f secs. (for N=%d, T=%d)", sw.elapsedTime(), n, t);
+        StdOut.println("95% confidence interval= [" + percolationStats.confidenceLo() + ","
+                        + percolationStats.confidenceHi() + "]");
+        System.out.printf("Total time: %f secs. (for N=%d, T=%d)", sw.elapsedTime(), n, t);*/
     }
 }
