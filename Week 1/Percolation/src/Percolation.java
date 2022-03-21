@@ -28,8 +28,7 @@ public class Percolation {
 
         // Instantiation of n^2 number of cells + virtualTop + virtualBottom initially blocked.
         uf = new WeightedQuickUnionUF(n * n + 2);
-        site = new boolean[n][n]; //no 2 because they are virtual and should not be represented
-        // in site
+        site = new boolean[n][n]; //no 2 because they are virtual and should not be represented in site
     }
 
     // opens the site (row, col) if it is not open already
@@ -44,34 +43,32 @@ public class Percolation {
         opensitesCount++;
 
         // connect cell to sites that are opened from left, right, up & down.
-        int colU = col + 1; // Used to start count from 1 instead of 0 as virtualTop is at 0
 
         //connect left
-        //check first if we are at the far left, so we don't reach out of bound error
         if (isOpen(row, col - 1)) {
-            uf.union(indexOf(row, col), indexOf(row, colU - 1));
+            uf.union(indexOf(row, col), indexOf(row, col - 1));
         }
 
         //connect right
-        //check first if we are at the far right, so we don't reach out of bound error
         if (isOpen(row, col + 1)) {
-            uf.union(indexOf(row, col), indexOf(row, colU + 1));
+            uf.union(indexOf(row, col), indexOf(row, col + 1));
         }
 
         //connect up
-        //check first if we are at the top, so we don't reach out of bound error
         if (isOpen(row - 1, col)) {
-            uf.union(indexOf(row, col), indexOf(row - 1, colU));
-        } else {
-            uf.union(virtualTop, indexOf(row, colU));
+            uf.union(indexOf(row, col), indexOf(row - 1, col));
         }
 
         //connect bottom
-        //check first if we are at the bottom, so we don't reach out of bound error
         if (isOpen(row + 1, col)) {
-            uf.union(indexOf(row, col), indexOf(row + 1, colU));
-        } else {
-            uf.union(virtualBottom, indexOf(row, colU));
+            uf.union(indexOf(row, col), indexOf(row + 1, col));
+        }
+
+        //Check if we are at top
+        if (row == 0) {
+            uf.union(virtualTop, indexOf(row, col));
+        } else if (row == size - 1) { //else check if we are at bottom
+            uf.union(virtualBottom, indexOf(row, col));
         }
     }
 
@@ -82,9 +79,7 @@ public class Percolation {
 
     // is the site (row, col) isOpenfull?
     public boolean isFull(int row, int col) {
-        return isOpen(row, col) && uf.connected(row * size + col, 0); // is site connected to
-        // virtualTop?
-//        return isOpen(row, col) && (uf.find(virtualTop) == uf.find(indexOf(row, col)));
+        return isOpen(row, col) && uf.connected(virtualTop, 0); // is site connected to virtualTop?
     }
 
     // returns the number of open sites
@@ -95,7 +90,6 @@ public class Percolation {
     // does the system percolate?
     public boolean percolates() {
         return uf.connected(virtualTop, virtualBottom); // is virtualTop connected to virtualBottom?
-//        return uf.find(virtualTop) == uf.find(virtualBottom);
     }
 
     //Validate input
@@ -111,17 +105,18 @@ public class Percolation {
     }
 
     private int indexOf(int row, int col) {
-        return (row * size) + col;
+        return (row * size) + (col + 1); // col + 1 because we start at 1 not 0, as 0 is virtualTop
     }
 
     private void testCreator(int row, int col) {
         System.out.println("isOpen(" + row + ", " + col +") Before opening: " + isOpen(row, col));
-        System.out.println("isFull(" + row + ", " + col +") Before opening: " + isOpen(row, col));
+        System.out.println("isFull(" + row + ", " + col +") Before opening: " + isFull(row, col));
         System.out.println("percolates(): " + percolates());
         System.out.println("Opening Index(" + row + "," + col+ ")"); open(row, col);
         System.out.println("isOpen(" + row + ", " + col +") After opening: " + isOpen(row, col));
-        System.out.println("isFull(" + row + ", " + col +") After opening: " + isOpen(row, col));
+        System.out.println("isFull(" + row + ", " + col +") After opening: " + isFull(row, col));
         System.out.println("percolates(): " + percolates());
+        System.out.println("####################################");
     }
 
 
@@ -131,12 +126,14 @@ public class Percolation {
         testCreator(row2, col2);
         System.out.println("Two points connected? " + uf.connected(indexOf(row, col), indexOf(row2,
                 col2)));
+        System.out.println();
 
     }
 
     // test client (optional)
     public static void main(String[] args) {
 
+        //Unit Test for each function
         /*// Instance
         int n = 2;
         Percolation percolation = new Percolation(n);
@@ -172,46 +169,15 @@ public class Percolation {
         System.out.println("True; percolation.percolates(): " + percolation.percolates());
         percolation.open(1, 1);*/
 
+        //Entire Percolation Test
         /*// Instance
         int n = 4;
         Percolation percolation = new Percolation(n);
 
-        // Test open
-        System.out.println("#########open() Testing#########");
-
-        System.out.println("False; Before opening index(0,0): " + percolation.isOpen(0, 0));
-        percolation.open(0, 0);
-        System.out.println("True; After opening index(0,0): " + percolation.isOpen(0, 0));
-
-        System.out.println();
-
-        // Test union (within open)
-        System.out.println("#########union() Testing#########");
-
-        percolation.open(0, 1);
-        System.out.println("True; index(0,1) after opening isFull: " + percolation.isFull(0, 1));
-
-//        System.out.println("False; index(1,0) before opening isFull: " + percolation.isFull(1, 1));
-//        percolation.open(1, 0);
-//        System.out.println("True; index (1,0) after opening isFull: " + percolation.isFull(1, 0));
-//
-        System.out.println();
-//        System.out.println("False; index (1,0) connected to bottom? "
-//                + percolation.uf.connected(percolation.indexOf(1,0), percolation.virtualBottom));
-//        System.out.println();
-
-        // Test percolates()
-        System.out.println("#########percolates() Testing#########");
-        System.out.println("percolation.size: " + percolation.size);
-        System.out.println("percolation.virtualTop: " + percolation.virtualTop);
-        System.out.println("percolation.virtualBottom: " + percolation.virtualBottom);
-        System.out.println("False; percolation.percolates(): " + percolation.percolates());*/
-
-        // Instance
-        int n = 4;
-        Percolation percolation = new Percolation(n);
-
-        percolation.testCreator(0,0);
-
+        percolation.testCreator(0,0,1,1);
+        percolation.testCreator(1,0);
+        percolation.testCreator(2,0);
+        percolation.testCreator(3,0);
+        System.out.println("VirtualBottom & (3,0) connected? " + percolation.uf.connected(percolation.virtualBottom, percolation.indexOf(3,0)));*/
     }
 }

@@ -3,9 +3,9 @@ import edu.princeton.cs.algs4.*;
 public class PercolationStats {
 
     // Global Variables
-    private final int trials;
-    private double[] numOfPercolations;
-    private final double confidanceIntervalValue = 1.96;
+    final private int trials;
+    final private double[] percolations;
+    final private double confidenceIntervalValue = 1.96;
 
     // perform independent trials on an n-by-n grid
     public PercolationStats(int n, int trials){
@@ -15,46 +15,45 @@ public class PercolationStats {
         }
 
         this.trials = trials;
-        numOfPercolations = new double[trials];
-
+        percolations = new double[trials];
         //Generate numOfPer for "t" times
         for (int i=0; i<trials; i++){
             //generate value of percolation for trial "t"
             Percolation percolation = new Percolation(n);
             while (!percolation.percolates()) {
-                percolation.open(StdRandom.uniform(n+1), StdRandom.uniform(n+1));
+                percolation.open(StdRandom.uniform(n), StdRandom.uniform(n));
             }
             //store value of probability "p" to calculate the mean of "t" trials
-            numOfPercolations[i] = percolation.numberOfOpenSites() / (n * n);
+            percolations[i] = (double) percolation.numberOfOpenSites() / (n * n);
         }
     }
 
     // sample mean of percolation threshold
     public double mean() {
-        return StdStats.mean(numOfPercolations);
+        return StdStats.mean(percolations);
     }
 
     // sample standard deviation of percolation threshold
     public double stddev() {
-        return StdStats.stddev(numOfPercolations);
+        return StdStats.stddev(percolations);
     }
 
     // low endpoint of 95% confidence interval
     public double confidenceLo() {
-        return mean() - ((confidanceIntervalValue * stddev()) / Math.sqrt(trials));
+        return mean() - ((confidenceIntervalValue * stddev()) / Math.sqrt(trials));
     }
 
     // high endpoint of 95% confidence interval
     public double confidenceHi() {
-        return mean() + ((confidanceIntervalValue * stddev()) / Math.sqrt(trials));
+        return mean() + ((confidenceIntervalValue * stddev()) / Math.sqrt(trials));
     }
 
     // test client (see below)
     public static void main(String[] args){
 
         // Obtain n & t values
-        int n = StdIn.readInt();
-        int t = StdIn.readInt();
+        int n = Integer.parseInt(args[0]);
+        int t = Integer.parseInt(args[1]);
 
         //Instantiate Class
         PercolationStats percolationStats = new PercolationStats(n,t);
