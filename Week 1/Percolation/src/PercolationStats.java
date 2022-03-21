@@ -9,7 +9,8 @@ public class PercolationStats {
 
     // perform independent trials on an n-by-n grid
     public PercolationStats(int n, int trials){
-        if (n <= 0 || trials <= 0) {
+        //required error by assignment
+        if (n < 1 || trials < 1) {
             throw new IllegalArgumentException();
         }
 
@@ -24,7 +25,7 @@ public class PercolationStats {
                 percolation.open(StdRandom.uniform(n+1), StdRandom.uniform(n+1));
             }
             //store value of probability "p" to calculate the mean of "t" trials
-            numOfPercolations[i] = percolation.getOpensitesCount() / (n * n);
+            numOfPercolations[i] = percolation.numberOfOpenSites() / (n * n);
         }
     }
 

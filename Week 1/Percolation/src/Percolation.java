@@ -32,11 +32,12 @@ public class Percolation {
     public void open(int row, int col) {
         validateInput(row, col);
 
-        if (!site[row][col]) {
-            opensitesCount++; //if site is closed increment sites by 1
+        if (site[row][col]) {
+            return;
         }
 
         site[row][col] = true; //Opening site
+        opensitesCount++;
 
         // connect cell to sites that are opened from left, right, up & down.
         int colU = col + 1; // Used to start count from 1 instead of 0 so that virtual top is at 0
@@ -82,7 +83,7 @@ public class Percolation {
     }
 
     // returns the number of open sites
-    public int getOpensitesCount() {
+    public int numberOfOpenSites() {
         return opensitesCount;
     }
 
@@ -110,7 +111,6 @@ public class Percolation {
     // test client (optional)
     public static void main(String[] args) {
 
-        /*
         // Instance
         int n = 2;
         Percolation percolation = new Percolation(n);
@@ -133,6 +133,5 @@ public class Percolation {
                 + (percolation.uf.find(1 * n + 1) == percolation.uf.find(percolation.virtualBottom)));
         System.out.println("percolation.percolates(): " + percolation.percolates()); // True
         percolation.open(1, 1);
-        */
     }
 }
