@@ -79,7 +79,8 @@ public class Percolation {
 
     // is the site (row, col) isOpenfull?
     public boolean isFull(int row, int col) {
-        return isOpen(row, col) && uf.connected(virtualTop, 0); // is site connected to virtualTop?
+//        return isOpen(row, col) && uf.connected(virtualTop, 0); // is site connected to virtualTop?
+        return isOpen(row, col) && (uf.find(virtualTop) == uf.find(indexOf(row, col)));
     }
 
     // returns the number of open sites
@@ -89,7 +90,8 @@ public class Percolation {
 
     // does the system percolate?
     public boolean percolates() {
-        return uf.connected(virtualTop, virtualBottom); // is virtualTop connected to virtualBottom?
+//        return uf.connected(virtualTop, virtualBottom); // is virtualTop connected to virtualBottom?
+        return uf.find(virtualTop) == uf.find(virtualBottom);
     }
 
     //Validate input
@@ -108,7 +110,7 @@ public class Percolation {
         return (row * size) + (col + 1); // col + 1 because we start at 1 not 0, as 0 is virtualTop
     }
 
-/*    private void testCreator(int row, int col) {
+    /*private void testCreator(int row, int col) {
         System.out.println("isOpen(" + row + ", " + col + ") Before opening: " + isOpen(row, col));
         System.out.println("isFull(" + row + ", " + col + ") Before opening: " + isFull(row, col));
         System.out.println("percolates(): " + percolates());
