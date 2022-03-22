@@ -11,6 +11,7 @@ public class Percolation {
     private final int size;
 
     private final WeightedQuickUnionUF uf; //relation array that connects, unions nodes
+    private final WeightedQuickUnionUF uf2; //Used to solve backwash issue in submission
     private final int  virtualTop;
     private final int virtualBottom;
     private int opensitesCount; //number of open cells in the 2D array
@@ -30,6 +31,7 @@ public class Percolation {
 
         // Instantiation of n^2 number of cells + virtualTop + virtualBottom initially blocked.
         uf = new WeightedQuickUnionUF(n * n + 2);
+        uf2 = new WeightedQuickUnionUF(n * n + 2);
         site = new boolean[n][n]; //no 2 because they are virtual and should not be represented in site
     }
 
@@ -48,26 +50,31 @@ public class Percolation {
         //connect left
         if (cellValidAndOpen(row, col - 1)) {
             uf.union(indexOf(row, col), indexOf(row, col - 1));
+            uf2.union(indexOf(row, col), indexOf(row, col - 1));
         }
 
         //connect right
         if (cellValidAndOpen(row, col + 1)) {
             uf.union(indexOf(row, col), indexOf(row, col + 1));
+            uf2.union(indexOf(row, col), indexOf(row, col + 1));
         }
 
         //connect up
         if (cellValidAndOpen(row - 1, col)) {
             uf.union(indexOf(row, col), indexOf(row - 1, col));
+            uf2.union(indexOf(row, col), indexOf(row - 1, col));
         }
 
         //connect bottom
         if (cellValidAndOpen(row + 1, col)) {
             uf.union(indexOf(row, col), indexOf(row + 1, col));
+            uf2.union(indexOf(row, col), indexOf(row + 1, col));
         }
 
         //Check if we are at top
         if (row == 1) {
             uf.union(virtualTop, indexOf(row, col));
+            uf2.union(virtualTop, indexOf(row, col));
         }
 
         //used to be else if to decrease the number of checks but he checks against n=1 that
@@ -86,7 +93,9 @@ public class Percolation {
     // is the site (row, col) isOpenfull?
     public boolean isFull(int row, int col) {
         validateInput(row, col);
-        return site[row - 1][col - 1] && isConnected(virtualTop, indexOf(row, col));
+//        return site[row - 1][col - 1] && isConnected(virtualTop, indexOf(row, col));
+        //we use uf2 because we did not ever connect virtualBottom with bottom cells
+        return site[row - 1][col - 1] && uf2.find(virtualTop) == uf2.find(indexOf(row, col));
     }
 
     // returns the number of open sites
