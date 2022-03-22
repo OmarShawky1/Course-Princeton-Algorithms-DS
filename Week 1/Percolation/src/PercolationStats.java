@@ -1,3 +1,4 @@
+import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.StdRandom;
 import edu.princeton.cs.algs4.StdStats;
 
@@ -53,22 +54,21 @@ public class PercolationStats {
     // test client (see below)
     public static void main(String[] args){
 
-/*        // Obtain n & t values
-//        int n = Integer.parseInt(args[0]);
-//        int t = Integer.parseInt(args[1]);
-        int n = StdIn.readInt();
-        int t = StdIn.readInt();
-
-        //Instantiate Class
-        Stopwatch sw = new Stopwatch();
-        PercolationStats percolationStats = new PercolationStats(n,t);
+        // Obtain n & t values
+        int n = Integer.parseInt(args[0]);
+        int t = Integer.parseInt(args[1]);
+//        int n = StdIn.readInt();
+//        int t = StdIn.readInt();
 
         //Measure time spent
+//        Stopwatch sw = new Stopwatch();
+        //Instantiate Class
+        PercolationStats percolationStats = new PercolationStats(n,t);
+
         StdOut.println("mean                   = " + percolationStats.mean());
         StdOut.println("stddev                 = " + percolationStats.stddev());
         StdOut.println("95% confidence interval= [" + percolationStats.confidenceLo() + ","
                         + percolationStats.confidenceHi() + "]");
-        System.out.printf("Total time: %f secs. (for N=%d, T=%d)", sw.elapsedTime(), n, t);
-        */
+//        System.out.printf("Total time: %f secs. (for N=%d, T=%d)", sw.elapsedTime(), n, t);
     }
 }
