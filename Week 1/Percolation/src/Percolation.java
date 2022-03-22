@@ -1,5 +1,7 @@
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
+import java.util.Scanner; //todo remove me
+
 public class Percolation {
 
     // Global Variables
@@ -110,7 +112,7 @@ public class Percolation {
         return (row * size) + (col + 1); // col + 1 because we start at 1 not 0, as 0 is virtualTop
     }
 
-    /*private void testCreator(int row, int col) {
+    private void testCreator(int row, int col) {
         System.out.println("isOpen(" + row + ", " + col + ") Before opening: " + isOpen(row, col));
         System.out.println("isFull(" + row + ", " + col + ") Before opening: " + isFull(row, col));
         System.out.println("percolates(): " + percolates());
@@ -130,7 +132,7 @@ public class Percolation {
                 col2)));
         System.out.println();
 
-    }*/
+    }
 
     // test client (optional)
     public static void main(String[] args) {
@@ -184,5 +186,13 @@ public class Percolation {
         System.out.println("VirtualBottom & (3,0) connected? " +
                             percolation.uf.connected(percolation.virtualBottom,
                             percolation.indexOf(3,0)));*/
+
+        //Live test
+        //todo comment everything under this
+        Percolation percolation = new Percolation(4);
+        Scanner scanner = new Scanner(System.in);
+        while(scanner.hasNext()){
+            percolation.testCreator(scanner.nextInt(), scanner.nextInt());
+        }
     }
 }
