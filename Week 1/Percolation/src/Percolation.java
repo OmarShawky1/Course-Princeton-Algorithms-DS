@@ -1,6 +1,6 @@
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
-//import java.util.Scanner; //todo remove me
+import java.util.Scanner; //todo remove me
 
 public class Percolation {
 
@@ -78,11 +78,6 @@ public class Percolation {
     }
 
     // is the site (row, col) open?
-    private boolean cellValidAndOpen(int row, int col) {
-        return cellValid(row, col) && site[row - 1][col - 1];
-    }
-
-    // is the site (row, col) open?
     public boolean isOpen(int row, int col) {
         validateInput(row, col);
         return site[row - 1][col - 1];
@@ -91,8 +86,7 @@ public class Percolation {
     // is the site (row, col) isOpenfull?
     public boolean isFull(int row, int col) {
         validateInput(row, col);
-//        return isOpen(row, col) && uf.connected(virtualTop, 0); // is site connected to virtualTop?
-        return site[row - 1][col - 1] && (uf.find(virtualTop) == uf.find(indexOf(row, col)));
+        return site[row - 1][col - 1] && isConnected(virtualTop, indexOf(row, col));
     }
 
     // returns the number of open sites
@@ -102,8 +96,17 @@ public class Percolation {
 
     // does the system percolate?
     public boolean percolates() {
-//        return uf.connected(virtualTop, virtualBottom); // is virtualTop connected to virtualBottom?
-        return uf.find(virtualTop) == uf.find(virtualBottom);
+        return isConnected(virtualTop, virtualBottom);
+    }
+
+    // check two points connection
+    private boolean isConnected(int p1, int p2){
+        return uf.find(p1) == uf.find(p2);
+    }
+
+    // is the site (row, col) open?
+    private boolean cellValidAndOpen(int row, int col) {
+        return cellValid(row, col) && site[row - 1][col - 1];
     }
 
     //Validate input
@@ -122,7 +125,7 @@ public class Percolation {
         return ((row - 1) * size) + col; // col+1-1 because we start at 1, as 0 is virtualTop
     }
 
-/*    private void testCreator(int row, int col) {
+    private void testCreator(int row, int col) {
         System.out.println("isOpen(" + row + ", " + col + ") Before opening: " + isOpen(row, col));
         System.out.println("isFull(" + row + ", " + col + ") Before opening: " + isFull(row, col));
         System.out.println("percolates(): " + percolates());
@@ -142,7 +145,7 @@ public class Percolation {
                 col2)));
         System.out.println();
 
-    }*/
+    }
 
     // test client (optional)
     public static void main(String[] args) {
@@ -197,7 +200,6 @@ public class Percolation {
                             percolation.uf.connected(percolation.virtualBottom,
                             percolation.indexOf(3,0)));*/
 
-/*
         //Live test
         //todo comment everything under this
 
@@ -206,7 +208,6 @@ public class Percolation {
         while (scanner.hasNext()) {
             percolation.testCreator(scanner.nextInt(), scanner.nextInt());
         }
-*/
 
     }
 }
