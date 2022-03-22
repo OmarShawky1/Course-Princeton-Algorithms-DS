@@ -1,6 +1,6 @@
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
-//import java.util.Scanner; //todo remove me
+import java.util.Scanner; //todo remove me
 
 public class Percolation {
 
@@ -35,59 +35,53 @@ public class Percolation {
 
     // opens the site (row, col) if it is not open already
     public void open(int row, int col) {
-        row--;
-        col--;
         validateInput(row, col);
 
-        if (site[row][col]) { //Do nothing in case the site is already opened
+        if (site[row - 1][col - 1]) { //Do nothing in case the site is already opened
             return;
         }
 
-        site[row][col] = true; //Opening site
+        site[row - 1][col - 1] = true; //Opening site
         opensitesCount++;
 
         // connect cell to sites that are opened from left, right, up & down.
         //connect left
-        int rowO = row + 1;
-        int colO = col + 1;
-        if (isOpen(rowO, colO - 1)) {
+        if (isOpen(row, col - 1)) {
             uf.union(indexOf(row, col), indexOf(row, col - 1));
         }
 
         //connect right
-        if (isOpen(rowO, colO + 1)) {
+        if (isOpen(row, col + 1)) {
             uf.union(indexOf(row, col), indexOf(row, col + 1));
         }
 
         //connect up
-        if (isOpen(rowO - 1, colO)) {
+        if (isOpen(row - 1, col)) {
             uf.union(indexOf(row, col), indexOf(row - 1, col));
         }
 
         //connect bottom
-        if (isOpen(rowO + 1, colO)) {
+        if (isOpen(row + 1, col)) {
             uf.union(indexOf(row, col), indexOf(row + 1, col));
         }
 
         //Check if we are at top
-        if (row == 0) {
+        if (row == 1) {
             uf.union(virtualTop, indexOf(row, col));
-        } else if (row == size - 1) { //else check if we are at bottom
+        } else if (row == size) { //else check if we are at bottom
             uf.union(virtualBottom, indexOf(row, col));
         }
     }
 
     // is the site (row, col) open?
     public boolean isOpen(int row, int col) {
-        row--;
-        col--;
-        return checkCellValidity(row, col) && site[row][col];
+        return cellValid(row, col) && site[row - 1][col - 1];
     }
 
     // is the site (row, col) isOpenfull?
     public boolean isFull(int row, int col) {
 //        return isOpen(row, col) && uf.connected(virtualTop, 0); // is site connected to virtualTop?
-        return isOpen(row, col) && (uf.find(virtualTop) == uf.find(indexOf(row - 1, col - 1)));
+        return isOpen(row, col) && (uf.find(virtualTop) == uf.find(indexOf(row, col)));
     }
 
     // returns the number of open sites
@@ -103,18 +97,18 @@ public class Percolation {
 
     //Validate input
     private void validateInput(int row, int col) {
-        if (!checkCellValidity(row, col)) {
-            throw new IllegalArgumentException();
+        if (!cellValid(row, col)) {
+            throw new IllegalArgumentException("I was called with: row: " + row + " , col: " + col);
         }
     }
 
     // check if index is in bound (lies between 0 & n-1), return false otherwise
-    private boolean checkCellValidity(int row, int col) {
-        return row >= 0 && row < size && col >= 0 && col < size;
+    private boolean cellValid(int row, int col) {
+        return row >= 1 && row <= size && col >= 1 && col <= size;
     }
 
     private int indexOf(int row, int col) {
-        return (row * size) + (col + 1); // col + 1 because we start at 1 not 0, as 0 is virtualTop
+        return ((row - 1) * size) + col; // col+1-1 because we start at 1, as 0 is virtualTop
     }
 
     private void testCreator(int row, int col) {
@@ -192,7 +186,6 @@ public class Percolation {
                             percolation.uf.connected(percolation.virtualBottom,
                             percolation.indexOf(3,0)));*/
 
-/*
         //Live test
         //todo comment everything under this
 
@@ -202,6 +195,5 @@ public class Percolation {
             percolation.testCreator(scanner.nextInt(), scanner.nextInt());
         }
 
-*/
     }
 }
