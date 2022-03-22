@@ -1,6 +1,6 @@
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
-import java.util.Scanner; //todo remove me
+//import java.util.Scanner;
 
 public class Percolation {
 
@@ -93,7 +93,6 @@ public class Percolation {
     // is the site (row, col) isOpenfull?
     public boolean isFull(int row, int col) {
         validateInput(row, col);
-//        return site[row - 1][col - 1] && isConnected(virtualTop, indexOf(row, col));
         //we use uf2 because we did not ever connect virtualBottom with bottom cells
         return site[row - 1][col - 1] && uf2.find(virtualTop) == uf2.find(indexOf(row, col));
     }
@@ -134,6 +133,7 @@ public class Percolation {
         return ((row - 1) * size) + col; // col+1-1 because we start at 1, as 0 is virtualTop
     }
 
+/*
     private void testCreator(int row, int col) {
         System.out.println("isOpen(" + row + ", " + col + ") Before opening: " + isOpen(row, col));
         System.out.println("isFull(" + row + ", " + col + ") Before opening: " + isFull(row, col));
@@ -150,11 +150,12 @@ public class Percolation {
 
         testCreator(row, col);
         testCreator(row2, col2);
-        System.out.println("Two points connected? " + uf.connected(indexOf(row, col), indexOf(row2,
+        System.out.println("Two points connected? " + isConnected(indexOf(row, col), indexOf(row2,
                 col2)));
         System.out.println();
 
     }
+*/
 
     // test client (optional)
     public static void main(String[] args) {
@@ -209,14 +210,15 @@ public class Percolation {
                             percolation.uf.connected(percolation.virtualBottom,
                             percolation.indexOf(3,0)));*/
 
+/*
         //Live test
-        //todo comment everything under this
 
         Scanner scanner = new Scanner(System.in);
         Percolation percolation = new Percolation(scanner.nextInt());
         while (scanner.hasNext()) {
             percolation.testCreator(scanner.nextInt(), scanner.nextInt());
         }
+*/
 
     }
 }

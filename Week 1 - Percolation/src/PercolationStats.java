@@ -8,7 +8,7 @@ public class PercolationStats {
 //    final private int trials;
     private final int trials;
     private final double[] percolations;
-    private final double confidenceIntervalValue = 1.96;
+    private static final double confidenceIntervalValue = 1.96;
 
     // perform independent trials on an n-by-n grid
     public PercolationStats(int n, int trials) {
