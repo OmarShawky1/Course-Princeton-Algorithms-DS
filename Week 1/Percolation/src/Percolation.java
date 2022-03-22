@@ -68,7 +68,11 @@ public class Percolation {
         //Check if we are at top
         if (row == 1) {
             uf.union(virtualTop, indexOf(row, col));
-        } else if (row == size) { //else check if we are at bottom
+        }
+
+        //used to be else if to decrease the number of checks but he checks against n=1 that
+        // gives true for both row = 1 & row = size when size = 1.
+        if (row == size) { //else check if we are at bottom
             uf.union(virtualBottom, indexOf(row, col));
         }
     }
