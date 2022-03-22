@@ -46,22 +46,22 @@ public class Percolation {
 
         // connect cell to sites that are opened from left, right, up & down.
         //connect left
-        if (isOpen(row, col - 1)) {
+        if (cellValidAndOpen(row, col - 1)) {
             uf.union(indexOf(row, col), indexOf(row, col - 1));
         }
 
         //connect right
-        if (isOpen(row, col + 1)) {
+        if (cellValidAndOpen(row, col + 1)) {
             uf.union(indexOf(row, col), indexOf(row, col + 1));
         }
 
         //connect up
-        if (isOpen(row - 1, col)) {
+        if (cellValidAndOpen(row - 1, col)) {
             uf.union(indexOf(row, col), indexOf(row - 1, col));
         }
 
         //connect bottom
-        if (isOpen(row + 1, col)) {
+        if (cellValidAndOpen(row + 1, col)) {
             uf.union(indexOf(row, col), indexOf(row + 1, col));
         }
 
@@ -74,8 +74,14 @@ public class Percolation {
     }
 
     // is the site (row, col) open?
-    public boolean isOpen(int row, int col) {
+    private boolean cellValidAndOpen(int row, int col) {
         return cellValid(row, col) && site[row - 1][col - 1];
+    }
+
+    // is the site (row, col) open?
+    public boolean isOpen(int row, int col) {
+        validateInput(row, col);
+        return site[row - 1][col - 1];
     }
 
     // is the site (row, col) isOpenfull?
