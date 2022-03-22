@@ -14,9 +14,6 @@ public class Percolation {
     private final int  virtualTop;
     private final int virtualBottom;
     private int opensitesCount; //number of open cells in the 2D array
-    private int[][] bottomCells; //Used to store bottom cells that are full so that they only can
-    // be unioned witt bottom; This is because a point may not be full but gives isFull because
-    // system percolates.
 
     // creates n-by-n grid, with all sites initially blocked
     public Percolation(int n) {
@@ -30,7 +27,6 @@ public class Percolation {
         virtualTop = 0;
         virtualBottom = size * size + 1;
         opensitesCount = 0;
-        bottomCells = new int[0][2];
 
         // Instantiation of n^2 number of cells + virtualTop + virtualBottom initially blocked.
         uf = new WeightedQuickUnionUF(n * n + 2);
@@ -77,50 +73,13 @@ public class Percolation {
         //used to be else if to decrease the number of checks but he checks against n=1 that
         // gives true for both row = 1 & row = size when size = 1.
         if (row == size) { //else check if we are at bottom
-            addToBottomCells(row, col);
+            uf.union(virtualBottom, indexOf(row, col));
         }
     }
 
-    private void addToBottomCells(int row, int col) {
-//        System.out.println("I am in addToBC; (row: " + row + ", col: " + col + ")");
-        int[][] copiedArray = new int[bottomCells.length + 1][2];
-        if (bottomCells.length < 1) {
-            copiedArray[0][0] = row;
-            copiedArray[0][1] = col;
-//            System.out.println("row & col from cA: " + copiedArray[0][0] + ", " + copiedArray[0][1]);
-            bottomCells = copiedArray;
-        } else {
-            for(int i = 0; i < bottomCells.length; i++){
-//                System.out.println("I will put this in copiedArray[i]: " + bottomCells[i].clone());
-                copiedArray[i] = bottomCells[i].clone();
-                copiedArray[i + 1][0] = row;
-                copiedArray[i + 1][1] = col;
-//                System.out.println("row & col from cA: " + copiedArray[i + 1][0] + ", " + copiedArray[i + 1][1]);
-            }
-            bottomCells = copiedArray;
-        }
-    }
-
-
-    private void unionWithVirtualBottom() {
-        int rowLength = bottomCells.length;
-        //Union everything stored in the que (which is named bottomCells)
-//        System.out.println("I am at unionWithVB; rowLength: " + rowLength);
-        if(rowLength > 0) {
-            for(int i = 0; i < rowLength; i++) {
-//                System.out.println("I am in the for loop");
-                int row = bottomCells[i][0];
-                int col = bottomCells[i][1];
-//                System.out.println("row: " + row + ", col: " + col);
-                //if this point isFull, union it, discard union otherwise
-                if (row > 0 && col > 0 && isFull(row, col)) {
-//                    System.out.println("I am unionWithVB, (row: " + row + ", col: " + col +
-//                            ") & " + "isFull: " + isFull(row, col));
-                    uf.union(virtualBottom, indexOf(row, col));
-                }
-            }
-//            bottomCells = new int[0][2]; //erase everything has been stored so that we save time
-        }
+    // is the site (row, col) open?
+    private boolean cellValidAndOpen(int row, int col) {
+        return cellValid(row, col) && site[row - 1][col - 1];
     }
 
     // is the site (row, col) open?
@@ -132,7 +91,8 @@ public class Percolation {
     // is the site (row, col) isOpenfull?
     public boolean isFull(int row, int col) {
         validateInput(row, col);
-        return site[row - 1][col - 1] && isConnected(virtualTop, indexOf(row, col));
+//        return isOpen(row, col) && uf.connected(virtualTop, 0); // is site connected to virtualTop?
+        return site[row - 1][col - 1] && (uf.find(virtualTop) == uf.find(indexOf(row, col)));
     }
 
     // returns the number of open sites
@@ -142,18 +102,8 @@ public class Percolation {
 
     // does the system percolate?
     public boolean percolates() {
-        unionWithVirtualBottom();
-        return isConnected(virtualTop, virtualBottom);
-    }
-
-    // check two points connection
-    private boolean isConnected(int p1, int p2) {
-        return uf.find(p1) == uf.find(p2);
-    }
-
-    // is the site (row, col) open?
-    private boolean cellValidAndOpen(int row, int col) {
-        return cellValid(row, col) && site[row - 1][col - 1];
+//        return uf.connected(virtualTop, virtualBottom); // is virtualTop connected to virtualBottom?
+        return uf.find(virtualTop) == uf.find(virtualBottom);
     }
 
     //Validate input
@@ -171,8 +121,8 @@ public class Percolation {
     private int indexOf(int row, int col) {
         return ((row - 1) * size) + col; // col+1-1 because we start at 1, as 0 is virtualTop
     }
-/*
-    private void testCreator(int row, int col) {
+
+/*    private void testCreator(int row, int col) {
         System.out.println("isOpen(" + row + ", " + col + ") Before opening: " + isOpen(row, col));
         System.out.println("isFull(" + row + ", " + col + ") Before opening: " + isFull(row, col));
         System.out.println("percolates(): " + percolates());
@@ -256,7 +206,7 @@ public class Percolation {
         while (scanner.hasNext()) {
             percolation.testCreator(scanner.nextInt(), scanner.nextInt());
         }
-
 */
+
     }
 }
