@@ -1,4 +1,5 @@
-import edu.princeton.cs.algs4.*;
+import edu.princeton.cs.algs4.StdRandom;
+import edu.princeton.cs.algs4.StdStats;
 
 public class PercolationStats {
 
@@ -18,11 +19,11 @@ public class PercolationStats {
         this.trials = trials;
         percolations = new double[trials];
         //Generate numOfPer for "t" times
-        for (int i=0; i<trials; i++){
+        for (int i = 0; i < trials; i++) {
             //generate value of percolation for trial "t"
             Percolation percolation = new Percolation(n);
             while (!percolation.percolates()) {
-                percolation.open(StdRandom.uniform(n), StdRandom.uniform(n));
+                percolation.open(StdRandom.uniform(n) + 1, StdRandom.uniform(n) + 1);
             }
             //store value of probability "p" to calculate the mean of "t" trials
             percolations[i] = (double) percolation.numberOfOpenSites() / (n * n);
@@ -52,7 +53,7 @@ public class PercolationStats {
     // test client (see below)
     public static void main(String[] args){
 
-        // Obtain n & t values
+/*        // Obtain n & t values
 //        int n = Integer.parseInt(args[0]);
 //        int t = Integer.parseInt(args[1]);
         int n = StdIn.readInt();
@@ -68,5 +69,6 @@ public class PercolationStats {
         StdOut.println("95% confidence interval= [" + percolationStats.confidenceLo() + ","
                         + percolationStats.confidenceHi() + "]");
         System.out.printf("Total time: %f secs. (for N=%d, T=%d)", sw.elapsedTime(), n, t);
+        */
     }
 }
