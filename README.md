@@ -5,3 +5,10 @@ This is the first Homework; It is about utilizing Union Find Algorithm & Weighte
 Grade: 100/100
 
 ![Percolation Grades](./Grades/PercolationGrade.png)
+
+<br>
+
+# Queues
+
+The goal of this assignment is to implement elementary data structures using arrays and linked lists, and to introduce you to generics and iterators.
+
