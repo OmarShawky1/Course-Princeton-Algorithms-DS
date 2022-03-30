@@ -65,20 +65,40 @@ public class Deque<Item> implements Iterable<Item> {
     // add the item to the front
     public void addFirst(Item item) {
         itemValid(item);
-        first.previous = new Node(first, null, item);
-        first = first.previous;
+        Node newNode  = new Node(first, null, item);
+
+        if (!isEmpty()){
+            first.previous = newNode;
+            first = first.previous;
+        } else {
+            first = newNode;
+            last = newNode;
+        }
+
     }
     // add the item to the back
     public void addLast(Item item) {
         itemValid(item);
-        last.next = new Node(null, last, item);
-        last = last.next;
+
+        Node newNode = new Node(null, last, item);
+        if (!isEmpty()){
+            last.next = newNode;
+            last = last.next;
+        } else {
+            first = newNode;
+            last = newNode;
+        }
     }
     // remove and return the item from the front
     public Item removeFirst() {
         checkListEmpty();
         Item firstItem = first.item;
         first = first.next;
+
+        //if list became empty (first = null), make last = null
+        if (isEmpty()){
+            last = first;
+        }
         return firstItem;
     }
     // remove and return the item from the back
@@ -86,6 +106,11 @@ public class Deque<Item> implements Iterable<Item> {
         checkListEmpty();
         Item lastData = last.item;
         last = last.previous;
+
+        //if list became empty (last = null), make first = null
+        if(last == null){
+            first = null;
+        }
         return lastData;
     }
     // return an iterator over items in order from front to back
