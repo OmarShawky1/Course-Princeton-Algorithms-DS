@@ -11,11 +11,11 @@ public class Deque<Item> implements Iterable<Item> {
     private class Node {
         private Node next;
         private Node previous;
-        private Item data;
-        public Node(Node next, Node previous, Item data) {
+        private Item item;
+        public Node(Node next, Node previous, Item item) {
             this.next = next;
             this.previous = previous;
-            this.data = data;
+            this.item = item;
         }
     }
 
@@ -29,7 +29,7 @@ public class Deque<Item> implements Iterable<Item> {
 
         public Item next() {
             checkListEmpty();
-            Item item = (Item) current.data;
+            Item item = (Item) current.item;
             current = current.next;
             return item;
         }
@@ -77,14 +77,14 @@ public class Deque<Item> implements Iterable<Item> {
     // remove and return the item from the front
     public Item removeFirst() {
         checkListEmpty();
-        Item firstData = first.data;
+        Item firstItem = first.item;
         first = first.next;
-        return firstData;
+        return firstItem;
     }
     // remove and return the item from the back
     public Item removeLast() {
         checkListEmpty();
-        Item lastData = last.data;
+        Item lastData = last.item;
         last = last.previous;
         return lastData;
     }
@@ -109,6 +109,6 @@ public class Deque<Item> implements Iterable<Item> {
 
     // unit testing (required)
     public static void main(String[] args) {
-        
+
     }
 }
