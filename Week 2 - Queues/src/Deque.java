@@ -1,5 +1,5 @@
+import edu.princeton.cs.algs4.StdOut;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.NoSuchElementException;
 
 public class Deque<Item> implements Iterable<Item> {
@@ -159,39 +159,39 @@ public class Deque<Item> implements Iterable<Item> {
     // unit testing (required)
     public static void main(String[] args) {
 
-        System.out.println("###############Dequeue Tests###############");
+        StdOut.println("###############Dequeue Tests###############");
 
-        System.out.println("##########My Own Test Cases##########");
-        System.out.println("####Test 1####");
-        System.out.println("Initialize an empty Double ended LinkedList");
+        StdOut.println("##########My Own Test Cases##########");
+        StdOut.println("####Test 1####");
+        StdOut.println("Initialize an empty Double ended LinkedList");
         Deque<String> temp = new Deque<>();
-        System.out.println("List: " +  temp);
-        System.out.println("temp.size() is zero: " + (temp.size() == 0));
-        System.out.println("temp.isEmpty() is true: " + temp.isEmpty());
+        StdOut.println("List: " +  temp);
+        StdOut.println("temp.size() is zero: " + (temp.size() == 0));
+        StdOut.println("temp.isEmpty() is true: " + temp.isEmpty());
         try {
-            System.out.println("temp.removeFirst() is error: " + temp.removeFirst());
+            StdOut.println("temp.removeFirst() is error: " + temp.removeFirst());
         } catch (NoSuchElementException e) {
-            System.out.println("temp.removeFirst() is error: " + e);
+            StdOut.println("temp.removeFirst() is error: " + e);
         };
 
         try {
-            System.out.println("temp.removeLast() is error: " + temp.removeLast());
+            StdOut.println("temp.removeLast() is error: " + temp.removeLast());
         } catch (NoSuchElementException e) {
-            System.out.println("temp.removeLast() is error: " + e);
+            StdOut.println("temp.removeLast() is error: " + e);
         };
-        System.out.println("####Test 1 End####");
+        StdOut.println("####Test 1 End####");
 
-        System.out.println();
+        StdOut.println();
 
-        System.out.println("####Test 2####");
-        System.out.println("Initialize Double ended LinkedList with initial values");
+        StdOut.println("####Test 2####");
+        StdOut.println("Initialize Double ended LinkedList with initial values");
         Deque<String> deque = new Deque<>("1", "2", "3");
-        System.out.println("Constructor: " +  deque);
-        System.out.println("hasNext test: " + deque);
-        System.out.println("####Test 2 End####");
+        StdOut.println("Constructor: " +  deque);
+        StdOut.println("hasNext test: " + deque);
+        StdOut.println("####Test 2 End####");
 
-        System.out.println("##########End of my Tests##########");
-        System.out.println();
+        StdOut.println("##########End of my Tests##########");
+        StdOut.println();
 
     }
 }
