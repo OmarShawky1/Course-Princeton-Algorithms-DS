@@ -23,7 +23,7 @@ public class Deque<Item> implements Iterable<Item> {
 
     // is the deque empty?
     public boolean isEmpty() {
-        return first == null;
+        return first.item == null;
     }
     // return the number of items on the deque
     public int size() {
@@ -72,7 +72,7 @@ public class Deque<Item> implements Iterable<Item> {
         Item firstItem = first.item;
         first = first.next;
 
-        //if list became empty (first = null), make last = null
+        //if list became empty (first.item = null)
         if (isEmpty()){
             last = first;
         }
@@ -84,9 +84,9 @@ public class Deque<Item> implements Iterable<Item> {
         Item lastData = last.item;
         last = last.previous;
 
-        //if list became empty (last = null), make first = null
-        if(last == null){
-            first = null;
+        //if list became empty (last.item = null)
+        if(last.item == null){
+            first = last;
         }
         return lastData;
     }
@@ -104,7 +104,7 @@ public class Deque<Item> implements Iterable<Item> {
 
     // Check if list, being operated, is empty
     private void checkListEmpty() {
-        if (first == null) {
+        if (first.item == null) {
             throw new NoSuchElementException("I was called to remove first/last on an empty list");
         }
     }
@@ -166,6 +166,19 @@ public class Deque<Item> implements Iterable<Item> {
         System.out.println("Initialize an empty Double ended LinkedList");
         Deque<String> temp = new Deque<>();
         System.out.println("List: " +  temp);
+        System.out.println("temp.size() is zero: " + (temp.size() == 0));
+        System.out.println("temp.isEmpty() is true: " + temp.isEmpty());
+        try {
+            System.out.println("temp.removeFirst() is error: " + temp.removeFirst());
+        } catch (NoSuchElementException e) {
+            System.out.println("temp.removeFirst() is error: " + e);
+        };
+
+        try {
+            System.out.println("temp.removeLast() is error: " + temp.removeLast());
+        } catch (NoSuchElementException e) {
+            System.out.println("temp.removeLast() is error: " + e);
+        };
         System.out.println("####Test 1 End####");
 
         System.out.println();
@@ -173,7 +186,7 @@ public class Deque<Item> implements Iterable<Item> {
         System.out.println("####Test 2####");
         System.out.println("Initialize Double ended LinkedList with initial values");
         Deque<String> deque = new Deque<>("1", "2", "3");
-        System.out.println("List after initialization: " +  deque);
+        System.out.println("Constructor: " +  deque);
         System.out.println("hasNext test: " + deque);
         System.out.println("####Test 2 End####");
 
