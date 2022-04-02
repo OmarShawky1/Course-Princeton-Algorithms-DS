@@ -25,21 +25,26 @@ public class Deque<Item> implements Iterable<Item> {
     public boolean isEmpty() {
         return first.item == null;
     }
+
     // return the number of items on the deque
     public int size() {
         int counter = 0;
-        while (first.next != null){
-            first = first.next;
+        Iterator<Item> iterator = iterator();
+        boolean hasNext = iterator.hasNext();
+        while (hasNext) {
             counter++;
+            iterator.next();
+            hasNext = iterator.hasNext();
         }
         return counter;
     }
+
     // add the item to the front
     public void addFirst(Item item) {
         itemValid(item);
 
         // Initialize a node that has nothing before it (null) and old first after it.
-        Node newNode  = new Node(first, null, item);
+        Node newNode  = new Node(null, first, item);
 
         // If list contains items, make current first.previous point to newNode & make it first
         if (!isEmpty()){
@@ -53,11 +58,13 @@ public class Deque<Item> implements Iterable<Item> {
         }
 
     }
+
     // add the item to the back
     public void addLast(Item item) {
         itemValid(item);
 
-        Node newNode = new Node(null, last, item);
+        // Initialize a node that has old last before it and nothing after it.
+        Node newNode = new Node(last, null, item);
         if (!isEmpty()){
             last.next = newNode;
             last = last.next;
@@ -66,6 +73,7 @@ public class Deque<Item> implements Iterable<Item> {
             last = newNode;
         }
     }
+
     // remove and return the item from the front
     public Item removeFirst() {
         checkListEmpty();
@@ -78,6 +86,7 @@ public class Deque<Item> implements Iterable<Item> {
         }
         return firstItem;
     }
+
     // remove and return the item from the back
     public Item removeLast() {
         checkListEmpty();
@@ -102,7 +111,7 @@ public class Deque<Item> implements Iterable<Item> {
         }
     }
 
-    // Check if list, being operated, is empty
+    // Check if list, that is being operated, is empty
     private void checkListEmpty() {
         if (first.item == null) {
             throw new NoSuchElementException("I was called to remove first/last on an empty list");
@@ -129,9 +138,9 @@ public class Deque<Item> implements Iterable<Item> {
         private Node next;
         private Node previous;
         private Item item;
-        public Node(Node next, Node previous, Item item) {
-            this.next = next;
+        public Node(Node previous, Node next, Item item) {
             this.previous = previous;
+            this.next = next;
             this.item = item;
         }
     }
@@ -164,21 +173,37 @@ public class Deque<Item> implements Iterable<Item> {
         StdOut.println("##########My Own Test Cases##########");
         StdOut.println("####Test 1####");
         StdOut.println("Initialize an empty Double ended LinkedList");
-        Deque<String> temp = new Deque<>();
-        StdOut.println("List: " +  temp);
-        StdOut.println("temp.size() is zero: " + (temp.size() == 0));
-        StdOut.println("temp.isEmpty() is true: " + temp.isEmpty());
+        Deque<String> list = new Deque<>();
+        StdOut.println("Constructor & has next: " +  list);
+        StdOut.println("list.size() is zero: " + (list.size() == 0));
+        StdOut.println("list.isEmpty() is true: " + list.isEmpty());
         try {
-            StdOut.println("temp.removeFirst() is error: " + temp.removeFirst());
+            StdOut.println("list.removeFirst() is error: " + list.removeFirst());
         } catch (NoSuchElementException e) {
-            StdOut.println("temp.removeFirst() is error: " + e);
+            StdOut.println("list.removeFirst() is error: " + e);
         };
 
         try {
-            StdOut.println("temp.removeLast() is error: " + temp.removeLast());
+            StdOut.println("list.removeLast() is error: " + list.removeLast());
         } catch (NoSuchElementException e) {
-            StdOut.println("temp.removeLast() is error: " + e);
+            StdOut.println("list.removeLast() is error: " + e);
         };
+
+        StdOut.println("End of Error Cases");
+
+        StdOut.println("Add Test Cases");
+        for (int i=1; i<=10; i++){
+            list.addLast(Integer.toString(i));
+        }
+        StdOut.println("list has only [1,2,3,4,5,6,7,8,9,10]: " + list);
+        StdOut.println(list.size());
+
+        StdOut.println("remove Test Cases");
+        for (int i=1; i<=6; i++){
+            list.removeFirst();
+        }
+        StdOut.println("list has only [9,8,7]: " + list);
+
         StdOut.println("####Test 1 End####");
 
         StdOut.println();
@@ -186,8 +211,7 @@ public class Deque<Item> implements Iterable<Item> {
         StdOut.println("####Test 2####");
         StdOut.println("Initialize Double ended LinkedList with initial values");
         Deque<String> deque = new Deque<>("1", "2", "3");
-        StdOut.println("Constructor: " +  deque);
-        StdOut.println("hasNext test: " + deque);
+        StdOut.println("Constructor & has next: " +  deque);
         StdOut.println("####Test 2 End####");
 
         StdOut.println("##########End of my Tests##########");
