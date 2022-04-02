@@ -13,7 +13,7 @@ public class Deque<Item> implements Iterable<Item> {
 
         // Initialize first & last pointers to null nodes
         first = new Node(null, null, null);
-        last = new Node(null, null, null);
+        last = first;
 
         //Add Initial values
         for (Item item : items) {
@@ -65,10 +65,15 @@ public class Deque<Item> implements Iterable<Item> {
 
         // Initialize a node that has old last before it and nothing after it.
         Node newNode = new Node(last, null, item);
+
+        // Initialize a node that has (last) before it and nothing after it (null).
         if (!isEmpty()){
             last.next = newNode;
             last = last.next;
-        } else {
+        }
+
+        //If list is empty, then first & last nodes should point to the new node
+        else {
             first = newNode;
             last = newNode;
         }
@@ -191,18 +196,20 @@ public class Deque<Item> implements Iterable<Item> {
 
         StdOut.println("End of Error Cases");
 
-        StdOut.println("Add Test Cases");
+        StdOut.println("\"Add()\" Test Cases");
         for (int i=1; i<=10; i++){
+            StdOut.println("I am going to add " + i);
             list.addLast(Integer.toString(i));
+            StdOut.println("list after addition: " + list);
         }
-        StdOut.println("list has only [1,2,3,4,5,6,7,8,9,10]: " + list);
+        StdOut.println("list has only [1,2,3,4,5,6,7,8,9,10]: " + list); //ERROR, 10 missing
         StdOut.println(list.size());
 
-        StdOut.println("remove Test Cases");
+        StdOut.println("\"Remove()\" Test Cases");
         for (int i=1; i<=6; i++){
             list.removeFirst();
         }
-        StdOut.println("list has only [9,8,7]: " + list);
+        StdOut.println("list has only [7, 8, 9]: " + list);
 
         StdOut.println("####Test 1 End####");
 
@@ -210,7 +217,7 @@ public class Deque<Item> implements Iterable<Item> {
 
         StdOut.println("####Test 2####");
         StdOut.println("Initialize Double ended LinkedList with initial values");
-        Deque<String> deque = new Deque<>("1", "2", "3");
+        Deque<String> deque = new Deque<>("1", "2", "3", "4", "5", "6", "7", "8", "9", "10");
         StdOut.println("Constructor & has next: " +  deque);
         StdOut.println("####Test 2 End####");
 
