@@ -234,12 +234,19 @@ public class Deque<Item> implements Iterable<Item> {
         }
         StdOut.println("list has only [1,2,3,4,5,6,7,8,9,10]: " + list);
         StdOut.println();
-        
+
         StdOut.println("\"Remove()\" Test Cases");
         for (int i=1; i<7; i++){
             list.removeFirst();
         }
         StdOut.println("list has only [7, 8, 9, 10]: " + list);
+        StdOut.println();
+
+        StdOut.println("\"addFirst()\" Test Cases");
+        for (int i=6; i>0; i--){
+            list.addFirst(Integer.toString(i));
+        }
+        StdOut.println("list has only [1,2,3,4,5,6,7,8,9,10]: " + list);
 
         StdOut.print("Trying to remove using iterator().remove(): ");
         try {
