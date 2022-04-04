@@ -2,14 +2,14 @@ import edu.princeton.cs.algs4.StdOut;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class Deque<Item> implements Iterable<Item> {
+public class Deque<Item> implements Iterable {
 
     //Global Variables
     private Node first;
     private Node last;
 
     // construct deque with initial values
-    public Deque(Item ...items) {
+    public Deque(Item ... items) {
 
         // Initialize first & last pointers to null nodes
         first = null;
@@ -17,7 +17,6 @@ public class Deque<Item> implements Iterable<Item> {
 
         //Add Initial values
         for (Item item : items) {
-//            addFirst(item);
             addLast(item);
         }
     }
@@ -52,15 +51,15 @@ public class Deque<Item> implements Iterable<Item> {
         Node newNode  = new Node(null, first, item);
 
         // If list contains items, make current first.previous point to newNode & make it first
-        if (!isEmpty()){
+        if (!isEmpty()) {
 //            StdOut.println("addFirst(): !isEmpty(): newNode.item is " + newNode.item); //TODO remove it
             first.previous = newNode;
 //            StdOut.println("addFirst(): !isEmpty(): first.previous.item is " + first.previous.item); //TODO remove it
             first = first.previous;
 //            StdOut.println("addFirst(): !isEmpty(): first.item is " + first.item); //TODO remove it
-        }
+
         //If list is empty, then first & last nodes should point to the new node
-        else {
+        } else {
             first = newNode;
             last = newNode;
 //            StdOut.println("addFirst(): else: first: " + first + " ,last: " + last); //TODO remove it
@@ -77,16 +76,15 @@ public class Deque<Item> implements Iterable<Item> {
         Node newNode = new Node(last, null, item);
 
         // Initialize a node that has (last) before it and nothing after it (null).
-        if (!isEmpty()){
+        if (!isEmpty()) {
 //            StdOut.println("addLast(): !isEmpty(): newNode.item is " + newNode.item); //TODO remove it
             last.next = newNode;
 //            StdOut.println("addLast(): !isEmpty(): first.previous.item is " + last.next.item); //TODO remove it
             last = last.next;
 //            StdOut.println("addLast(): !isEmpty(): first.item is " + last.item); //TODO remove it
-        }
 
-        //If list is empty, then first & last nodes should point to the new node
-        else {
+            //If list is empty, then first & last nodes should point to the new node
+        } else {
             first = newNode;
             last = newNode;
 //            StdOut.println("addLast(): else: first: " + first + " ,last: " + last); //TODO remove it
@@ -113,7 +111,7 @@ public class Deque<Item> implements Iterable<Item> {
         last = last.previous;
 
         //if list became empty (last.item = null)
-        if(last.item == null){
+        if (last.item == null) {
             first = last;
         }
         return lastData;
@@ -143,7 +141,7 @@ public class Deque<Item> implements Iterable<Item> {
         Iterator<Item> iterator = iterator();
         boolean hasNext = iterator.hasNext();
 //        StdOut.println("toString: hasNext before the while: " + hasNext); //TODO remove it
-        while (hasNext){
+        while (hasNext) {
             listToString.append(iterator.next());
             hasNext = iterator.hasNext();
 //            StdOut.println("toString: hasNext after the while: " + hasNext); //TODO remove it
@@ -178,12 +176,12 @@ public class Deque<Item> implements Iterable<Item> {
 
         public Item next() {
             checkListEmpty();
-            Item item = (Item) current.item;
+            Item item = current.item;
             current = current.next;
             return item;
         }
 
-        public void remove(){
+        public void remove() {
             throw new UnsupportedOperationException("remove() should not be called");
         }
     }
@@ -212,14 +210,14 @@ public class Deque<Item> implements Iterable<Item> {
             StdOut.println(list.removeFirst());
         } catch (NoSuchElementException e) {
             StdOut.println(e);
-        };
+        }
 
         StdOut.println("list.removeLast() is error: ");
         try {
             StdOut.println(list.removeLast());
         } catch (NoSuchElementException e) {
             StdOut.println(e);
-        };
+        }
 
         StdOut.println();
         StdOut.println("End of Error Cases");
@@ -227,7 +225,7 @@ public class Deque<Item> implements Iterable<Item> {
         StdOut.println();
 
         StdOut.println("\"Add()\" Test Cases");
-        for (int i=1; i<=10; i++){
+        for (int i = 1; i <= 10; i++) {
 //            StdOut.println("I am going to add " + i); //Todo remove it
             list.addLast(Integer.toString(i));
 //            StdOut.println("list after addition: " + list); //Todo remove it
@@ -236,14 +234,14 @@ public class Deque<Item> implements Iterable<Item> {
         StdOut.println();
 
         StdOut.println("\"Remove()\" Test Cases");
-        for (int i=1; i<7; i++){
+        for (int i = 1; i < 7; i++) {
             list.removeFirst();
         }
         StdOut.println("list has only [7, 8, 9, 10]: " + list);
         StdOut.println();
 
         StdOut.println("\"addFirst()\" Test Cases");
-        for (int i=6; i>0; i--){
+        for (int i = 6; i > 0; i--) {
             list.addFirst(Integer.toString(i));
         }
         StdOut.println("list has only [1,2,3,4,5,6,7,8,9,10]: " + list);
@@ -251,7 +249,7 @@ public class Deque<Item> implements Iterable<Item> {
         StdOut.print("Trying to remove using iterator().remove(): ");
         try {
             list.iterator().remove();
-        } catch (UnsupportedOperationException e){
+        } catch (UnsupportedOperationException e) {
             StdOut.println(e);
         }
 
@@ -269,6 +267,5 @@ public class Deque<Item> implements Iterable<Item> {
 
         StdOut.println("##########End of my Tests##########");
         StdOut.println();
-
     }
 }
