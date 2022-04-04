@@ -184,7 +184,7 @@ public class Deque<Item> implements Iterable<Item> {
         }
 
         public void remove(){
-            throw new UnsupportedOperationException("remove() should not be called"); //todo test it
+            throw new UnsupportedOperationException("remove() should not be called");
         }
     }
 
@@ -202,19 +202,29 @@ public class Deque<Item> implements Iterable<Item> {
         StdOut.println("list.size() is zero: " + (list.size() == 0));
         StdOut.println("list.isEmpty() is true: " + list.isEmpty());
 
+        StdOut.println();
+
+        StdOut.println("Start of Error Cases");
+        StdOut.println();
+
+        StdOut.print("list.removeFirst() is error: ");
         try {
-            StdOut.println("list.removeFirst() is error: " + list.removeFirst());
+            StdOut.println(list.removeFirst());
         } catch (NoSuchElementException e) {
-            StdOut.println("list.removeFirst() is error: " + e);
+            StdOut.println(e);
         };
 
+        StdOut.println("list.removeLast() is error: ");
         try {
-            StdOut.println("list.removeLast() is error: " + list.removeLast());
+            StdOut.println(list.removeLast());
         } catch (NoSuchElementException e) {
-            StdOut.println("list.removeLast() is error: " + e);
+            StdOut.println(e);
         };
 
+        StdOut.println();
         StdOut.println("End of Error Cases");
+
+        StdOut.println();
 
         StdOut.println("\"Add()\" Test Cases");
         for (int i=1; i<=10; i++){
@@ -223,15 +233,24 @@ public class Deque<Item> implements Iterable<Item> {
 //            StdOut.println("list after addition: " + list); //Todo remove it
         }
         StdOut.println("list has only [1,2,3,4,5,6,7,8,9,10]: " + list);
-
+        StdOut.println();
+        
         StdOut.println("\"Remove()\" Test Cases");
         for (int i=1; i<7; i++){
             list.removeFirst();
         }
         StdOut.println("list has only [7, 8, 9, 10]: " + list);
 
+        StdOut.print("Trying to remove using iterator().remove(): ");
+        try {
+            list.iterator().remove();
+        } catch (UnsupportedOperationException e){
+            StdOut.println(e);
+        }
+
         StdOut.println("####Test 1 End####");
 
+        StdOut.println();
         StdOut.println();
 
         StdOut.println("####Test 2####");
