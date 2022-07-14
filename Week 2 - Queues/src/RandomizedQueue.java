@@ -7,8 +7,9 @@ import java.util.NoSuchElementException;
 public class RandomizedQueue<Item> implements Iterable<Item> {
 
     //Global Variables
-    Object[] queue;
-    int N;
+    private Object[] queue;
+    private int N;
+    private int lastIndex;
     private int first;
 
 
@@ -17,23 +18,26 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
         int itemsLength = items.length;
         queue = new Object[itemsLength];
+        N = 0;
+        lastIndex = 0;
         first = 0;
     }
 
     // is the randomized queue empty?
     public boolean isEmpty() {
-        return N==0;
+        return N == 0;
     }
 
     // return the number of items on the randomized queue
-    public int size(){
+    public int size() {
         return N + 1;
     }
 
     // add the item
     public void enqueue(Item item) {
         itemValid(item);
-        queue[++N] = item;
+        queue[++lastIndex] = item;
+        N++;
         adjustArraySize();
     }
 
@@ -45,7 +49,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         do {
             randomNumber = first + StdRandom.uniform(N) + 1;
             item = (Item) queue[randomNumber];
-        } while (item != null);
+        } while (item == null);
         queue[randomNumber] = null;
         N--;
         adjustArraySize();
@@ -59,7 +63,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         do {
             randomNumber = first + StdRandom.uniform(N) + 1;
             item = (Item) queue[randomNumber];
-        } while (item != null);
+        } while (item == null);
         return item;
     }
     // return an independent iterator over items in random order
@@ -108,6 +112,8 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
        for (Object object: queue){
            if (object != null) newArr[++pointer] = object;
        }
+       queue = newArr;
+       lastIndex = pointer;
    }
 
     // Check if the item is null
