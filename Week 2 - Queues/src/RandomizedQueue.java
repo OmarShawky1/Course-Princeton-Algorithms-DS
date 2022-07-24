@@ -1,43 +1,43 @@
 import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.StdRandom;
-
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 public class RandomizedQueue<Item> implements Iterable<Item> {
 
     //Global Variables
+
+    //Array object used for storing the enqueued & dequeued items
     private Object[] queue;
-    private int N;
-    private int lastIndex;
-    private int first;
+    private int numOfItems; //Number of items in an array
+    private int lastIndex; //last non-null item in array queue
+    private int first; //first non/null item in array queue
 
 
     // construct an empty randomized queue
     public RandomizedQueue(Item... items) {
-
         int itemsLength = items.length;
         queue = new Object[itemsLength];
-        N = 0;
+        numOfItems = 0;
         lastIndex = 0;
         first = 0;
     }
 
     // is the randomized queue empty?
     public boolean isEmpty() {
-        return N == 0;
+        return numOfItems == 0;
     }
 
     // return the number of items on the randomized queue
     public int size() {
-        return N + 1;
+        return numOfItems + 1;
     }
 
     // add the item
     public void enqueue(Item item) {
         itemValid(item);
         queue[++lastIndex] = item;
-        N++;
+        numOfItems++;
         adjustArraySize();
     }
 
@@ -47,25 +47,27 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         Item item;
         int randomNumber;
         do {
-            randomNumber = first + StdRandom.uniform(N) + 1;
+            randomNumber = first + StdRandom.uniform(numOfItems) + 1;
             item = (Item) queue[randomNumber];
         } while (item == null);
         queue[randomNumber] = null;
-        N--;
+        numOfItems--;
         adjustArraySize();
         return item;
     }
+
     // return a random item (but do not remove it)
     public Item sample() {
         checkArrayEmpty();
         Item item;
         int randomNumber;
         do {
-            randomNumber = first + StdRandom.uniform(N) + 1;
+            randomNumber = first + StdRandom.uniform(numOfItems) + 1;
             item = (Item) queue[randomNumber];
         } while (item == null);
         return item;
     }
+
     // return an independent iterator over items in random order
     public Iterator<Item> iterator() {
         return new ListIterator();
@@ -97,19 +99,19 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         }
     }
 
-    private void adjustArraySize(){
-       if (N == queue.length) {
-           cloneArray(N*2);
+    private void adjustArraySize() {
+       if (numOfItems == queue.length) {
+           cloneArray(numOfItems * 2);
 
-       } else if (N == queue.length/4) {
-           cloneArray(N/2);
+       } else if (numOfItems == queue.length / 4) {
+           cloneArray(numOfItems / 2);
        }
    }
 
-   private void cloneArray(int newSize){
+   private void cloneArray(int newSize) {
        Object[] newArr = new Object[newSize];
        int pointer = 0;
-       for (Object object: queue){
+       for (Object object : queue) {
            if (object != null) newArr[++pointer] = object;
        }
        queue = newArr;
