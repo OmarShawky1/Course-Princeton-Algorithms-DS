@@ -167,8 +167,8 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         StdOut.println("Initialize an empty RandomizedQueue");
         RandomizedQueue<String> randomizedQueue = new RandomizedQueue<>();
         StdOut.println("Constructor & hasNext: " +  randomizedQueue);
-        StdOut.println("list.size() is zero: " + (randomizedQueue.size() == 0));
-        StdOut.println("list.isEmpty() is true: " + randomizedQueue.isEmpty());
+        StdOut.println("randomizedQueue.size() is zero: " + (randomizedQueue.size() == 0));
+        StdOut.println("randomizedQueue.isEmpty() is true: " + randomizedQueue.isEmpty());
 
         StdOut.println();
 
@@ -181,6 +181,14 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         } catch (NoSuchElementException e) {
             StdOut.println(e);
         }
+
+        StdOut.println("enqueuing null item:");
+        try {
+            randomizedQueue.enqueue(null);
+        } catch (IllegalArgumentException e){
+            StdOut.println(e);
+        }
+
 
         StdOut.println();
         StdOut.println("End of Error Cases");
