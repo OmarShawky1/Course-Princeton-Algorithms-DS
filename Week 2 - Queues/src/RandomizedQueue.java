@@ -22,7 +22,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         numOfItems = 0;
         lastIndex = -1;
 
-        for (Item item: items){
+        for (Item item : items) {
 //            StdOut.println("Adding item " + item); //Todo remove it
             enqueue(item);
         }
