@@ -15,5 +15,9 @@ public class Permutation {
         for (int i = 1; i< args.length; i++){
          randomizedQueue.enqueue(args[i]);
         }
+
+        for (int i = 0; i < k; i++){
+            StdOut.println(randomizedQueue.dequeue());
+        }
     }
 }
