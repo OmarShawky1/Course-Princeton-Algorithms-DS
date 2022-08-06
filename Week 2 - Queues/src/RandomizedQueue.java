@@ -19,8 +19,8 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     public RandomizedQueue(Item... items) {
         int itemsLength = items.length == 0 ? 1 : items.length;
         queue = (Item[]) new Object[itemsLength];
-        numOfItems = itemsLength;
-        lastIndex = 0;
+        numOfItems = items.length;
+        lastIndex = -1;
     }
 
     // is the randomized queue empty?
@@ -40,17 +40,9 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         //check if there is available remaining space before enqueuing
 //        StdOut.println("randomizedQueue.queue.length: " + queue.length); //Todo remove it
 //        StdOut.println("randomizedQueue.numOfItems: " + numOfItems); //Todo remove it
-//        if (queue.length - numOfItems <= 1) {
-//            resize();
-//            queue[++lastIndex] = item;
-//            numOfItems++;
-//            resize();
-//        } else {
-//            queue[++lastIndex] = item;
-//            numOfItems++;
-//            resize();
-//        }
+//        StdOut.println("randomizedQueue.lastIndex before: " + lastIndex); //Todo remove it
         queue[++lastIndex] = item;
+//        StdOut.println("randomizedQueue.lastIndex After: " + lastIndex); //Todo remove it
         numOfItems++;
         resize();
     }
@@ -131,7 +123,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
     private void cloneToArrayOfSize(int newSize) {
         Item[] newArr = (Item[]) new Object[newSize];
-        int pointer = 0;
+        int pointer = -1;
         for (Item item : queue) {
             if (item != null) newArr[++pointer] = item;
         }
@@ -187,7 +179,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
         StdOut.println("\"Enqueue()\" Test Cases");
         for (int i = 1; i <= 10; i++) {
-            StdOut.println("This is iteration: " + i + " and i will append " + Integer.toString(i)); //Todo remove it
+//            StdOut.println("This is iteration: " + i + " and i will append " + Integer.toString(i)); //Todo remove it
             randomizedQueue.enqueue(Integer.toString(i));
         }
         StdOut.println("list has only [1,2,3,4,5,6,7,8,9,10]: " + randomizedQueue.print());
