@@ -139,7 +139,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     }
 
     //TODO: to be removed, this is just for testing purposes to ensure enqueuing is correct
-    private String print() {
+    public String toString() {
         String temp = "";
         for (Item item : queue) {
             temp = temp + item + ",";
@@ -182,7 +182,12 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 //            StdOut.println("This is iteration: " + i + " and i will append " + Integer.toString(i)); //Todo remove it
             randomizedQueue.enqueue(Integer.toString(i));
         }
-        StdOut.println("list has only [1,2,3,4,5,6,7,8,9,10]: " + randomizedQueue.print());
+        StdOut.println("list has only [1,2,3,4,5,6,7,8,9,10]: " + randomizedQueue);
+        StdOut.println();
+
+        StdOut.println("\"Dequeue()\" Test Cases");
+        randomizedQueue.dequeue();
+        StdOut.println("randomizedQueue has removed one item " + randomizedQueue);
         StdOut.println();
     }
 }
