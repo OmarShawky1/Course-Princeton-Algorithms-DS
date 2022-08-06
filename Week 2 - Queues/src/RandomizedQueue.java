@@ -19,8 +19,13 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     public RandomizedQueue(Item... items) {
         int itemsLength = items.length == 0 ? 1 : items.length;
         queue = (Item[]) new Object[itemsLength];
-        numOfItems = items.length;
+        numOfItems = 0;
         lastIndex = -1;
+
+        for (Item item: items){
+//            StdOut.println("Adding item " + item); //Todo remove it
+            enqueue(item);
+        }
     }
 
     // is the randomized queue empty?
@@ -38,12 +43,14 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         itemValid(item);
 
         //check if there is available remaining space before enqueuing
-//        StdOut.println("randomizedQueue.queue.length: " + queue.length); //Todo remove it
-//        StdOut.println("randomizedQueue.numOfItems: " + numOfItems); //Todo remove it
+//        StdOut.println("randomizedQueue.queue.length Before: " + queue.length); //Todo remove it
+//        StdOut.println("randomizedQueue.numOfItems Before: " + numOfItems); //Todo remove it
 //        StdOut.println("randomizedQueue.lastIndex before: " + lastIndex); //Todo remove it
         queue[++lastIndex] = item;
 //        StdOut.println("randomizedQueue.lastIndex After: " + lastIndex); //Todo remove it
         numOfItems++;
+//        StdOut.println("randomizedQueue.queue.length After: " + queue.length); //Todo remove it
+//        StdOut.println("randomizedQueue.numOfItems After: " + numOfItems); //Todo remove it
         resize();
     }
 
@@ -116,8 +123,10 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         if (numOfItems == queue.length) {
             cloneToArrayOfSize(numOfItems * 2);
 
-        } else if (numOfItems == queue.length / 4) {
-            cloneToArrayOfSize(numOfItems / 2);
+        } else if (numOfItems <= queue.length / 4) {
+//            StdOut.println("queue.length / 4 = " + (queue.length / 4));//Todo remove it
+//            StdOut.println("numOfItems = " + numOfItems);//Todo remove it
+            cloneToArrayOfSize(numOfItems * 2);
         }
     }
 
@@ -125,6 +134,8 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         Item[] newArr = (Item[]) new Object[newSize];
         int pointer = -1;
         for (Item item : queue) {
+//            StdOut.println("pointer+1: " + (pointer+1));
+//            StdOut.println("newSize: " + newSize);
             if (item != null) newArr[++pointer] = item;
         }
         queue = newArr;
@@ -148,7 +159,6 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     }
 
     public static void main(String[] args) {
-        //TODO!!: main() method must call directly every public constructor and method to verify that they work as prescribed
         StdOut.println("###############RandomizedQueue Tests###############");
 
         StdOut.println("##########My Own Test Cases##########");
@@ -165,7 +175,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         StdOut.println("Start of Error Cases");
         StdOut.println();
 
-        StdOut.print("list.removeFirst() is error: ");
+        StdOut.print("randomizedQueue.dequeue() is error: ");
         try {
             StdOut.println(randomizedQueue.dequeue());
         } catch (NoSuchElementException e) {
@@ -182,7 +192,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 //            StdOut.println("This is iteration: " + i + " and i will append " + Integer.toString(i)); //Todo remove it
             randomizedQueue.enqueue(Integer.toString(i));
         }
-        StdOut.println("list has only [1,2,3,4,5,6,7,8,9,10]: " + randomizedQueue);
+        StdOut.println("randomizedQueue has only [1,2,3,4,5,6,7,8,9,10]: " + randomizedQueue);
         StdOut.println();
 
         StdOut.println("\"Dequeue()\" Test Cases");
@@ -196,5 +206,26 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         } catch (UnsupportedOperationException e) {
             StdOut.println(e);
         }
+
+        StdOut.println("####Test 1 End####");
+
+        StdOut.println();
+        StdOut.println();
+
+        StdOut.println("####Test 2####");
+        StdOut.println("Initialize RandomizedQueue Array List with initial values");
+        RandomizedQueue<String> randomizedQueue2 = new RandomizedQueue<>("1", "2", "3", "4", "5",
+                "6", "7", "8", "9", "10");
+        StdOut.println("Constructor & has next: " +  randomizedQueue2);
+        StdOut.println("randomizedQueue2.size(): " + randomizedQueue2.size());
+
+        StdOut.println("Enqueue after (initialize with initial values) test");
+        randomizedQueue2.enqueue("11");
+        StdOut.println("Constructor & has next: " +  randomizedQueue2);
+        StdOut.println("randomizedQueue2.size(): " + randomizedQueue2.size());
+        StdOut.println("####Test 2 End####");
+
+        StdOut.println("##########End of my Tests##########");
+        StdOut.println();
     }
 }
