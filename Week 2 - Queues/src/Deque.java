@@ -135,6 +135,7 @@ public class Deque<Item> implements Iterable {
         }
     }
 
+    //TODO: to be removed, this is just for testing purposes to ensure enqueuing is correct
     public String toString() {
 //        StdOut.println("I am toString()"); //TODO remove it
         StringBuilder listToString = new StringBuilder("[");
