@@ -189,5 +189,12 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         randomizedQueue.dequeue();
         StdOut.println("randomizedQueue has removed one item " + randomizedQueue);
         StdOut.println();
+
+        StdOut.print("Trying to remove using iterator().remove(): ");
+        try {
+            randomizedQueue.iterator().remove();
+        } catch (UnsupportedOperationException e) {
+            StdOut.println(e);
+        }
     }
 }
