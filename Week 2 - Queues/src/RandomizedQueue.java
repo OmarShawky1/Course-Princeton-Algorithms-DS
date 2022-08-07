@@ -1,6 +1,7 @@
 import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.StdRandom;
 
+import java.util.Arrays; //TODO to be removed
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -65,12 +66,31 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
     // return an independent iterator over items in random order
     public Iterator<Item> iterator() {
-        return new ListIterator();
+        // Cloning array that will be shuffled
+        Item[] shuffledItems = (Item[]) new Object[queue.length];
+        int pointer = -1;
+        for (Item item : queue) {
+            if (item != null) {
+                shuffledItems[++pointer] = item;
+            } else {
+                break;
+            }
+        }
+        StdOut.println("queue.length: " + queue.length);
+        StdOut.println("Shuffled array before shuffling: " + Arrays.toString(shuffledItems));
+        StdRandom.shuffle(shuffledItems);
+        StdOut.println("Shuffled array: " + Arrays.toString(shuffledItems));
+        return new ListIterator(shuffledItems);
     }
 
     private class ListIterator implements Iterator<Item> {
 
         private int current = FIRST;
+        private final Item[] items;
+
+        public ListIterator(Item[] items) {
+            this.items = items;
+        }
 
         public boolean hasNext() {
             return current <= lastIndex;
@@ -81,7 +101,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
                 throw new NoSuchElementException("I was called to remove first/last on an empty list");
             }
 
-            Item item = queue[current];
+            Item item = items[current];
             current++;
             return item;
         }
@@ -142,7 +162,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     // Although this is not a required function to implement, but it is necessary for debugging
     public String toString() {
         StringBuilder listToString = new StringBuilder("[");
-        Iterator<Item> iterator = iterator();
+        Iterator<Item> iterator = new ListIterator(queue);
         boolean hasNext = iterator.hasNext();
         while (hasNext) {
             listToString.append(iterator.next());
@@ -298,9 +318,20 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         StdOut.println("I will dequeue: " + queue.dequeue());
         StdOut.println("queue after first dequeue: " + queue);
         StdOut.println("queue.size() after dequeuing is 1? " + (queue.size() == 1));
-        StdOut.println("I will dequeue" + queue.dequeue());
+        StdOut.println("I will dequeue " + queue.dequeue());
         StdOut.println("queue after dequeuing again: " + queue);
         StdOut.println("####Test 3 End####");
 
+        StdOut.println();
+
+        StdOut.println("####Test 4####");
+        queue = new RandomizedQueue<>();
+        StdOut.println("queue: " + queue);
+        queue.enqueue(19);
+        queue.enqueue(73);
+        StdOut.println("queue after enqueuing 19,73: " + queue + ", lastIndex: " + queue.lastIndex);
+        Iterator<Integer> iterator = queue.iterator();
+        StdOut.println("queue.iterator(): " + iterator.next() + ", " + iterator.next());
+        StdOut.println("####Test 4 End####");
     }
 }
