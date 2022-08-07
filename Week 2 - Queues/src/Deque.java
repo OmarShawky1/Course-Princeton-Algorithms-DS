@@ -132,7 +132,7 @@ public class Deque<Item> implements Iterable<Item> {
         }
     }
     */
-    
+
     // Although this is not a required function to implement but it is necessary for debugging
     public String toString() {
         StringBuilder listToString = new StringBuilder("[");
@@ -170,7 +170,7 @@ public class Deque<Item> implements Iterable<Item> {
         }
 
         public Item next() {
-            if (isEmpty()) {
+            if (!hasNext()) {
                 throw new NoSuchElementException("I was called to remove first/last on an empty list");
             }
 
