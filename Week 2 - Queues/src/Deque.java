@@ -33,14 +33,14 @@ public class Deque<Item> implements Iterable<Item> {
 
     // is the deque empty?
     public boolean isEmpty() {
-        return first == null;
+        return first == null; // can be size == 0
     }
 
     // return the number of items on the deque
     public int size() {
         return size;
     }
-    
+
     /*
     public int size() {
         int counter = 0;
@@ -65,7 +65,7 @@ public class Deque<Item> implements Iterable<Item> {
         // If list contains items, make current first.previous point to newNode & make it first
         if (!isEmpty()) {
             first.previous = newNode;
-            first = first.previous;
+            first = newNode; // or newNode
         // If list is empty, then first & last nodes should point to the new node
         } else {
             first = newNode;
@@ -95,14 +95,14 @@ public class Deque<Item> implements Iterable<Item> {
 
     // remove and return the item from the front
     public Item removeFirst() {
-        if (checkListEmpty()) {
+        if (isEmpty()) {
             throw new NoSuchElementException("I was called to remove first/last on an empty list");
         }
 
         Item firstItem = first.item;
         first = first.next;
 
-        // if list became empty (first.item = null)
+        // if list became empty (first == null)
         if (isEmpty()) {
             last = first;
         }
@@ -112,15 +112,15 @@ public class Deque<Item> implements Iterable<Item> {
 
     // remove and return the item from the back
     public Item removeLast() {
-        if (checkListEmpty()) {
+        if (isEmpty()) {
             throw new NoSuchElementException("I was called to remove first/last on an empty list");
         }
 
         Item lastData = last.item;
         last = last.previous;
 
-        // if list became empty (last.item = null)
-        if (last.item == null) {
+        // if list became empty (last == null)
+        if (last == null) {
             first = last;
         }
         size--;
@@ -146,11 +146,14 @@ public class Deque<Item> implements Iterable<Item> {
         }
     }
     */
+
+    /*
     private boolean checkListEmpty() {
         return first == null;
     }
+    */
 
-    /*
+    /**/ //TODO recomment me
     public String toString() {
         StringBuilder listToString = new StringBuilder("[");
         Iterator<Item> iterator = iterator();
@@ -165,7 +168,7 @@ public class Deque<Item> implements Iterable<Item> {
         listToString.append("]");
         return listToString.toString();
     }
-    */
+    /**/
 
     // Private Class Node, It contains Next, Previous & Data (because it is double ended)
     private class Node {
@@ -188,7 +191,7 @@ public class Deque<Item> implements Iterable<Item> {
         }
 
         public Item next() {
-            if (checkListEmpty()) {
+            if (isEmpty()) {
                 throw new NoSuchElementException("I was called to remove first/last on an empty list");
             }
 
@@ -283,5 +286,17 @@ public class Deque<Item> implements Iterable<Item> {
         StdOut.println("##########End of my Tests##########");
         StdOut.println();
         */
+
+        StdOut.println("##########Online Grader Tests Cases##########"); // All that failed only
+
+        StdOut.println("####Test 1####");
+        Deque<Integer> deque = new Deque<>();
+        StdOut.println("addFirst test");
+        deque.addFirst(1);
+        StdOut.println("deque: " + deque);
+
+        StdOut.println("removeLast test");
+        deque.removeLast();
+        StdOut.println("deque: " + deque);
     }
 }
