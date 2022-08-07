@@ -120,15 +120,6 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     }
 
     private void resize() {
-        /*
-        if (numOfItems == 0 && lastIndex == queue.length - 1) {
-            cloneToArrayOfSize(BASE_SIZE);
-        } else if (numOfItems == queue.length) {
-            cloneToArrayOfSize(numOfItems * 2);
-        } else if (numOfItems <= queue.length / 4 && queue.length > 3) { // or queue.length != Base
-            cloneToArrayOfSize(numOfItems * 2);
-        }
-         */
         if (lastIndex == queue.length - 1) {
             cloneToArrayOfSize(numOfItems * 2);
         } else if (numOfItems <= queue.length / 4 && queue.length > 3) {
@@ -171,7 +162,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
     public static void main(String[] args) {
         StdOut.println("###############RandomizedQueue Tests###############");
-
+        /*
         StdOut.println("##########My Own Test Cases##########");
 
         StdOut.println("####Test 1####");
@@ -238,6 +229,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
         StdOut.println();
         StdOut.println();
+         */
 
         /*
         StdOut.println("####Test 2####");
@@ -257,7 +249,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         StdOut.println();
         */
         StdOut.println();
-
+        /*
         StdOut.println("##########Online Grader Tests Cases##########"); // All that failed only
 
         StdOut.println("####Test 1####");
@@ -315,6 +307,6 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         queue.enqueue(26);
         StdOut.println("queue: " + queue);
         StdOut.println("####Test 3 End####");
-
+        */
     }
 }
