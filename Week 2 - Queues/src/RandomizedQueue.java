@@ -50,7 +50,10 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
         // Replace last non-null value (if possible) with the recently dequeued value
         queue[randomNumber] = queue[numOfItems - 1];
+        queue[numOfItems - 1] = null;
+
         numOfItems--;
+        lastIndex--;
         resize();
         return item;
     }
@@ -108,7 +111,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     }
 
     private void resize() {
-        if (lastIndex == queue.length - 1) {
+        if (numOfItems == queue.length) {
             cloneToArrayOfSize(numOfItems * 2);
         } else if (numOfItems <= queue.length / 4 && queue.length > 3) {
             cloneToArrayOfSize(numOfItems * 2);
@@ -119,7 +122,11 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         Item[] newArr = (Item[]) new Object[newSize];
         int pointer = -1;
         for (Item item : queue) {
-            if (item != null) newArr[++pointer] = item;
+            if (item != null) {
+                newArr[++pointer] = item;
+            } else {
+                break;
+            }
         }
         queue = newArr;
         lastIndex = pointer;
@@ -276,6 +283,23 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         queue.enqueue(9);
         queue.enqueue(26);
         StdOut.println("queue: " + queue);
+        StdOut.println("####Test 3 End####");
+
+        StdOut.println();
+
+        StdOut.println("####Test 3####");
+        queue = new RandomizedQueue<>();
+        StdOut.println("queue.isEmpty(): " + queue.isEmpty());
+        StdOut.println("I will enqueue 9,2");
+        queue.enqueue(9);
+        queue.enqueue(2);
+        StdOut.println("queue: " + queue);
+        StdOut.println("queue.size(): " + queue.size());
+        StdOut.println("I will dequeue: " + queue.dequeue());
+        StdOut.println("queue after first dequeue: " + queue);
+        StdOut.println("queue.size() after dequeuing is 1? " + (queue.size() == 1));
+        StdOut.println("I will dequeue" + queue.dequeue());
+        StdOut.println("queue after dequeuing again: " + queue);
         StdOut.println("####Test 3 End####");
 
     }
