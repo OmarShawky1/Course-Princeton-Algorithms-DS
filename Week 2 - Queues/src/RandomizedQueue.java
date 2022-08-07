@@ -23,7 +23,6 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         lastIndex = -1;
 
         for (Item item : items) {
-//            StdOut.println("Adding item " + item); //Todo remove it
             enqueue(item);
         }
     }
@@ -43,14 +42,8 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         itemValid(item);
 
         //check if there is available remaining space before enqueuing
-//        StdOut.println("randomizedQueue.queue.length Before: " + queue.length); //Todo remove it
-//        StdOut.println("randomizedQueue.numOfItems Before: " + numOfItems); //Todo remove it
-//        StdOut.println("randomizedQueue.lastIndex before: " + lastIndex); //Todo remove it
         queue[++lastIndex] = item;
-//        StdOut.println("randomizedQueue.lastIndex After: " + lastIndex); //Todo remove it
         numOfItems++;
-//        StdOut.println("randomizedQueue.queue.length After: " + queue.length); //Todo remove it
-//        StdOut.println("randomizedQueue.numOfItems After: " + numOfItems); //Todo remove it
         resize();
     }
 
@@ -124,8 +117,6 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
             cloneToArrayOfSize(numOfItems * 2);
 
         } else if (numOfItems <= queue.length / 4) {
-//            StdOut.println("queue.length / 4 = " + (queue.length / 4));//Todo remove it
-//            StdOut.println("numOfItems = " + numOfItems);//Todo remove it
             cloneToArrayOfSize(numOfItems * 2);
         }
     }
@@ -149,14 +140,13 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         }
     }
 
-    //TODO: to be removed, this is just for testing purposes to ensure enqueuing is correct
-    public String toString() {
+/*    public String toString() {
         String temp = "";
         for (Item item : queue) {
             temp = temp + item + ",";
         }
         return "[" + temp + "]";
-    }
+    }*/
 
     public static void main(String[] args) {
         StdOut.println("###############RandomizedQueue Tests###############");
@@ -166,7 +156,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         StdOut.println("####Test 1####");
         StdOut.println("Initialize an empty RandomizedQueue");
         RandomizedQueue<String> randomizedQueue = new RandomizedQueue<>();
-        StdOut.println("Constructor & hasNext: " +  randomizedQueue);
+//        StdOut.println("Constructor & hasNext: " +  randomizedQueue);
         StdOut.println("randomizedQueue.size() is zero: " + (randomizedQueue.size() == 0));
         StdOut.println("randomizedQueue.isEmpty() is true: " + randomizedQueue.isEmpty());
 
@@ -197,15 +187,14 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
         StdOut.println("\"Enqueue()\" Test Cases");
         for (int i = 1; i <= 10; i++) {
-//            StdOut.println("This is iteration: " + i + " and i will append " + Integer.toString(i)); //Todo remove it
             randomizedQueue.enqueue(Integer.toString(i));
         }
-        StdOut.println("randomizedQueue has only [1,2,3,4,5,6,7,8,9,10]: " + randomizedQueue);
+//        StdOut.println("randomizedQueue has only [1,2,3,4,5,6,7,8,9,10]: " + randomizedQueue);
         StdOut.println();
 
         StdOut.println("\"Dequeue()\" Test Cases");
         randomizedQueue.dequeue();
-        StdOut.println("randomizedQueue has removed one item " + randomizedQueue);
+//        StdOut.println("randomizedQueue has removed one item " + randomizedQueue);
         StdOut.println();
 
         StdOut.print("Trying to remove using iterator().remove(): ");
@@ -224,12 +213,12 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         StdOut.println("Initialize RandomizedQueue Array List with initial values");
         RandomizedQueue<String> randomizedQueue2 = new RandomizedQueue<>("1", "2", "3", "4", "5",
                 "6", "7", "8", "9", "10");
-        StdOut.println("Constructor & has next: " +  randomizedQueue2);
+//        StdOut.println("Constructor & has next: " +  randomizedQueue2);
         StdOut.println("randomizedQueue2.size(): " + randomizedQueue2.size());
 
         StdOut.println("Enqueue after (initialize with initial values) test");
         randomizedQueue2.enqueue("11");
-        StdOut.println("Constructor & has next: " +  randomizedQueue2);
+//        StdOut.println("Constructor & has next: " +  randomizedQueue2);
         StdOut.println("randomizedQueue2.size(): " + randomizedQueue2.size());
         StdOut.println("####Test 2 End####");
 

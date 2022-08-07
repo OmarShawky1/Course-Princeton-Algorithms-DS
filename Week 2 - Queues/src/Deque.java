@@ -28,23 +28,19 @@ public class Deque<Item> implements Iterable {
 
     // return the number of items on the deque
     public int size() {
-//        StdOut.println("I am size()"); //TODO remove it
         int counter = 0;
         Iterator<Item> iterator = iterator();
         boolean hasNext = iterator.hasNext();
-//        StdOut.println("size(): before while, hasNext: " + hasNext); //TODO remove it
         while (hasNext) {
             counter++;
             iterator.next();
             hasNext = iterator.hasNext();
-//            StdOut.println("size(): After while, hasNext: " + hasNext); //TODO remove it
         }
         return counter;
     }
 
     // add the item to the front
     public void addFirst(Item item) {
-//        StdOut.println("I am addFirst()"); //TODO remove it
         itemValid(item);
 
         // Initialize a node that has nothing before it (null) and old first after it.
@@ -52,24 +48,18 @@ public class Deque<Item> implements Iterable {
 
         // If list contains items, make current first.previous point to newNode & make it first
         if (!isEmpty()) {
-//            StdOut.println("addFirst(): !isEmpty(): newNode.item is " + newNode.item); //TODO remove it
             first.previous = newNode;
-//            StdOut.println("addFirst(): !isEmpty(): first.previous.item is " + first.previous.item); //TODO remove it
             first = first.previous;
-//            StdOut.println("addFirst(): !isEmpty(): first.item is " + first.item); //TODO remove it
-
         //If list is empty, then first & last nodes should point to the new node
         } else {
             first = newNode;
             last = newNode;
-//            StdOut.println("addFirst(): else: first: " + first + " ,last: " + last); //TODO remove it
         }
 
     }
 
     // add the item to the back
     public void addLast(Item item) {
-//        StdOut.println("I am addLast()"); //TODO remove it
         itemValid(item);
 
         // Initialize a node that has old last before it and nothing after it.
@@ -77,17 +67,12 @@ public class Deque<Item> implements Iterable {
 
         // Initialize a node that has (last) before it and nothing after it (null).
         if (!isEmpty()) {
-//            StdOut.println("addLast(): !isEmpty(): newNode.item is " + newNode.item); //TODO remove it
             last.next = newNode;
-//            StdOut.println("addLast(): !isEmpty(): first.previous.item is " + last.next.item); //TODO remove it
             last = last.next;
-//            StdOut.println("addLast(): !isEmpty(): first.item is " + last.item); //TODO remove it
-
             //If list is empty, then first & last nodes should point to the new node
         } else {
             first = newNode;
             last = newNode;
-//            StdOut.println("addLast(): else: first: " + first + " ,last: " + last); //TODO remove it
         }
     }
 
@@ -135,24 +120,20 @@ public class Deque<Item> implements Iterable {
         }
     }
 
-    //TODO: to be removed, this is just for testing purposes to ensure enqueuing is correct
-    public String toString() {
-//        StdOut.println("I am toString()"); //TODO remove it
+/*    public String toString() {
         StringBuilder listToString = new StringBuilder("[");
         Iterator<Item> iterator = iterator();
         boolean hasNext = iterator.hasNext();
-//        StdOut.println("toString: hasNext before the while: " + hasNext); //TODO remove it
         while (hasNext) {
             listToString.append(iterator.next());
             hasNext = iterator.hasNext();
-//            StdOut.println("toString: hasNext after the while: " + hasNext); //TODO remove it
             if (hasNext) {
                 listToString.append(", ");
             }
         }
         listToString.append("]");
         return listToString.toString();
-    }
+    }*/
 
     //Private Class Node, It contains Next, Previous & Data (because it is double ended)
     private class Node {
@@ -171,7 +152,6 @@ public class Deque<Item> implements Iterable {
         private Node current = first;
 
         public boolean hasNext() {
-//            StdOut.println("hasNext(): current.item:" + current.item + " & return is: " + (current.next != null)); //TODO remove it
             return current != null;
         }
 
@@ -227,9 +207,7 @@ public class Deque<Item> implements Iterable {
 
         StdOut.println("\"Add()\" Test Cases");
         for (int i = 1; i <= 10; i++) {
-//            StdOut.println("I am going to add " + i); //Todo remove it
             list.addLast(Integer.toString(i));
-//            StdOut.println("list after addition: " + list); //Todo remove it
         }
         StdOut.println("list has only [1,2,3,4,5,6,7,8,9,10]: " + list);
         StdOut.println();
