@@ -33,27 +33,13 @@ public class Deque<Item> implements Iterable<Item> {
 
     // is the deque empty?
     public boolean isEmpty() {
-        return first == null; // can be size == 0
+        return size == 0;
     }
 
     // return the number of items on the deque
     public int size() {
         return size;
     }
-
-    /*
-    public int size() {
-        int counter = 0;
-        Iterator<Item> iterator = iterator();
-        boolean hasNext = iterator.hasNext();
-        while (hasNext) {
-            counter++;
-            iterator.next();
-            hasNext = iterator.hasNext();
-        }
-        return counter;
-    }
-    */
 
     // add the item to the front
     public void addFirst(Item item) {
@@ -101,12 +87,12 @@ public class Deque<Item> implements Iterable<Item> {
 
         Item firstItem = first.item;
         first = first.next;
+        size--;
 
-        // if list became empty (first == null)
+        // if list became empty // (first == null)
         if (isEmpty()) {
             last = first;
         }
-        size--;
         return firstItem;
     }
 
@@ -118,12 +104,12 @@ public class Deque<Item> implements Iterable<Item> {
 
         Item lastData = last.item;
         last = last.previous;
+        size--;
 
         // if list became empty (last == null)
-        if (last == null) {
+        if (isEmpty()) {
             first = last;
         }
-        size--;
         return lastData;
     }
     // return an iterator over items in order from front to back
@@ -231,7 +217,7 @@ public class Deque<Item> implements Iterable<Item> {
             StdOut.println(e);
         }
 
-        StdOut.println("list.removeLast() is error: ");
+        StdOut.print("list.removeLast() is error: ");
         try {
             StdOut.println(list.removeLast());
         } catch (NoSuchElementException e) {
