@@ -1,7 +1,6 @@
 import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.StdRandom;
 
-import java.util.Arrays; //TODO to be removed
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -67,7 +66,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     // return an independent iterator over items in random order
     public Iterator<Item> iterator() {
         // Cloning array that will be shuffled
-        Item[] shuffledItems = (Item[]) new Object[queue.length];
+        Item[] shuffledItems = (Item[]) new Object[numOfItems];
         int pointer = -1;
         for (Item item : queue) {
             if (item != null) {
@@ -76,10 +75,15 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
                 break;
             }
         }
-        StdOut.println("queue.length: " + queue.length);
-        StdOut.println("Shuffled array before shuffling: " + Arrays.toString(shuffledItems));
+
         StdRandom.shuffle(shuffledItems);
-        StdOut.println("Shuffled array: " + Arrays.toString(shuffledItems));
+        Item[] tempItems = (Item[]) new Object[queue.length];
+        pointer = -1;
+        for (Item item : shuffledItems) {
+            tempItems[++pointer] = item;
+        }
+
+        shuffledItems = tempItems;
         return new ListIterator(shuffledItems);
     }
 
