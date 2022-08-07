@@ -151,17 +151,23 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
             throw new IllegalArgumentException("I was called with to add/remove null");
         }
     }
-/*
 
+    // Although this is not a required function to implement but it is necessary for debugging
     public String toString() {
-        String temp = "";
-        for (Item item : queue) {
-            temp = temp + item + ",";
+        StringBuilder listToString = new StringBuilder("[");
+        Iterator<Item> iterator = iterator();
+        boolean hasNext = iterator.hasNext();
+        while (hasNext) {
+            listToString.append(iterator.next());
+            hasNext = iterator.hasNext();
+            if (hasNext) {
+                listToString.append(", ");
+            }
         }
-        return "[" + temp + "]";
+        listToString.append("]");
+        return listToString.toString();
     }
 
-*/
     public static void main(String[] args) {
         StdOut.println("###############RandomizedQueue Tests###############");
 

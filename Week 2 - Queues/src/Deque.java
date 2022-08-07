@@ -132,14 +132,8 @@ public class Deque<Item> implements Iterable<Item> {
         }
     }
     */
-
-    /*
-    private boolean checkListEmpty() {
-        return first == null;
-    }
-    */
-
-    /**/ //TODO recomment me
+    
+    // Although this is not a required function to implement but it is necessary for debugging
     public String toString() {
         StringBuilder listToString = new StringBuilder("[");
         Iterator<Item> iterator = iterator();
@@ -154,7 +148,6 @@ public class Deque<Item> implements Iterable<Item> {
         listToString.append("]");
         return listToString.toString();
     }
-    /**/
 
     // Private Class Node, It contains Next, Previous & Data (because it is double ended)
     private class Node {
