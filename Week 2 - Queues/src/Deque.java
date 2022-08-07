@@ -10,8 +10,7 @@ public class Deque<Item> implements Iterable<Item> {
     private int size;
 
     // construct deque with initial values
-/*
-
+    /*
     public Deque(Item ... items) {
         // Initialize first & last pointers to null nodes
         first = null;
@@ -22,8 +21,8 @@ public class Deque<Item> implements Iterable<Item> {
             addLast(item);
         }
     }
+    */
 
-*/
     public Deque() {
         // Initialize first & last pointers to null nodes
         first = null;
@@ -92,6 +91,8 @@ public class Deque<Item> implements Iterable<Item> {
         // if list became empty // (first == null)
         if (isEmpty()) {
             last = first;
+        } else {
+            first.previous = null;
         }
         return firstItem;
     }
@@ -109,6 +110,8 @@ public class Deque<Item> implements Iterable<Item> {
         // if list became empty (last == null)
         if (isEmpty()) {
             first = last;
+        } else {
+            last.next = null;
         }
         return lastData;
     }
@@ -188,7 +191,7 @@ public class Deque<Item> implements Iterable<Item> {
     public static void main(String[] args) {
 
         StdOut.println("###############Dequeue Tests###############");
-
+        /*
         StdOut.println("##########My Own Test Cases##########");
 
         StdOut.println("####Test 1####");
@@ -253,7 +256,7 @@ public class Deque<Item> implements Iterable<Item> {
 
         StdOut.println();
         StdOut.println();
-
+        */
         /*
         StdOut.println("####Test 2####");
         StdOut.println("Initialize Double ended LinkedList with initial values");
@@ -277,5 +280,13 @@ public class Deque<Item> implements Iterable<Item> {
         StdOut.println("removeLast test");
         deque.removeLast();
         StdOut.println("deque: " + deque);
+        StdOut.println("####Test 1 End####");
+
+        StdOut.println();
+
+        StdOut.println("####Test 2 Start####");
+        deque = new Deque<>();
+        deque.addFirst(1);
+        deque.removeFirst();
     }
 }
