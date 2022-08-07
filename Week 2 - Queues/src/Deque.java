@@ -7,6 +7,7 @@ public class Deque<Item> implements Iterable<Item> {
     // Global Variables
     private Node first;
     private Node last;
+    private int size;
 
     // construct deque with initial values
 /*
@@ -27,6 +28,7 @@ public class Deque<Item> implements Iterable<Item> {
         // Initialize first & last pointers to null nodes
         first = null;
         last = first;
+        size = 0;
     }
 
     // is the deque empty?
@@ -35,6 +37,11 @@ public class Deque<Item> implements Iterable<Item> {
     }
 
     // return the number of items on the deque
+    public int size() {
+        return size;
+    }
+    
+    /*
     public int size() {
         int counter = 0;
         Iterator<Item> iterator = iterator();
@@ -46,6 +53,7 @@ public class Deque<Item> implements Iterable<Item> {
         }
         return counter;
     }
+    */
 
     // add the item to the front
     public void addFirst(Item item) {
@@ -63,7 +71,7 @@ public class Deque<Item> implements Iterable<Item> {
             first = newNode;
             last = newNode;
         }
-
+        size++;
     }
 
     // add the item to the back
@@ -82,6 +90,7 @@ public class Deque<Item> implements Iterable<Item> {
             first = newNode;
             last = newNode;
         }
+        size++;
     }
 
     // remove and return the item from the front
@@ -97,6 +106,7 @@ public class Deque<Item> implements Iterable<Item> {
         if (isEmpty()) {
             last = first;
         }
+        size--;
         return firstItem;
     }
 
@@ -113,6 +123,7 @@ public class Deque<Item> implements Iterable<Item> {
         if (last.item == null) {
             first = last;
         }
+        size--;
         return lastData;
     }
     // return an iterator over items in order from front to back
@@ -127,7 +138,7 @@ public class Deque<Item> implements Iterable<Item> {
         }
     }
 
-    // Check if list, that is being operated, is empty
+    // Check if list (that is being operated) is empty
     /*
     private void checkListEmpty() {
         if (first == null) {
