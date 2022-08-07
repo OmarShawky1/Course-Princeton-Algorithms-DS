@@ -47,7 +47,9 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         Object[] node = this.returnRandomNode();
         int randomNumber = (int) node[0];
         Item item = (Item) node[1];
-        queue[randomNumber] = null;
+
+        // Replace last non-null value (if possible) with the recently dequeued value
+        queue[randomNumber] = queue[numOfItems - 1];
         numOfItems--;
         resize();
         return item;
@@ -92,13 +94,16 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
             throw new NoSuchElementException("I was called to remove first/last on an empty list");
         }
 
+        /*
         Item item;
         int randomNumber;
         do {
             randomNumber = StdRandom.uniform(numOfItems);
             item = queue[randomNumber];
         } while (item == null);
-
+         */
+        int randomNumber = StdRandom.uniform(numOfItems);
+        Item item = queue[randomNumber];
         return new Object[]{randomNumber, item};
     }
 
@@ -145,7 +150,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
     public static void main(String[] args) {
         StdOut.println("###############RandomizedQueue Tests###############");
-        /*
+
         StdOut.println("##########My Own Test Cases##########");
 
         StdOut.println("####Test 1####");
@@ -211,10 +216,10 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         StdOut.println("####Test 1 End####");
 
         StdOut.println();
-         */
+
 
         StdOut.println();
-        /*
+
         StdOut.println("##########Online Grader Tests Cases##########"); // All that failed only
 
         StdOut.println("####Test 1####");
@@ -272,6 +277,6 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         queue.enqueue(26);
         StdOut.println("queue: " + queue);
         StdOut.println("####Test 3 End####");
-        */
+
     }
 }
