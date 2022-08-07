@@ -2,15 +2,16 @@ import edu.princeton.cs.algs4.StdOut;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class Deque<Item> implements Iterable {
+public class Deque<Item> implements Iterable<Item> {
 
-    //Global Variables
+    // Global Variables
     private Node first;
     private Node last;
 
     // construct deque with initial values
-    public Deque(Item ... items) {
+/*
 
+    public Deque(Item ... items) {
         // Initialize first & last pointers to null nodes
         first = null;
         last = first;
@@ -19,6 +20,13 @@ public class Deque<Item> implements Iterable {
         for (Item item : items) {
             addLast(item);
         }
+    }
+
+*/
+    public Deque() {
+        // Initialize first & last pointers to null nodes
+        first = null;
+        last = first;
     }
 
     // is the deque empty?
@@ -50,7 +58,7 @@ public class Deque<Item> implements Iterable {
         if (!isEmpty()) {
             first.previous = newNode;
             first = first.previous;
-        //If list is empty, then first & last nodes should point to the new node
+        // If list is empty, then first & last nodes should point to the new node
         } else {
             first = newNode;
             last = newNode;
@@ -69,7 +77,7 @@ public class Deque<Item> implements Iterable {
         if (!isEmpty()) {
             last.next = newNode;
             last = last.next;
-            //If list is empty, then first & last nodes should point to the new node
+            // If list is empty, then first & last nodes should point to the new node
         } else {
             first = newNode;
             last = newNode;
@@ -78,12 +86,15 @@ public class Deque<Item> implements Iterable {
 
     // remove and return the item from the front
     public Item removeFirst() {
-        checkListEmpty();
+        if (checkListEmpty()) {
+            throw new NoSuchElementException("I was called to remove first/last on an empty list");
+        }
+
         Item firstItem = first.item;
         first = first.next;
 
-        //if list became empty (first.item = null)
-        if (isEmpty()){
+        // if list became empty (first.item = null)
+        if (isEmpty()) {
             last = first;
         }
         return firstItem;
@@ -91,11 +102,14 @@ public class Deque<Item> implements Iterable {
 
     // remove and return the item from the back
     public Item removeLast() {
-        checkListEmpty();
+        if (checkListEmpty()) {
+            throw new NoSuchElementException("I was called to remove first/last on an empty list");
+        }
+
         Item lastData = last.item;
         last = last.previous;
 
-        //if list became empty (last.item = null)
+        // if list became empty (last.item = null)
         if (last.item == null) {
             first = last;
         }
@@ -114,13 +128,19 @@ public class Deque<Item> implements Iterable {
     }
 
     // Check if list, that is being operated, is empty
+    /*
     private void checkListEmpty() {
         if (first == null) {
             throw new NoSuchElementException("I was called to remove first/last on an empty list");
         }
     }
+    */
+    private boolean checkListEmpty() {
+        return first == null;
+    }
 
-/*    public String toString() {
+    /*
+    public String toString() {
         StringBuilder listToString = new StringBuilder("[");
         Iterator<Item> iterator = iterator();
         boolean hasNext = iterator.hasNext();
@@ -133,13 +153,14 @@ public class Deque<Item> implements Iterable {
         }
         listToString.append("]");
         return listToString.toString();
-    }*/
+    }
+    */
 
-    //Private Class Node, It contains Next, Previous & Data (because it is double ended)
+    // Private Class Node, It contains Next, Previous & Data (because it is double ended)
     private class Node {
         private Node next;
         private Node previous;
-        private Item item;
+        private final Item item;
         public Node(Node previous, Node next, Item item) {
             this.previous = previous;
             this.next = next;
@@ -156,7 +177,10 @@ public class Deque<Item> implements Iterable {
         }
 
         public Item next() {
-            checkListEmpty();
+            if (checkListEmpty()) {
+                throw new NoSuchElementException("I was called to remove first/last on an empty list");
+            }
+
             Item item = current.item;
             current = current.next;
             return item;
@@ -237,6 +261,7 @@ public class Deque<Item> implements Iterable {
         StdOut.println();
         StdOut.println();
 
+        /*
         StdOut.println("####Test 2####");
         StdOut.println("Initialize Double ended LinkedList with initial values");
         Deque<String> deque = new Deque<>("1", "2", "3", "4", "5", "6", "7", "8", "9", "10");
@@ -246,5 +271,6 @@ public class Deque<Item> implements Iterable {
 
         StdOut.println("##########End of my Tests##########");
         StdOut.println();
+        */
     }
 }

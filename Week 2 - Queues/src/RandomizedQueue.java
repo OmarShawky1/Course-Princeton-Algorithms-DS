@@ -5,17 +5,18 @@ import java.util.NoSuchElementException;
 
 public class RandomizedQueue<Item> implements Iterable<Item> {
 
-    //Global Variables
+    // Global Variables
 
-    //Array object used for storing the enqueued & dequeued items
+    // Array object used for storing the enqueued & dequeued items
+    private static final int FIRST = 0; // first non/null item in array queue, always 0
+
     private Item[] queue;
-    private int numOfItems; //Number of items in an array
-    private int lastIndex; //last non-null item in array queue
-
-    private final int FIRST = 0; //first non/null item in array queue, always 0
+    private int numOfItems; // Number of items in an array
+    private int lastIndex; // last non-null item in array queue
 
 
     // construct an empty randomized queue
+/*
     public RandomizedQueue(Item... items) {
         int itemsLength = items.length == 0 ? 1 : items.length;
         queue = (Item[]) new Object[itemsLength];
@@ -25,6 +26,13 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         for (Item item : items) {
             enqueue(item);
         }
+    }
+*/
+    public RandomizedQueue() {
+        int itemsLength = 2;
+        queue = (Item[]) new Object[itemsLength];
+        numOfItems = 0;
+        lastIndex = -1;
     }
 
     // is the randomized queue empty?
@@ -41,7 +49,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     public void enqueue(Item item) {
         itemValid(item);
 
-        //check if there is available remaining space before enqueuing
+        // check if there is available remaining space before enqueuing
         queue[++lastIndex] = item;
         numOfItems++;
         resize();
@@ -77,8 +85,11 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         }
 
         public Item next() {
-            checkArrayEmpty();
-            Item item = (Item) queue[current];
+            if (checkArrayEmpty()) {
+                throw new NoSuchElementException("I was called to remove first/last on an empty list");
+            }
+
+            Item item = queue[current];
             current++;
             return item;
         }
@@ -88,9 +99,12 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         }
     }
 
-    //Returns encapsulated node in an object array where first item is index and second is value
+    // Returns encapsulated node in an object array where first item is index and second is value
     private Object[] returnRandomNode() {
-        checkArrayEmpty();
+        if (checkArrayEmpty()) {
+            throw new NoSuchElementException("I was called to remove first/last on an empty list");
+        }
+
         Item item;
         int randomNumber;
         do {
@@ -105,11 +119,11 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         return StdRandom.uniform(numOfItems);
     }
 
-    private void checkArrayEmpty() {
+    private boolean checkArrayEmpty() {
         for (Item item : queue) {
-            if (item != null) return;
+            if (item != null) return false;
         }
-        throw new NoSuchElementException("I was called to remove first/last on an empty list");
+        return true;
     }
 
     private void resize() {
@@ -125,8 +139,6 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         Item[] newArr = (Item[]) new Object[newSize];
         int pointer = -1;
         for (Item item : queue) {
-//            StdOut.println("pointer+1: " + (pointer+1));
-//            StdOut.println("newSize: " + newSize);
             if (item != null) newArr[++pointer] = item;
         }
         queue = newArr;
@@ -139,15 +151,17 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
             throw new IllegalArgumentException("I was called with to add/remove null");
         }
     }
+/*
 
-/*    public String toString() {
+    public String toString() {
         String temp = "";
         for (Item item : queue) {
             temp = temp + item + ",";
         }
         return "[" + temp + "]";
-    }*/
+    }
 
+*/
     public static void main(String[] args) {
         StdOut.println("###############RandomizedQueue Tests###############");
 
@@ -175,7 +189,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         StdOut.println("enqueuing null item:");
         try {
             randomizedQueue.enqueue(null);
-        } catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             StdOut.println(e);
         }
 
@@ -209,20 +223,22 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         StdOut.println();
         StdOut.println();
 
+        /*
         StdOut.println("####Test 2####");
         StdOut.println("Initialize RandomizedQueue Array List with initial values");
         RandomizedQueue<String> randomizedQueue2 = new RandomizedQueue<>("1", "2", "3", "4", "5",
                 "6", "7", "8", "9", "10");
-//        StdOut.println("Constructor & has next: " +  randomizedQueue2);
+        StdOut.println("Constructor & has next: " +  randomizedQueue2);
         StdOut.println("randomizedQueue2.size(): " + randomizedQueue2.size());
 
         StdOut.println("Enqueue after (initialize with initial values) test");
         randomizedQueue2.enqueue("11");
-//        StdOut.println("Constructor & has next: " +  randomizedQueue2);
+        StdOut.println("Constructor & has next: " +  randomizedQueue2);
         StdOut.println("randomizedQueue2.size(): " + randomizedQueue2.size());
         StdOut.println("####Test 2 End####");
 
         StdOut.println("##########End of my Tests##########");
         StdOut.println();
+        */
     }
 }

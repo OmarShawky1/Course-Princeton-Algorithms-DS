@@ -4,7 +4,7 @@ import edu.princeton.cs.algs4.StdOut;
 public class Permutation {
 
     public static void main(String[] args) {
-        //Check that there is only 2 arguments
+        // Check that there is only 2 arguments
         if (args.length == 0) {
             StdOut.println("Insufficient Arguments");
             return;
@@ -14,9 +14,11 @@ public class Permutation {
         RandomizedQueue<String> randomizedQueue = new RandomizedQueue<>();
 
         // Consume input fed to the environmental variables instead of stream
-        /*for (int i = 1; i< args.length; i++){
+        /*
+        for (int i = 1; i< args.length; i++){
          randomizedQueue.enqueue(args[i]);
-        }*/
+        }
+        */
 
         while (!StdIn.isEmpty()) {
             randomizedQueue.enqueue(StdIn.readString());
