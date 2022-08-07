@@ -70,22 +70,16 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     private class ListIterator implements Iterator<Item> {
 
         private int current = FIRST;
-        private final Item[] items;
+        private final int[] shuffledOrder; // Used to store unordered set from 0 till numOfItems
 
         public ListIterator() {
             // Cloning array that will be shuffled
-            Item[] shuffledItems = (Item[]) new Object[numOfItems];
-            int pointer = -1;
-            for (Item item : queue) {
-                if (item != null) {
-                    shuffledItems[++pointer] = item;
-                } else {
-                    break;
-                }
+            shuffledOrder = new int[numOfItems];
+            for (int i = 0; i < numOfItems; i++) {
+                shuffledOrder[i] = i;
             }
 
-            StdRandom.shuffle(shuffledItems);
-            items = shuffledItems;
+            StdRandom.shuffle(shuffledOrder);
         }
 
         public boolean hasNext() {
@@ -97,7 +91,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
                 throw new NoSuchElementException("I was called to remove first/last on an empty list");
             }
 
-            Item item = items[current];
+            Item item = queue[shuffledOrder[current]];
             current++;
             return item;
         }
@@ -113,14 +107,6 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
             throw new NoSuchElementException("I was called to remove first/last on an empty list");
         }
 
-        /*
-        Item item;
-        int randomNumber;
-        do {
-            randomNumber = StdRandom.uniform(numOfItems);
-            item = queue[randomNumber];
-        } while (item == null);
-         */
         int randomNumber = StdRandom.uniform(numOfItems);
         Item item = queue[randomNumber];
         return new Object[]{randomNumber, item};
