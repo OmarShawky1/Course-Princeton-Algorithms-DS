@@ -1,4 +1,3 @@
-import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.StdRandom;
 
 import java.util.Iterator;
@@ -65,26 +64,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
     // return an independent iterator over items in random order
     public Iterator<Item> iterator() {
-        // Cloning array that will be shuffled
-        Item[] shuffledItems = (Item[]) new Object[numOfItems];
-        int pointer = -1;
-        for (Item item : queue) {
-            if (item != null) {
-                shuffledItems[++pointer] = item;
-            } else {
-                break;
-            }
-        }
-
-        StdRandom.shuffle(shuffledItems);
-        Item[] tempItems = (Item[]) new Object[queue.length];
-        pointer = -1;
-        for (Item item : shuffledItems) {
-            tempItems[++pointer] = item;
-        }
-
-        shuffledItems = tempItems;
-        return new ListIterator(shuffledItems);
+        return new ListIterator();
     }
 
     private class ListIterator implements Iterator<Item> {
@@ -92,8 +72,20 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         private int current = FIRST;
         private final Item[] items;
 
-        public ListIterator(Item[] items) {
-            this.items = items;
+        public ListIterator() {
+            // Cloning array that will be shuffled
+            Item[] shuffledItems = (Item[]) new Object[numOfItems];
+            int pointer = -1;
+            for (Item item : queue) {
+                if (item != null) {
+                    shuffledItems[++pointer] = item;
+                } else {
+                    break;
+                }
+            }
+
+            StdRandom.shuffle(shuffledItems);
+            items = shuffledItems;
         }
 
         public boolean hasNext() {
@@ -163,6 +155,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         }
     }
 
+    /* If you want to use toString or check tests in main, revert this commit 99/100
     // Although this is not a required function to implement, but it is necessary for debugging
     public String toString() {
         StringBuilder listToString = new StringBuilder("[");
@@ -178,8 +171,10 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         listToString.append("]");
         return listToString.toString();
     }
+     */
 
     public static void main(String[] args) {
+        /*
         StdOut.println("###############RandomizedQueue Tests###############");
 
         StdOut.println("##########My Own Test Cases##########");
@@ -337,5 +332,6 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         Iterator<Integer> iterator = queue.iterator();
         StdOut.println("queue.iterator(): " + iterator.next() + ", " + iterator.next());
         StdOut.println("####Test 4 End####");
+         */
     }
 }
