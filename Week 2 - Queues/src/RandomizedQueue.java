@@ -81,11 +81,11 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         private int current = FIRST;
 
         public boolean hasNext() {
-            return queue[current] != null;
+            return current <= lastIndex;
         }
 
         public Item next() {
-            if (checkArrayEmpty()) {
+            if (!hasNext()) {
                 throw new NoSuchElementException("I was called to remove first/last on an empty list");
             }
 
@@ -101,29 +101,18 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
     // Returns encapsulated node in an object array where first item is index and second is value
     private Object[] returnRandomNode() {
-        if (checkArrayEmpty()) {
+        if (isEmpty()) {
             throw new NoSuchElementException("I was called to remove first/last on an empty list");
         }
 
         Item item;
         int randomNumber;
         do {
-            randomNumber = this.genRandIndexNumber();
-            item = (Item) queue[randomNumber];
+            randomNumber = StdRandom.uniform(numOfItems);
+            item = queue[randomNumber];
         } while (item == null);
 
         return new Object[] {randomNumber, item};
-    }
-
-    private int genRandIndexNumber() {
-        return StdRandom.uniform(numOfItems);
-    }
-
-    private boolean checkArrayEmpty() {
-        for (Item item : queue) {
-            if (item != null) return false;
-        }
-        return true;
     }
 
     private void resize() {
@@ -209,12 +198,21 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         for (int i = 1; i <= 10; i++) {
             randomizedQueue.enqueue(Integer.toString(i));
         }
-//        StdOut.println("randomizedQueue has only [1,2,3,4,5,6,7,8,9,10]: " + randomizedQueue);
+        StdOut.println("randomizedQueue has only [1,2,3,4,5,6,7,8,9,10]: " + randomizedQueue);
         StdOut.println();
 
-        StdOut.println("\"Dequeue()\" Test Cases");
+        StdOut.println("\"sample()\" Test Cases");
+        for (int i = 1; i <= 10; i++) {
+            StdOut.print(randomizedQueue.sample());
+            StdOut.print(", ");
+        }
+        StdOut.println();
+        StdOut.println("randomizedQueue has only [1,2,3,4,5,6,7,8,9,10]: " + randomizedQueue);
+        StdOut.println();
+
+        StdOut.println("\"dequeue()\" Test Cases");
         randomizedQueue.dequeue();
-//        StdOut.println("randomizedQueue has removed one item " + randomizedQueue);
+        StdOut.println("randomizedQueue has removed one item " + randomizedQueue);
         StdOut.println();
 
         StdOut.print("Trying to remove using iterator().remove(): ");
