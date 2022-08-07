@@ -1,5 +1,6 @@
 import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.StdRandom;
+
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -9,6 +10,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
     // Array object used for storing the enqueued & dequeued items
     private static final int FIRST = 0; // first non/null item in array queue, always 0
+    private static final int BASE_SIZE = 2;
 
     private Item[] queue;
     private int numOfItems; // Number of items in an array
@@ -16,7 +18,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
 
     // construct an empty randomized queue
-/*
+    /*
     public RandomizedQueue(Item... items) {
         int itemsLength = items.length == 0 ? 1 : items.length;
         queue = (Item[]) new Object[itemsLength];
@@ -27,10 +29,10 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
             enqueue(item);
         }
     }
-*/
+    */
+
     public RandomizedQueue() {
-        int itemsLength = 2;
-        queue = (Item[]) new Object[itemsLength];
+        queue = (Item[]) new Object[BASE_SIZE];
         numOfItems = 0;
         lastIndex = -1;
     }
@@ -50,6 +52,12 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         itemValid(item);
 
         // check if there is available remaining space before enqueuing
+        /*
+        if (lastIndex >= queue.length - 1) {
+            resize();
+        }
+         */
+        // Increment index & add to it
         queue[++lastIndex] = item;
         numOfItems++;
         resize();
@@ -112,14 +120,15 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
             item = queue[randomNumber];
         } while (item == null);
 
-        return new Object[] {randomNumber, item};
+        return new Object[]{randomNumber, item};
     }
 
     private void resize() {
-        if (numOfItems == queue.length) {
+        if (numOfItems == 0 && lastIndex == queue.length - 1) {
+            cloneToArrayOfSize(BASE_SIZE);
+        } else if (numOfItems == queue.length) {
             cloneToArrayOfSize(numOfItems * 2);
-
-        } else if (numOfItems <= queue.length / 4) {
+        } else if (numOfItems <= queue.length / 4 && queue.length > 3) { // or queue.length != Base
             cloneToArrayOfSize(numOfItems * 2);
         }
     }
@@ -141,7 +150,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         }
     }
 
-    // Although this is not a required function to implement but it is necessary for debugging
+    // Although this is not a required function to implement, but it is necessary for debugging
     public String toString() {
         StringBuilder listToString = new StringBuilder("[");
         Iterator<Item> iterator = iterator();
@@ -165,7 +174,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         StdOut.println("####Test 1####");
         StdOut.println("Initialize an empty RandomizedQueue");
         RandomizedQueue<String> randomizedQueue = new RandomizedQueue<>();
-//        StdOut.println("Constructor & hasNext: " +  randomizedQueue);
+        StdOut.println("Constructor & hasNext: " + randomizedQueue);
         StdOut.println("randomizedQueue.size() is zero: " + (randomizedQueue.size() == 0));
         StdOut.println("randomizedQueue.isEmpty() is true: " + randomizedQueue.isEmpty());
 
@@ -244,5 +253,45 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         StdOut.println("##########End of my Tests##########");
         StdOut.println();
         */
+        StdOut.println();
+
+        StdOut.println("##########Online Grader Tests Cases##########"); // All that failed only
+
+        StdOut.println("####Test 1####");
+        RandomizedQueue<Integer> queue = new RandomizedQueue<>();
+        StdOut.println("queue.size(): " + queue.size());
+        StdOut.println("will enqueue 18");
+        queue.enqueue(18);
+        StdOut.println("queue: " + queue);
+        StdOut.println("queue.dequeue() is 18? " + (queue.dequeue() == 18));
+        StdOut.println("is queue.size() 0? " + (queue.size() == 0));
+        StdOut.println("will enqueue 47");
+        queue.enqueue(47);
+        StdOut.println("####Test 1 End####");
+
+        StdOut.println();
+
+        StdOut.println("####Test 2####");
+        queue = new RandomizedQueue<>();
+        StdOut.println("Will enqueue 6 & 8");
+        queue.enqueue(6);
+        queue.enqueue(8);
+        StdOut.println("queue: " + queue);
+        StdOut.println("Size supposed to be 2, true? " + (queue.size() == 2));
+        StdOut.println("queue.isEmpty() is false?" + (!queue.isEmpty()));
+        StdOut.println("Will enqueue 24");
+        queue.enqueue(24);
+        StdOut.println("queue: " + queue);
+        StdOut.println("queue.isEmpty() is false?" + (!queue.isEmpty()));
+        StdOut.println("Will enqueue 6");
+        queue.enqueue(6);
+        StdOut.println("queue: " + queue);
+        StdOut.println("queue.dequeue(): " + queue.dequeue());
+        StdOut.println("queue.size(): " + queue.size());
+        StdOut.println("Will enqueue 6");
+        queue.enqueue(46);
+        StdOut.println("queue: " + queue);
+        StdOut.println("####Test 2 End####");
+
     }
 }
