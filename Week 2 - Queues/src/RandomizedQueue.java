@@ -18,19 +18,6 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
 
     // construct an empty randomized queue
-    /*
-    public RandomizedQueue(Item... items) {
-        int itemsLength = items.length == 0 ? 1 : items.length;
-        queue = (Item[]) new Object[itemsLength];
-        numOfItems = 0;
-        lastIndex = -1;
-
-        for (Item item : items) {
-            enqueue(item);
-        }
-    }
-    */
-
     public RandomizedQueue() {
         queue = (Item[]) new Object[BASE_SIZE];
         numOfItems = 0;
@@ -50,10 +37,6 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     // add the item
     public void enqueue(Item item) {
         itemValid(item);
-
-        // check if there is available remaining space before enqueuing
-//        StdOut.print("I am enqueue, numOfItems: " + numOfItems + ", queue.length: " + queue.length);
-//        StdOut.println(", lastIndex: " + lastIndex);
         queue[++lastIndex] = item;
         numOfItems++;
         resize();
@@ -228,26 +211,8 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         StdOut.println("####Test 1 End####");
 
         StdOut.println();
-        StdOut.println();
          */
 
-        /*
-        StdOut.println("####Test 2####");
-        StdOut.println("Initialize RandomizedQueue Array List with initial values");
-        RandomizedQueue<String> randomizedQueue2 = new RandomizedQueue<>("1", "2", "3", "4", "5",
-                "6", "7", "8", "9", "10");
-        StdOut.println("Constructor & has next: " +  randomizedQueue2);
-        StdOut.println("randomizedQueue2.size(): " + randomizedQueue2.size());
-
-        StdOut.println("Enqueue after (initialize with initial values) test");
-        randomizedQueue2.enqueue("11");
-        StdOut.println("Constructor & has next: " +  randomizedQueue2);
-        StdOut.println("randomizedQueue2.size(): " + randomizedQueue2.size());
-        StdOut.println("####Test 2 End####");
-
-        StdOut.println("##########End of my Tests##########");
-        StdOut.println();
-        */
         StdOut.println();
         /*
         StdOut.println("##########Online Grader Tests Cases##########"); // All that failed only
