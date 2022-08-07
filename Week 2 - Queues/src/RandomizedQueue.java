@@ -52,12 +52,8 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         itemValid(item);
 
         // check if there is available remaining space before enqueuing
-        /*
-        if (lastIndex >= queue.length - 1) {
-            resize();
-        }
-         */
-        // Increment index & add to it
+//        StdOut.print("I am enqueue, numOfItems: " + numOfItems + ", queue.length: " + queue.length);
+//        StdOut.println(", lastIndex: " + lastIndex);
         queue[++lastIndex] = item;
         numOfItems++;
         resize();
@@ -124,11 +120,18 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     }
 
     private void resize() {
+        /*
         if (numOfItems == 0 && lastIndex == queue.length - 1) {
             cloneToArrayOfSize(BASE_SIZE);
         } else if (numOfItems == queue.length) {
             cloneToArrayOfSize(numOfItems * 2);
         } else if (numOfItems <= queue.length / 4 && queue.length > 3) { // or queue.length != Base
+            cloneToArrayOfSize(numOfItems * 2);
+        }
+         */
+        if (lastIndex == queue.length - 1) {
+            cloneToArrayOfSize(numOfItems * 2);
+        } else if (numOfItems <= queue.length / 4 && queue.length > 3) {
             cloneToArrayOfSize(numOfItems * 2);
         }
     }
@@ -190,7 +193,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
             StdOut.println(e);
         }
 
-        StdOut.println("enqueuing null item:");
+        StdOut.print("enqueuing null item:");
         try {
             randomizedQueue.enqueue(null);
         } catch (IllegalArgumentException e) {
@@ -277,21 +280,41 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         queue.enqueue(6);
         queue.enqueue(8);
         StdOut.println("queue: " + queue);
-        StdOut.println("Size supposed to be 2, true? " + (queue.size() == 2));
-        StdOut.println("queue.isEmpty() is false?" + (!queue.isEmpty()));
+        StdOut.println("Size == 2? " + (queue.size() == 2));
+        StdOut.println("queue.isEmpty() is false? " + (!queue.isEmpty()));
         StdOut.println("Will enqueue 24");
         queue.enqueue(24);
         StdOut.println("queue: " + queue);
-        StdOut.println("queue.isEmpty() is false?" + (!queue.isEmpty()));
+        StdOut.println("queue.isEmpty() is false? " + (!queue.isEmpty()));
         StdOut.println("Will enqueue 6");
         queue.enqueue(6);
         StdOut.println("queue: " + queue);
         StdOut.println("queue.dequeue(): " + queue.dequeue());
         StdOut.println("queue.size(): " + queue.size());
-        StdOut.println("Will enqueue 6");
+        StdOut.println("Will enqueue 46");
         queue.enqueue(46);
         StdOut.println("queue: " + queue);
         StdOut.println("####Test 2 End####");
+
+        StdOut.println();
+
+        StdOut.println("####Test 3####");
+        queue = new RandomizedQueue<>();
+        StdOut.println("I will enqueue 46,44,42,48");
+        queue.enqueue(46);
+        queue.enqueue(44);
+        queue.enqueue(42);
+        queue.enqueue(48);
+        StdOut.println("queue.dequeue(): " + queue.dequeue());
+        StdOut.println("queue: " + queue);
+        StdOut.println("I will enqueue 32,25,43,9,26");
+        queue.enqueue(32);
+        queue.enqueue(25);
+        queue.enqueue(43);
+        queue.enqueue(9);
+        queue.enqueue(26);
+        StdOut.println("queue: " + queue);
+        StdOut.println("####Test 3 End####");
 
     }
 }
