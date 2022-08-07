@@ -10,5 +10,6 @@ Grade: 100/100
 
 # Queues
 
-The goal of this assignment is to implement elementary data structures using arrays and linked lists, and to introduce you to generics and iterators.
+The goal of this assignment is to implement elementary data structures using arrays and linked lists, and to introduce usage of generics and iterators. The Assignment emphasizes the apparingly-similar yet different implementation and outcomes from implementing Stacks (LIFO) and Queues (FIFO). In general, the fastest depends on the usage, if nothing is going to crumble if the DS suddenly lagged (amortized time) then Using Arrays is the most suitable solution. If a stream must be maintained without any delay in inputing from stream, then LinkedList ensures such desire.
 
+![Deques and Randomized Queues](./Grades/DequesandRandomizedQueues.png)
