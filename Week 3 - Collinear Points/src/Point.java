@@ -221,6 +221,6 @@ public class Point implements Comparable<Point> {
                 "ΔP = 1 but p01.slopeTo(p10): " + p01.slopeTo(p10);
 
         // Testing Comparator Class (SlopeOrder)
-        // TODO!!
+        // Untested; To be tested in any sorting class instead of here.
     }
 }
