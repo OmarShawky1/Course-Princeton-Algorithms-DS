@@ -59,7 +59,17 @@ public class Point implements Comparable<Point> {
      * @return the slope between this point and the specified point
      */
     public double slopeTo(Point that) {
-        /* YOUR CODE HERE */
+        int deltaY = that.y - y;
+        int deltaX = that.x - x;
+
+        if (deltaX == 0) {
+            if (deltaY == 0) {
+                return Double.NEGATIVE_INFINITY;
+            }
+            return Double.POSITIVE_INFINITY;
+        }
+
+        return (double) deltaY/deltaX;
     }
 
     /**
@@ -75,7 +85,17 @@ public class Point implements Comparable<Point> {
      *         argument point
      */
     public int compareTo(Point that) {
-        /* YOUR CODE HERE */
+        // P0 is less than P1, return -1
+        if (y <= that.y && x < that.x)  {
+            return -1;
+        }
+
+        // P0 is more than P1; return 1
+        if (y > that.y && x > that.x) {
+            return 1;
+        }
+
+        return 0; // They are equal (no need to test for that)
     }
 
     /**
@@ -91,7 +111,7 @@ public class Point implements Comparable<Point> {
 
     /**
      * Returns a string representation of this point.
-     * This method is provide for debugging;
+     * This method is provided for debugging;
      * your program should not rely on the format of the string representation.
      *
      * @return a string representation of this point
