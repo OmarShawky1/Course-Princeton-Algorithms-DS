@@ -36,27 +36,29 @@ public class BruteCollinearPoints {
 
     private static void sort(Point[] points, Point[] aux, int lo, int hi) {
         if (lo >= hi) return;
-        sort(points, aux, lo, hi / 2);
-        sort(points, aux, hi / 2 + 1, hi);
-        merge(points, aux, lo, (hi - 1) / 2, hi);
+        int mid = (hi - lo) / 2;
+        sort(points, aux, lo, mid);
+        sort(points, aux, mid + 1, hi);
+        merge(points, aux, lo, mid, hi);
     }
 
     private static void merge(Point[] points, Point[] aux, int lo, int mid, int hi) {
+        // Merge should not occur for an unsorted arrays
         assert isSorted(points, lo, hi / 2);
         assert isSorted(points, hi / 2 + 1, hi);
 
         for (int i = 0; i < points.length; i++) aux[i] = points[i]; // Copying Array
 
         // int i, j = 0; // Might cause checkstyle error, to be checked later
-        int i = 0;
-        int j = 0;
-        for (int k = 0; k < points.length; k++) { // Merging two halves of aux into points
-            if (i >= mid) points[k] = aux[j++]; // Append remaining right half cuz left is empty
-            else if (j >= hi) points[k] = aux[i++]; // Append remaining left half cuz right is empty
+        int i = 0; // Pointer to the right half of the array
+        int j = 0; // Pointer to the left half of the array
+        for (int k = 0; k < points.length; k++) { // Merging two halves of aux into points array
+            if (i >= mid) points[k] = aux[j++]; // Append remaining right half as left is empty
+            else if (j >= hi) points[k] = aux[i++]; // Append remaining left half as right is empty
             else if (less(aux[i], aux[j])) points[k] = aux[i++];
             else points[k] = aux[j++];
         }
-
+        // Checking that sorting works
         assert isSorted(points, lo, hi);
     }
 
