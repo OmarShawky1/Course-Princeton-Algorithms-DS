@@ -1,9 +1,24 @@
 public class BruteCollinearPoints {
 
+    // Global Variables
+    int numberOfSegments;
+
     // finds all line segments containing 4 points
     public BruteCollinearPoints(Point[] points) {
         if (!validPoints(points)) throw new IllegalArgumentException("Called constructor with " +
                 "either a null array, null point or a repeated point");
+        numberOfSegments = 0;
+    }
+
+    // the number of line segments
+    public int numberOfSegments() {
+        return numberOfSegments;
+    }
+
+    // the line segments
+    public LineSegment[] segments() {
+        // TODO
+        return new LineSegment[0];
     }
 
     private boolean validPoints(Point[] points) {
@@ -13,14 +28,14 @@ public class BruteCollinearPoints {
         }
 
         // Return false if a point is null
-        for (Point p: points) {
+        for (Point p : points) {
             if (p == null) return false;
         }
 
         // Return false if a point is repeated (Algo: Insertion sort)
-        for (int i=0; i<points.length; i++){
+        for (int i = 0; i < points.length; i++) {
             Point tempPoint = points[i];
-            for (int j=i+1; j< points.length; j++){
+            for (int j = i + 1; j < points.length; j++) {
                 if (tempPoint == points[j]) return false;
             }
         }
@@ -28,16 +43,16 @@ public class BruteCollinearPoints {
         /* Decision List
          1. First sort them stably via Top-bottom Merge; This will cost ~NlgN (Better than N^2/2
          in selection sort)
-            a. That is correct but then you will need to visit the entire array again which costs N
+            a. That is correct, but then you will need to visit the entire array again which costs N
          2. He does not want me to implement mergesort as per colleagues
         */
         /* Code Implementation of old validation
         // First, Sort (mergesort)
-        // TODO!!
+        // !!
         sort(points, new Point[points.length], 0, points.length - 1);
 
         // Second search in merged result
-        // TODO!!
+        // !!
          */
         return true;
     }
@@ -81,18 +96,6 @@ public class BruteCollinearPoints {
         return true;
     }
      */
-
-    // the number of line segments
-    public int numberOfSegments() {
-        // TODO
-        return 0;
-    }
-
-    // the line segments
-    public LineSegment[] segments() {
-        // TODO
-        return new LineSegment[0];
-    }
 
     public static void main(String[] args) {
 
