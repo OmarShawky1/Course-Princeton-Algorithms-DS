@@ -1,12 +1,15 @@
 public class BruteCollinearPoints {
 
     // Global Variables
-    int numberOfSegments;
+    private int numberOfSegments;
+    private Point[] points;
+    private LineSegment[] lineSegments;
 
     // finds all line segments containing 4 points
     public BruteCollinearPoints(Point[] points) {
         if (!validPoints(points)) throw new IllegalArgumentException("Called constructor with " +
                 "either a null array, null point or a repeated point");
+        this.points = points;
         numberOfSegments = 0;
     }
 
@@ -17,8 +20,7 @@ public class BruteCollinearPoints {
 
     // the line segments
     public LineSegment[] segments() {
-        // TODO
-        return new LineSegment[0];
+        return lineSegments;
     }
 
     private boolean validPoints(Point[] points) {
