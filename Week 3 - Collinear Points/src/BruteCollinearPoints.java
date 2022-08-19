@@ -1,3 +1,5 @@
+import edu.princeton.cs.algs4.StdOut;
+
 public class BruteCollinearPoints {
 
     // Global Variables
@@ -11,6 +13,38 @@ public class BruteCollinearPoints {
                 "either a null array, null point or a repeated point");
         this.points = points;
         numberOfSegments = 0;
+
+        // Didn't check that input is >= 4; It might blow
+        for (int i = 0; i < points.length - 1; i++) {
+            Point pointI = points[i];
+            for (int j = i + 1; j < points.length - 1; j++) {
+                Point pointJ = points[j];
+                for (int k = j + 1; k < points.length - 1; k++) {
+                    Point pointK = points[k];
+                    if (pointI.slopeTo(pointJ) == pointJ.slopeTo(pointK)) { //Two lines, same slope
+                        for (int l = k + 1; l < points.length - 1; l++) {
+                            Point pointL = points[l];
+                            if (pointK.slopeTo(pointL) == pointJ.slopeTo(pointL)) {
+                                if (lineSegments.length <= numberOfSegments + 1) {
+                                    cloneArray();
+                                }
+                                lineSegments[numberOfSegments++] = new LineSegment(pointI, pointL);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private void cloneArray() {
+        LineSegment[] tempLines = lineSegments.length == 0 ? new LineSegment[2] :
+                new LineSegment[2 * numberOfSegments]; // Initializing Array
+
+        for (int i = 0; i < numberOfSegments; i++) {
+            tempLines[i] = lineSegments[i];
+        }
+        lineSegments = tempLines;
     }
 
     // the number of line segments
@@ -100,6 +134,18 @@ public class BruteCollinearPoints {
      */
 
     public static void main(String[] args) {
+        StdOut.println("###############RandomizedQueue Tests###############");
 
+        StdOut.println("##########My Own Test Cases##########");
+
+        StdOut.println("####Test 1####");
+        int n = 4;
+        Point[] points1 = new Point[n];
+        for (int i=0; i<n; i++){
+            points1[i] = new Point(i,i);
+        }
+
+        BruteCollinearPoints bruteCollinearPoints = new BruteCollinearPoints(points1);
+        assert (bruteCollinearPoints.numberOfSegments() == n): "LineSegment is not working";
     }
 }
