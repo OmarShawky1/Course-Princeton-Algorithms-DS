@@ -9,23 +9,28 @@ public class BruteCollinearPoints {
 
     // finds all line segments containing 4 points
     public BruteCollinearPoints(Point[] points) {
-        if (!validPoints(points)) throw new IllegalArgumentException("Called constructor with " +
-                "either a null array, null point or a repeated point");
+        if (!validPoints(points)) throw new IllegalArgumentException();
         this.points = points;
         numberOfSegments = 0;
 
         // Didn't check that input is >= 4; It might blow
-        for (int i = 0; i < points.length - 1; i++) {
+        for (int i = 0; i < points.length; i++) {
             Point pointI = points[i];
-            for (int j = i + 1; j < points.length - 1; j++) {
+//            StdOut.println("I am loop i: " + i); // TODO: remove it
+            for (int j = i + 1; j < points.length; j++) {
                 Point pointJ = points[j];
-                for (int k = j + 1; k < points.length - 1; k++) {
+//                StdOut.println("I am loop j: " + j); // TODO: remove it
+                for (int k = j + 1; k < points.length; k++) {
                     Point pointK = points[k];
+//                    StdOut.println("I am loop k: " + k); // TODO: remove it
+//                    StdOut.println("pointI.slopeTo(pointJ) == pointJ.slopeTo(pointK): " + (pointI.slopeTo(pointJ) == pointJ.slopeTo(pointK))); // TODO: remove it
                     if (pointI.slopeTo(pointJ) == pointJ.slopeTo(pointK)) { //Two lines, same slope
-                        for (int l = k + 1; l < points.length - 1; l++) {
+                        for (int l = k + 1; l < points.length; l++) {
+//                            StdOut.println("I am loop l: " + l); // TODO: remove it
                             Point pointL = points[l];
+//                            StdOut.println("pointK.slopeTo(pointL) == pointJ.slopeTo(pointL)" + (pointK.slopeTo(pointL) == pointJ.slopeTo(pointL))); // TODO: remove it
                             if (pointK.slopeTo(pointL) == pointJ.slopeTo(pointL)) {
-                                if (lineSegments.length <= numberOfSegments + 1) {
+                                if (lineSegments == null || lineSegments.length <= numberOfSegments + 1) {
                                     cloneArray();
                                 }
                                 lineSegments[numberOfSegments++] = new LineSegment(pointI, pointL);
@@ -38,8 +43,8 @@ public class BruteCollinearPoints {
     }
 
     private void cloneArray() {
-        LineSegment[] tempLines = lineSegments.length == 0 ? new LineSegment[2] :
-                new LineSegment[2 * numberOfSegments]; // Initializing Array
+        LineSegment[] tempLines = lineSegments == null ? new LineSegment[1] :
+                new LineSegment[numberOfSegments + 1]; // Initializing Array
 
         for (int i = 0; i < numberOfSegments; i++) {
             tempLines[i] = lineSegments[i];
@@ -72,66 +77,11 @@ public class BruteCollinearPoints {
         for (int i = 0; i < points.length; i++) {
             Point tempPoint = points[i];
             for (int j = i + 1; j < points.length; j++) {
-                if (tempPoint == points[j]) return false;
+                if (tempPoint.compareTo(points[j]) == 0) return false;
             }
         }
-
-        /* Decision List
-         1. First sort them stably via Top-bottom Merge; This will cost ~NlgN (Better than N^2/2
-         in selection sort)
-            a. That is correct, but then you will need to visit the entire array again which costs N
-         2. He does not want me to implement mergesort as per colleagues
-        */
-        /* Code Implementation of old validation
-        // First, Sort (mergesort)
-        // !!
-        sort(points, new Point[points.length], 0, points.length - 1);
-
-        // Second search in merged result
-        // !!
-         */
         return true;
     }
-
-    /*
-    private static void sort(Point[] points, Point[] aux, int lo, int hi) {
-        if (lo >= hi) return;
-        int mid = (hi - lo) / 2;
-        sort(points, aux, lo, mid);
-        sort(points, aux, mid + 1, hi);
-        merge(points, aux, lo, mid, hi);
-    }
-
-    private static void merge(Point[] points, Point[] aux, int lo, int mid, int hi) {
-        // Merge should not occur for an unsorted arrays
-        assert isSorted(points, lo, hi / 2);
-        assert isSorted(points, hi / 2 + 1, hi);
-
-        for (int k = lo; k < hi; k++) aux[k] = points[k]; // Copying Array
-
-        // int i, j = 0; // Might cause checkstyle error, to be checked later
-        int i = 0; // Pointer to the right half of the array
-        int j = 0; // Pointer to the left half of the array
-        for (int k = 0; k < hi; k++) { // Merging two halves of aux into points array
-            if (i >= mid) points[k] = aux[j++]; // Append remaining right half as left is empty
-            else if (j >= hi) points[k] = aux[i++]; // Append remaining left half as right is empty
-            else if (less(aux[i], aux[j])) points[k] = aux[i++];
-            else points[k] = aux[j++];
-        }
-        // Checking that sorting works
-        assert isSorted(points, lo, hi);
-    }
-
-    private static boolean less(Point aux, Point aux1) {
-        // !!
-        return true;
-    }
-
-    private static boolean isSorted(Point[] points, int lo, int hi) {
-        // !!
-        return true;
-    }
-     */
 
     public static void main(String[] args) {
         StdOut.println("###############RandomizedQueue Tests###############");
@@ -139,13 +89,49 @@ public class BruteCollinearPoints {
         StdOut.println("##########My Own Test Cases##########");
 
         StdOut.println("####Test 1####");
+
+
+        StdOut.println("####Initializing a correct Input####");
+        // Initializing with points (1,1) till (4,4)
         int n = 4;
         Point[] points1 = new Point[n];
-        for (int i=0; i<n; i++){
-            points1[i] = new Point(i,i);
+        for (int i = 0; i < n; i++) {
+            points1[i] = new Point(i, i);
         }
 
-        BruteCollinearPoints bruteCollinearPoints = new BruteCollinearPoints(points1);
-        assert (bruteCollinearPoints.numberOfSegments() == n): "LineSegment is not working";
+        //Testing if the line segment worked
+        BruteCollinearPoints br = new BruteCollinearPoints(points1);
+        assert (br.numberOfSegments() == 1): "Constructor Failed to connect points";
+
+
+        StdOut.println("####End of correct Input Test####");
+
+        StdOut.println();
+
+        StdOut.println("####Error Test Cases####");
+        // Trying to put a null input to constructor
+        try {
+            br = new BruteCollinearPoints(null);
+        } catch (IllegalArgumentException e) {
+            StdOut.println("Null Input exception test succeeded");
+        }
+
+        // Trying to put an array that has a null point
+        Point[] points2 = new Point[2];
+        points2[0] = points1[0];
+        try {
+            br = new BruteCollinearPoints(points2);
+        } catch (IllegalArgumentException e) {
+            StdOut.println("Null point input exception test succeeded");
+        }
+
+        //Trying to put a repeated point
+        points1[2] = new Point(1,1);
+        try {
+            br = new BruteCollinearPoints(points1);
+        } catch (IllegalArgumentException e) {
+            StdOut.println("Repeated points exception test succeeded");
+        }
+        StdOut.println("####End of Error Test Cases####");
     }
 }
