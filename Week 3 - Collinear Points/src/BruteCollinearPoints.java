@@ -1,6 +1,7 @@
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdDraw;
 import edu.princeton.cs.algs4.StdOut;
+
 public class BruteCollinearPoints {
 
     // Global Variables
@@ -11,8 +12,9 @@ public class BruteCollinearPoints {
     // finds all line segments containing 4 points
     public BruteCollinearPoints(Point[] points) {
         if (invalidPoints(points)) throw new IllegalArgumentException();
-        this.points = points;
+        this.points = points.clone(); // Cloning to refrain from being mutable (spotbugs)
         numberOfSegments = 0;
+        lineSegments = new LineSegment[0];
 
         // Didn't check that input is >= 4; It might blow
         for (int i = 0; i < points.length; i++) {
@@ -38,8 +40,8 @@ public class BruteCollinearPoints {
     }
 
     private void cloneArray() {
-        LineSegment[] tempLines = lineSegments == null ?
-                new LineSegment[1] : new LineSegment[numberOfSegments + 1];
+        LineSegment[] tempLines =
+                lineSegments == null ? new LineSegment[1] : new LineSegment[numberOfSegments + 1];
 
         for (int i = 0; i < numberOfSegments; i++) {
             tempLines[i] = lineSegments[i];
@@ -49,12 +51,12 @@ public class BruteCollinearPoints {
 
     // the number of line segments
     public int numberOfSegments() {
-        return numberOfSegments;
+        return numberOfSegments; // Passing by reference, should've created local int but not imp.
     }
 
     // the line segments
     public LineSegment[] segments() {
-        return lineSegments;
+        return lineSegments.clone(); // Cloning to refrain from mutability (spotbugs)
     }
 
     private boolean invalidPoints(Point[] points) {
@@ -110,7 +112,7 @@ public class BruteCollinearPoints {
         StdOut.println("####Error Test Cases####");
         // Trying to put a null input to constructor
         try {
-            br = new BruteCollinearPoints(null);
+            new BruteCollinearPoints(null);
         } catch (IllegalArgumentException e) {
             StdOut.println("Null Input exception test succeeded");
         }
@@ -119,7 +121,7 @@ public class BruteCollinearPoints {
         Point[] points2 = new Point[2];
         points2[0] = points1[0];
         try {
-            br = new BruteCollinearPoints(points2);
+            new BruteCollinearPoints(points2);
         } catch (IllegalArgumentException e) {
             StdOut.println("Null point input exception test succeeded");
         }
@@ -127,7 +129,7 @@ public class BruteCollinearPoints {
         //Trying to put a repeated point
         points1[2] = new Point(1, 1);
         try {
-            br = new BruteCollinearPoints(points1);
+            new BruteCollinearPoints(points1);
         } catch (IllegalArgumentException e) {
             StdOut.println("Repeated points exception test succeeded");
         }
@@ -157,7 +159,6 @@ public class BruteCollinearPoints {
 
         // print and draw the line segments
         BruteCollinearPoints collinear = new BruteCollinearPoints(points);
-        // Doomed to throw nullPExc if no segms. Didn't solve it because it is a supplied code.
         for (LineSegment segment : collinear.segments()) {
             segment.draw();
         }
