@@ -88,12 +88,13 @@ public class Point implements Comparable<Point> {
      */
     public int compareTo(Point that) {
         // P0 is less than P1, return -1
-        if (y <= that.y && x < that.x) {
+        if (y < that.y || (y == that.y && x < that.x)) {
             return -1;
         }
 
         // P0 is more than P1; return 1
-        if (y > that.y && x > that.x) {
+        if (y > that.y || (y == that.y && x > that.x)) {
+            StdOut.println("y: " + y + "; that.y: " + that.y + "; x: " + x + "; that.x: " + that.x);
             return 1;
         }
 
@@ -169,10 +170,10 @@ public class Point implements Comparable<Point> {
 
 
         // Vertical points/lines (00 --> 01) && (10 --> 11)
-        assert (p00.compareTo(p01) == 0) :
+        assert (p00.compareTo(p01) == -1) :
                 "p00 = p01 but p00.compareTo(p01): " + p00.compareTo(p01);
 
-        assert (p10.compareTo(p11) == 0) :
+        assert (p10.compareTo(p11) == -1) :
                 "p10 = p11 but p01.compareTo(p11): " + p10.compareTo(p11);
 
         assert (p00.slopeTo(p01) == Double.POSITIVE_INFINITY) :
@@ -214,7 +215,7 @@ public class Point implements Comparable<Point> {
                 "ΔP = 1 but p11.slopeTo(p22): " + p11.slopeTo(p22);
 
         // Decreasing slope (01 --> 10)
-        assert (p01.compareTo(p10) == 0) :
+        assert (p01.compareTo(p10) == 1) :
                 "p01 = p10 but p01.compareTo(p10): " + p01.compareTo(p10);
 
         assert (p01.slopeTo(p10) == -1) :
