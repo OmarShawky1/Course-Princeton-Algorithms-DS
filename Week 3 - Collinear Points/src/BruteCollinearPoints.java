@@ -27,7 +27,7 @@ public class BruteCollinearPoints {
                         for (int l = k + 1; l < points.length; l++) {
                             Point pointL = points[l];
                             if (pointK.slopeTo(pointL) == pointJ.slopeTo(pointL)) {
-                                if (lineSegments == null || lineSegments.length <= numberOfSegments + 1) {
+                                if (lineSegments.length <= numberOfSegments + 1) {
                                     cloneArray();
                                 }
                                 lineSegments[numberOfSegments++] = new LineSegment(pointI, pointL);
