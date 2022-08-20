@@ -1,9 +1,6 @@
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdDraw;
 import edu.princeton.cs.algs4.StdOut;
-
-import java.util.Arrays; // TODO: remove it
-
 public class BruteCollinearPoints {
 
     // Global Variables
@@ -13,7 +10,6 @@ public class BruteCollinearPoints {
 
     // finds all line segments containing 4 points
     public BruteCollinearPoints(Point[] points) {
-        StdOut.println("Constructor received Point[]: " + Arrays.toString(points)); // TODO: remove it
         if (invalidPoints(points)) throw new IllegalArgumentException();
         this.points = points;
         numberOfSegments = 0;
@@ -63,18 +59,13 @@ public class BruteCollinearPoints {
 
     private boolean invalidPoints(Point[] points) {
         // Return true if array is null
-        StdOut.println("I received Point[]: " + Arrays.toString(points));
         if (points == null) {
-            StdOut.println("Invalid points because it is null; Points[]:" + Arrays.toString(points)); // TODO: remove it
             return true;
         }
 
         // Return true if a point is null
         for (Point p : points) {
-//            StdOut.println("p is:" + p + " & (p == " +
-//                    "null): " + (p == null)); // TODO: remove it
             if (p == null) {
-                StdOut.println("I will return true from single point in points"); // TODO: remove it
                 return true;
             }
         }
@@ -84,8 +75,6 @@ public class BruteCollinearPoints {
             Point tempPoint = points[i];
             for (int j = i + 1; j < points.length; j++) {
                 if (tempPoint.compareTo(points[j]) == 0) {
-                    StdOut.println("Invalid points because repeated; points[" + i + "]: " + tempPoint +
-                            "; points[" + j + "]: " + points[j]); // TODO: remove it
                     return true;
                 }
             }
@@ -147,18 +136,16 @@ public class BruteCollinearPoints {
         StdOut.println();
 
 
-        StdOut.println("####Assignment Instructor Testing method####"); // TODO: remove it
+        StdOut.println("####Assignment Instructor Testing method####");
         // read the n points from a file
         In in = new In(args[0]);
         int n = in.readInt();
-        StdOut.println("main() read in.readInt(): " + n); // TODO: remove it
         Point[] points = new Point[n];
         for (int i = 0; i < n; i++) {
             int x = in.readInt();
             int y = in.readInt();
             points[i] = new Point(x, y);
         }
-        StdOut.println("main() created points: " + Arrays.toString(points)); // TODO: remove it
         // draw the points
         StdDraw.enableDoubleBuffering();
         StdDraw.setXscale(0, 32768);
@@ -170,10 +157,8 @@ public class BruteCollinearPoints {
 
         // print and draw the line segments
         BruteCollinearPoints collinear = new BruteCollinearPoints(points);
-        StdOut.println("collinear.numberOfSegments(): " + collinear.numberOfSegments()); // TODO: remove it
         // Doomed to throw nullPExc if no segms. Didn't solve it because it is a supplied code.
         for (LineSegment segment : collinear.segments()) {
-            StdOut.println(segment); // TODO: remove it
             segment.draw();
         }
         StdDraw.show();
