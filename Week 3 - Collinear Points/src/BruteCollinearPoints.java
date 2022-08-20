@@ -41,7 +41,8 @@ public class BruteCollinearPoints {
 
     private void cloneArray() {
         LineSegment[] tempLines =
-                lineSegments == null ? new LineSegment[1] : new LineSegment[numberOfSegments + 1];
+                lineSegments.length == 0 ? new LineSegment[2] :
+                        new LineSegment[numberOfSegments * 2];
 
         for (int i = 0; i < numberOfSegments; i++) {
             tempLines[i] = lineSegments[i];
@@ -56,7 +57,11 @@ public class BruteCollinearPoints {
 
     // the line segments
     public LineSegment[] segments() {
-        return lineSegments.clone(); // Cloning to refrain from mutability (spotbugs)
+        LineSegment[] temp = new LineSegment[numberOfSegments];
+        for (int i = 0; i < numberOfSegments; i++) {
+            temp[i] = lineSegments[i];
+        }
+        return temp;
     }
 
     private boolean invalidPoints(Point[] points) {
