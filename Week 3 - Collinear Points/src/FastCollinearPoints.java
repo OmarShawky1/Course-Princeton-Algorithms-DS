@@ -82,7 +82,11 @@ public class FastCollinearPoints {
 
     // the line segments
     public LineSegment[] segments() {
-        return lineSegments.clone(); // Cloning to refrain from mutability (spotbugs)
+        LineSegment[] temp = new LineSegment[numberOfSegments];
+        for (int i = 0; i < numberOfSegments; i++) {
+            temp[i] = lineSegments[i];
+        }
+        return temp;
     }
 
     private boolean invalidPoints(Point[] points) {
@@ -124,7 +128,7 @@ public class FastCollinearPoints {
     }
 
     public static void main(String[] args) {
-
+        /*
         StdOut.println("###############FastCollinearPoints Tests###############");
 
         StdOut.println("##########My Own Test Cases##########");
@@ -177,7 +181,7 @@ public class FastCollinearPoints {
 
         StdOut.println();
 
-        /*
+        */
         StdOut.println("####Assignment Instructor Testing method####");
         // read the n points from a file
         In in = new In(args[0]);
@@ -205,6 +209,6 @@ public class FastCollinearPoints {
             segment.draw();
         }
         StdDraw.show();
-        */
+
     }
 }
