@@ -27,9 +27,7 @@ public class BruteCollinearPoints {
                         for (int l = k + 1; l < points.length; l++) {
                             Point pointL = points[l];
                             if (pointK.slopeTo(pointL) == pointJ.slopeTo(pointL)) {
-                                if (lineSegments.length <= numberOfSegments + 1) {
-                                    cloneArray();
-                                }
+                                resizeLineSegArray();
                                 lineSegments[numberOfSegments++] = new LineSegment(pointI, pointL);
                             }
                         }
@@ -39,15 +37,17 @@ public class BruteCollinearPoints {
         }
     }
 
-    private void cloneArray() {
-        LineSegment[] tempLines =
-                lineSegments.length == 0 ? new LineSegment[2] :
-                        new LineSegment[numberOfSegments * 2];
+    private void resizeLineSegArray() {
+        if (lineSegments.length <= numberOfSegments + 1) {
+            LineSegment[] tempLines =
+                    lineSegments.length == 0 ? new LineSegment[2] :
+                            new LineSegment[numberOfSegments * 2];
 
-        for (int i = 0; i < numberOfSegments; i++) {
-            tempLines[i] = lineSegments[i];
+            for (int i = 0; i < numberOfSegments; i++) {
+                tempLines[i] = lineSegments[i];
+            }
+            lineSegments = tempLines;
         }
-        lineSegments = tempLines;
     }
 
     // the number of line segments
@@ -90,7 +90,7 @@ public class BruteCollinearPoints {
     }
 
     public static void main(String[] args) {
-        StdOut.println("###############RandomizedQueue Tests###############");
+        StdOut.println("###############BruteCollinearPoints Tests###############");
 
         StdOut.println("##########My Own Test Cases##########");
 
@@ -141,7 +141,6 @@ public class BruteCollinearPoints {
         StdOut.println("####End of Error Test Cases####");
 
         StdOut.println();
-
 
         StdOut.println("####Assignment Instructor Testing method####");
         // read the n points from a file
