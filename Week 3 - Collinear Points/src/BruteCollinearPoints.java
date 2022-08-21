@@ -10,9 +10,9 @@ public class BruteCollinearPoints {
     private LineSegment[] lineSegments;
 
     // finds all line segments containing 4 points
-    public BruteCollinearPoints(Point[] points) {
-        if (invalidPoints(points)) throw new IllegalArgumentException();
-        this.points = points.clone(); // Cloning to refrain from being mutable (spotbugs)
+    public BruteCollinearPoints(Point[] pts) {
+        if (invalidPoints(pts)) throw new IllegalArgumentException();
+        this.points = pts.clone(); // Cloning to refrain from being mutable (spotbugs)
         numberOfSegments = 0;
         lineSegments = points.length >= 4 ? new LineSegment[points.length / 4] : new LineSegment[0];
 
