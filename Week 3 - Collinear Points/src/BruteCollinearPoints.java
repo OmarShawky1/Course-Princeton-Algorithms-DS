@@ -70,19 +70,19 @@ public class BruteCollinearPoints {
             return true;
         }
 
-        // Return true if a point is null
-        for (Point p : points) {
-            if (p == null) {
-                return true;
-            }
-        }
-
-        // Return true if a point is repeated (Algo: Insertion sort)
         for (int i = 0; i < points.length; i++) {
-            Point tempPoint = points[i];
-            for (int j = i + 1; j < points.length; j++) {
-                if (tempPoint.compareTo(points[j]) == 0) {
-                    return true;
+            Point pointI = points[i];
+
+            // Return true if a point is null
+            if (pointI == null) {
+                return true;
+            } else {
+                // Return true if a point is repeated (Algo: Insertion sort)
+                for (int j = i + 1; j < points.length; j++) {
+                    Point pointJ = points[j];
+                    if (pointJ == null || pointI.compareTo(pointJ) == 0) {
+                        return true;
+                    }
                 }
             }
         }
