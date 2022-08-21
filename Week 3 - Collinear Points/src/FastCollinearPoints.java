@@ -19,8 +19,9 @@ public class FastCollinearPoints {
         numberOfSegments = 0;
         lineSegments = new LineSegment[0];
 
-        Arrays.sort(points, points[0].slopeOrder()); // This is definitely wrong
+//        Arrays.sort(points, points[0].slopeOrder()); // This is definitely wrong
 
+        Arrays.sort(points);
         // Create a list that will remember the last collinear points
         LinkedList<Point> collPoints = new LinkedList<>();
 
@@ -45,7 +46,7 @@ public class FastCollinearPoints {
                 StdOut.println("Found 4 collinear points"); // TODO: remove line
                 // If there is already collinear points, then add current only.
                 StdOut.println("collPoints.size(): " + collPoints.size()); // TODO: remove line
-                if (collPoints.size() >= 4) {
+                if (collPoints.size() >= 4) { // Add the fifth point to the old 4 points
                     collPoints.add(point4);
                 } else { // Else add the 4 consecutive collinear points
                     collPoints.add(point1);
@@ -95,19 +96,19 @@ public class FastCollinearPoints {
             return true;
         }
 
-        // Return true if a point is null
-        for (Point p : points) {
-            if (p == null) {
-                return true;
-            }
-        }
-
-        // Return true if a point is repeated (Algo: Insertion sort)
         for (int i = 0; i < points.length; i++) {
-            Point tempPoint = points[i];
-            for (int j = i + 1; j < points.length; j++) {
-                if (tempPoint.compareTo(points[j]) == 0) {
-                    return true;
+            Point pointI = points[i];
+
+            // Return true if a point is null
+            if (pointI == null) {
+                return true;
+            } else {
+                // Return true if a point is repeated (Algo: Insertion sort)
+                for (int j = i + 1; j < points.length; j++) {
+                    Point pointJ = points[j];
+                    if (pointJ == null || pointI.compareTo(pointJ) == 0) {
+                        return true;
+                    }
                 }
             }
         }
@@ -209,6 +210,5 @@ public class FastCollinearPoints {
             segment.draw();
         }
         StdDraw.show();
-
     }
 }
