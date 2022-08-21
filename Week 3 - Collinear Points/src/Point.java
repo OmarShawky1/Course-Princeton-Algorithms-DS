@@ -93,8 +93,7 @@ public class Point implements Comparable<Point> {
         }
 
         // P0 is more than P1; return 1
-        if (y > that.y || (y == that.y && x > that.x)) {
-            StdOut.println("y: " + y + "; that.y: " + that.y + "; x: " + x + "; that.x: " + that.x);
+        if (y > that.y || x > that.x) {
             return 1;
         }
 
