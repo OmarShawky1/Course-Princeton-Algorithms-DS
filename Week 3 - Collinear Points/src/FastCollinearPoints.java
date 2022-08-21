@@ -34,9 +34,10 @@ public class FastCollinearPoints {
         double collSlope = Double.NaN;
 
         // Iterate over points itself from smallest to largest point
+        // for (Point origin : points) {
         for (int i = 0; i < points.length; i++) {
-            Point origin = points[i]; //AKA origin in HW
-
+            Point origin = points[i];
+            StdOut.println("origin is " + origin + " at index: " + i); // TODO: remove line
             // Detect collinear points
             /*
             Technique:
@@ -49,27 +50,31 @@ public class FastCollinearPoints {
              */
 
             Point[] pointsClone = points.clone();
+            StdOut.println("pointsClone Before sorting: " + Arrays.toString(pointsClone)); //TODO remove Line
             Arrays.sort(pointsClone, origin.slopeOrder());
-
-            for (int j = 0; j < points.length - 2; j++) {
-                Point p1 = points[j];
-                Point p2 = points[j + 1];
-                Point p3 = points[j + 2];
+            StdOut.println("pointsClone After sorting: " + Arrays.toString(pointsClone)); //TODO remove Line
+            for (int j = i + 1; j < pointsClone.length - 2; j++) {
+                Point p1 = pointsClone[j];
+                Point p2 = pointsClone[j + 1];
+                Point p3 = pointsClone[j + 2];
                 double tempSlope = origin.slopeTo(p3);
-
+                StdOut.println("tempSlope: " + tempSlope); // TODO: remove line
                 // If there is already 3 collinear points
                 if (!Double.isNaN(collSlope)) {
                     // check if this point is also on same line
                     if (collSlope == tempSlope) {
                         collPoints.add(p3);
+                        StdOut.println("collpoints stored " + collPoints.size() + " points"); // TODO: remove line
                     }
                     // Else, add collPoints to lineSegments[numsegm++]; Flush collPoints & collSlope
                     else {
+                        StdOut.println("I will add 4 points to Linesegment"); // TODO: remove line
                         // Adding
-                        StdOut.println("lineSegments.length: " + lineSegments.length +
-                                " ; numberOfSegments: " + numberOfSegments + " ; points.length: " + points.length);
+                        StdOut.println("Before Adding: lineSegments.length: " + lineSegments.length +
+                                " ; numberOfSegments: " + numberOfSegments + " ; points.length: " + pointsClone.length);
                         lineSegments[numberOfSegments++] =
                                 new LineSegment(origin, collPoints.peekLast());
+                        StdOut.println("After Adding: LineSegment: " + Arrays.toString(lineSegments)); // TODO: remove line
                         // Flushing
                         collPoints = new LinkedList<>();
                         collSlope = Double.NaN;
@@ -82,6 +87,7 @@ public class FastCollinearPoints {
                     collPoints.add(p2);
                     collPoints.add(p3);
                     collSlope = tempSlope;
+                    StdOut.println("collPoints stored 4 points"); // TODO: remove line
                 }
             }
         }
@@ -128,7 +134,7 @@ public class FastCollinearPoints {
 
         StdOut.println("####Initializing a correct Input####");
         // Initializing with points (1,1) till (4,4)
-        int num = 4;
+        int num = 5;
         Point[] points1 = new Point[num];
         for (int i = 0; i < num; i++) {
             points1[i] = new Point(i, i);
