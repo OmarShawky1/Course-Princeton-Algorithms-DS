@@ -19,6 +19,7 @@ public class FastCollinearPoints {
         numberOfSegments = 0;
         // Instead of resizing, maximum segments count is length/4 assuming all points make segment
         lineSegments = points.length >= 4 ? new LineSegment[points.length / 4] : new LineSegment[0];
+//        lineSegments = points.length >= 4 ? new LineSegment[points.length * points.length] : new LineSegment[0];
 
 
         Arrays.sort(points);
@@ -26,57 +27,63 @@ public class FastCollinearPoints {
 
         // Sorting by smallest to find repetition instead of insertion sort.
         // Sort points w.r.t the slope with origin where origin is each individual point in input
-        for (Point point : points) Arrays.sort(points, point.slopeOrder());
+        // for (Point point : points) Arrays.sort(points, point.slopeOrder());
 
         // Create a list that will remember the last collinear points
         LinkedList<Point> collPoints = new LinkedList<>();
+        double collSlope = Double.NaN;
 
-        // Check colliniarity of 4 points at a time
-        for (int i = 0; i < points.length - 3; i++) {
-            StdOut.println("In constructor at loop " + i); // TODO: remove line
+        // Iterate over points itself from smallest to largest point
+        for (int i = 0; i < points.length; i++) {
+            Point origin = points[i]; //AKA origin in HW
 
-            // Store the last 4 consecutive points that will be slope compared
-            Point point1 = points[i];
-            Point point2 = points[i + 1];
-            Point point3 = points[i + 2];
-            Point point4 = points[i + 3];
+            // Detect collinear points
+            /*
+            Technique:
+                1. Sort the Array by slope in pointsClone.
+                2. Begin a for loop
+                3. Try to detect 3 consecutive points having same slope.
+                3. If found, Store them in collPoints; Store their slope in collSlope.
+                4. Check if there is more points having the same slope as collSlope; Add if found.
+                5. If not found, Add collPoints to lineSegm[numsegm++]; Erase collSlope & collPoints
+             */
 
-            Double tempCompare = point1.slopeTo(point2); // To shorten the below line
-            StdOut.println("collPoints: " + collPoints); // TODO: remove line
-            StdOut.println("point1.slopeTo(point2): " + tempCompare); // TODO: remove line
-            StdOut.println("point2.slopeTo(point3): " + point2.slopeTo(point3)); // TODO: remove line
-            StdOut.println("point3.slopeTo(point4): " + point3.slopeTo(point4)); // TODO: remove line
-            // Check if we have 4 consecutive collinear points, if not, create line segment from
-            // the last remembered collinear points (if any)
-            if (tempCompare == point2.slopeTo(point3) && tempCompare == point3.slopeTo(point4)) {
-                StdOut.println("Found 4 collinear points"); // TODO: remove line
-                // If there is already collinear points, then add current only.
-                StdOut.println("collPoints.size() before ifs: " + collPoints.size()); // TODO: remove line
-                if (collPoints.size() >= 4) { // Add the fifth point to the old 4 points
-                    collPoints.add(point4);
-                } else { // Else add the 4 consecutive collinear points
-                    collPoints.add(point1);
-                    collPoints.add(point2);
-                    collPoints.add(point3);
-                    collPoints.add(point4);
-                    StdOut.println("collPoints after adding: " + collPoints); // TODO: remove line
+            Point[] pointsClone = points.clone();
+            Arrays.sort(pointsClone, origin.slopeOrder());
+
+            for (int j = 0; j < points.length - 2; j++) {
+                Point p1 = points[j];
+                Point p2 = points[j + 1];
+                Point p3 = points[j + 2];
+                double tempSlope = origin.slopeTo(p3);
+
+                // If there is already 3 collinear points
+                if (!Double.isNaN(collSlope)) {
+                    // check if this point is also on same line
+                    if (collSlope == tempSlope) {
+                        collPoints.add(p3);
+                    }
+                    // Else, add collPoints to lineSegments[numsegm++]; Flush collPoints & collSlope
+                    else {
+                        // Adding
+                        StdOut.println("lineSegments.length: " + lineSegments.length +
+                                " ; numberOfSegments: " + numberOfSegments + " ; points.length: " + points.length);
+                        lineSegments[numberOfSegments++] =
+                                new LineSegment(origin, collPoints.peekLast());
+                        // Flushing
+                        collPoints = new LinkedList<>();
+                        collSlope = Double.NaN;
+                    }
                 }
-            } else if (collPoints.size() >= 4) {
-                lineSegments[numberOfSegments++]
-                        = new LineSegment(collPoints.get(0), collPoints.get(collPoints.size() - 1));
-                StdOut.println("1) lineSegments: " + Arrays.toString(lineSegments)); // TODO: remove
-                // line
-                collPoints = new LinkedList<>();
-                StdOut.println("1) collPoints after cleaning: " + collPoints); // TODO: remove line
-            } // otherwise skip to next i
-        }
-        if (collPoints.size() >= 4) {
-            lineSegments[numberOfSegments++]
-                    = new LineSegment(collPoints.get(0), collPoints.get(collPoints.size() - 1));
-            StdOut.println("2) lineSegments: " + Arrays.toString(lineSegments)); // TODO: remove
-            // line
-            collPoints = new LinkedList<>();
-            StdOut.println("2) collPoints after cleaning: " + collPoints); // TODO: remove line
+                // If not, Check if the current points have same slope to origin.
+                else if ((tempSlope == origin.slopeTo(p2)) && (tempSlope == origin.slopeTo(p3))) {
+                    // Yes, then add them to CollPoints
+                    collPoints.add(p1);
+                    collPoints.add(p2);
+                    collPoints.add(p3);
+                    collSlope = tempSlope;
+                }
+            }
         }
     }
 
@@ -129,7 +136,9 @@ public class FastCollinearPoints {
 
         //Testing if the line segment worked
         FastCollinearPoints fcp = new FastCollinearPoints(points1);
-        assert (fcp.numberOfSegments() == 1) : "Constructor Failed to connect points";
+        assert (fcp.numberOfSegments() == 1) :
+                "Constructor Failed to connect points; it should've returned " +
+                        "fcp.numberOfSegments(): 1 but it returned " + fcp.numberOfSegments();
 
 
         StdOut.println("####End of correct Input Test####");
