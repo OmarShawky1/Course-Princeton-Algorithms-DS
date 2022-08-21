@@ -17,11 +17,27 @@ public class FastCollinearPoints {
         if (invalidPoints(points)) throw new IllegalArgumentException();
         this.points = points.clone(); // Cloning to refrain from being mutable (spotbugs)
         numberOfSegments = 0;
-        lineSegments = new LineSegment[0];
+        // Instead of resizing, maximum segments count is length/4 assuming all points make segment
+//        lineSegments = new LineSegment[points.length / 4];
+        lineSegments = points.length >= 4 ? new LineSegment[points.length / 4] : new LineSegment[0];
 
-//        Arrays.sort(points, points[0].slopeOrder()); // This is definitely wrong
+        /*
+        TODO:
+            1. Read the requirements in the assignment (Forgot to read them carefully).
+            1. Sort by smallest numbers & then sort by slope (stably).
+            2. The slope sort should be done per each entry for input "points" (not like what i did)
+         */
 
         Arrays.sort(points);
+        if (repeatedPoints(points)) throw new IllegalArgumentException();
+
+        /*
+        TODO: Fix following problems
+            1. Below line throws:
+             Exception in thread "main" java.lang.IllegalArgumentException: Comparison method violates its general contract!
+         */
+        Arrays.sort(points, points[0].slopeOrder());
+
         // Create a list that will remember the last collinear points
         LinkedList<Point> collPoints = new LinkedList<>();
 
@@ -56,7 +72,6 @@ public class FastCollinearPoints {
                     StdOut.println("collPoints after adding: " + collPoints); // TODO: remove line
                 }
             } else if (collPoints.size() >= 4) {
-                resizeLineSegArray();
                 lineSegments[numberOfSegments++]
                         = new LineSegment(collPoints.get(0), collPoints.get(collPoints.size() - 1));
                 StdOut.println("1) lineSegments: " + Arrays.toString(lineSegments)); // TODO: remove
@@ -66,7 +81,6 @@ public class FastCollinearPoints {
             } // otherwise skip to next i
         }
         if (collPoints.size() >= 4) {
-            resizeLineSegArray();
             lineSegments[numberOfSegments++]
                     = new LineSegment(collPoints.get(0), collPoints.get(collPoints.size() - 1));
             StdOut.println("2) lineSegments: " + Arrays.toString(lineSegments)); // TODO: remove
@@ -96,7 +110,8 @@ public class FastCollinearPoints {
             return true;
         }
 
-        for (int i = 0; i < points.length; i++) {
+        // TODO: To be removed, This is an old double for loop (O(n) ~~ N^2) but left just in case.
+        /*for (int i = 0; i < points.length; i++) {
             Point pointI = points[i];
 
             // Return true if a point is null
@@ -111,25 +126,21 @@ public class FastCollinearPoints {
                     }
                 }
             }
-        }
+        }*/
+
+        for (Point point : points) if (point == null) return true;
         return false;
     }
 
-    private void resizeLineSegArray() {
-        if (lineSegments.length <= numberOfSegments + 1) {
-            LineSegment[] tempLines =
-                    lineSegments.length == 0 ? new LineSegment[2] :
-                            new LineSegment[numberOfSegments * 2];
-
-            for (int i = 0; i < numberOfSegments; i++) {
-                tempLines[i] = lineSegments[i];
-            }
-            lineSegments = tempLines;
-        }
+    private boolean repeatedPoints(Point[] points) {
+        for (int i = 1; i < points.length; i++)
+            if (points[i - 1].compareTo(points[i]) == 0) return true;
+        return false;
     }
 
+
     public static void main(String[] args) {
-        /*
+
         StdOut.println("###############FastCollinearPoints Tests###############");
 
         StdOut.println("##########My Own Test Cases##########");
@@ -182,7 +193,7 @@ public class FastCollinearPoints {
 
         StdOut.println();
 
-        */
+
         StdOut.println("####Assignment Instructor Testing method####");
         // read the n points from a file
         In in = new In(args[0]);
@@ -210,5 +221,6 @@ public class FastCollinearPoints {
             segment.draw();
         }
         StdDraw.show();
+        StdOut.println("I'm Done");
     }
 }
