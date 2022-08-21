@@ -14,7 +14,7 @@ public class BruteCollinearPoints {
         if (invalidPoints(points)) throw new IllegalArgumentException();
         this.points = points.clone(); // Cloning to refrain from being mutable (spotbugs)
         numberOfSegments = 0;
-        lineSegments = new LineSegment[0];
+        lineSegments = points.length >= 4 ? new LineSegment[points.length / 4] : new LineSegment[0];
 
         // Didn't check that input is >= 4; It might blow
         for (int i = 0; i < points.length; i++) {
@@ -27,26 +27,12 @@ public class BruteCollinearPoints {
                         for (int l = k + 1; l < points.length; l++) {
                             Point pointL = points[l];
                             if (pointK.slopeTo(pointL) == pointJ.slopeTo(pointL)) {
-                                resizeLineSegArray();
                                 lineSegments[numberOfSegments++] = new LineSegment(pointI, pointL);
                             }
                         }
                     }
                 }
             }
-        }
-    }
-
-    private void resizeLineSegArray() {
-        if (lineSegments.length <= numberOfSegments + 1) {
-            LineSegment[] tempLines =
-                    lineSegments.length == 0 ? new LineSegment[2] :
-                            new LineSegment[numberOfSegments * 2];
-
-            for (int i = 0; i < numberOfSegments; i++) {
-                tempLines[i] = lineSegments[i];
-            }
-            lineSegments = tempLines;
         }
     }
 
@@ -105,7 +91,7 @@ public class BruteCollinearPoints {
             points1[i] = new Point(i, i);
         }
 
-        //Testing if the line segment worked
+        // Testing if the line segment worked
         BruteCollinearPoints br = new BruteCollinearPoints(points1);
         assert (br.numberOfSegments() == 1) : "Constructor Failed to connect points";
 
@@ -131,7 +117,7 @@ public class BruteCollinearPoints {
             StdOut.println("Null point input exception test succeeded");
         }
 
-        //Trying to put a repeated point
+        // Trying to put a repeated point
         points1[2] = new Point(1, 1);
         try {
             new BruteCollinearPoints(points1);
