@@ -87,17 +87,9 @@ public class Point implements Comparable<Point> {
      * argument point
      */
     public int compareTo(Point that) {
-        // P0 is less than P1, return -1
-        if (y < that.y || (y == that.y && x < that.x)) {
-            return -1;
-        }
-
-        // P0 is more than P1; return 1
-        if (y > that.y || x > that.x) {
-            return 1;
-        }
-
-        return 0; // They are equal (no need to test for that)
+        if (y < that.y || (y == that.y && x < that.x)) return -1; // Less?
+        if (y == that.y && x == that.x) return 0; // Equal?
+        return 1; // Otherwise, it's more.
     }
 
     /**
@@ -110,9 +102,10 @@ public class Point implements Comparable<Point> {
         return new BySlope();
     }
 
-    private static class BySlope implements Comparator<Point> {
+    private class BySlope implements Comparator<Point> {
         public int compare(Point p0, Point p1) {
-            return (int) p0.slopeTo(p1);
+            // Never use reguar <, > or == because of the -infty, +infty, NaN...
+            return Double.compare(Point.this.slopeTo(p0), Point.this.slopeTo(p1));
         }
     }
 
