@@ -31,15 +31,15 @@ public class FastCollinearPoints {
         // Create a list that will remember the last collinear points
         LinkedList<Point> collPoints = new LinkedList<>();
 
-        // Start from index 4 in order to escape checking Array boundaries
-        for (int i = 3; i < points.length; i++) {
+        // Check colliniarity of 4 points at a time
+        for (int i = 0; i < points.length - 3; i++) {
             StdOut.println("In constructor at loop " + i); // TODO: remove line
 
             // Store the last 4 consecutive points that will be slope compared
-            Point point1 = points[i - 3];
-            Point point2 = points[i - 2];
-            Point point3 = points[i - 1];
-            Point point4 = points[i];
+            Point point1 = points[i];
+            Point point2 = points[i + 1];
+            Point point3 = points[i + 2];
+            Point point4 = points[i + 3];
 
             Double tempCompare = point1.slopeTo(point2); // To shorten the below line
             StdOut.println("collPoints: " + collPoints); // TODO: remove line
@@ -51,7 +51,7 @@ public class FastCollinearPoints {
             if (tempCompare == point2.slopeTo(point3) && tempCompare == point3.slopeTo(point4)) {
                 StdOut.println("Found 4 collinear points"); // TODO: remove line
                 // If there is already collinear points, then add current only.
-                StdOut.println("collPoints.size(): " + collPoints.size()); // TODO: remove line
+                StdOut.println("collPoints.size() before ifs: " + collPoints.size()); // TODO: remove line
                 if (collPoints.size() >= 4) { // Add the fifth point to the old 4 points
                     collPoints.add(point4);
                 } else { // Else add the 4 consecutive collinear points
@@ -193,5 +193,6 @@ public class FastCollinearPoints {
         }
         StdDraw.show();
         StdOut.println("I'm Done");
+        /**/
     }
 }
