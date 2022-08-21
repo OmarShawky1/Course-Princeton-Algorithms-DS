@@ -13,30 +13,20 @@ public class FastCollinearPoints {
     private LineSegment[] lineSegments;
 
     // finds all line segments containing 4 or more points
-    public FastCollinearPoints(Point[] points) {
-        if (invalidPoints(points)) throw new IllegalArgumentException();
-        this.points = points.clone(); // Cloning to refrain from being mutable (spotbugs)
+    public FastCollinearPoints(Point[] pts) {
+        if (invalidPoints(pts)) throw new IllegalArgumentException();
+        this.points = pts.clone(); // Cloning to refrain from being mutable (spotbugs)
         numberOfSegments = 0;
         // Instead of resizing, maximum segments count is length/4 assuming all points make segment
-//        lineSegments = new LineSegment[points.length / 4];
         lineSegments = points.length >= 4 ? new LineSegment[points.length / 4] : new LineSegment[0];
 
-        /*
-        TODO:
-            1. Read the requirements in the assignment (Forgot to read them carefully).
-            1. Sort by smallest numbers & then sort by slope (stably).
-            2. The slope sort should be done per each entry for input "points" (not like what i did)
-         */
 
         Arrays.sort(points);
         if (repeatedPoints(points)) throw new IllegalArgumentException();
 
-        /*
-        TODO: Fix following problems
-            1. Below line throws:
-             Exception in thread "main" java.lang.IllegalArgumentException: Comparison method violates its general contract!
-         */
-        Arrays.sort(points, points[0].slopeOrder());
+        // Sorting by smallest to find repetition instead of insertion sort.
+        // Sort points w.r.t the slope with origin where origin is each individual point in input
+        for (Point point : points) Arrays.sort(points, point.slopeOrder());
 
         // Create a list that will remember the last collinear points
         LinkedList<Point> collPoints = new LinkedList<>();
@@ -106,35 +96,16 @@ public class FastCollinearPoints {
 
     private boolean invalidPoints(Point[] points) {
         // Return true if array is null
-        if (points == null) {
-            return true;
-        }
-
-        // TODO: To be removed, This is an old double for loop (O(n) ~~ N^2) but left just in case.
-        /*for (int i = 0; i < points.length; i++) {
-            Point pointI = points[i];
-
-            // Return true if a point is null
-            if (pointI == null) {
-                return true;
-            } else {
-                // Return true if a point is repeated (Algo: Insertion sort)
-                for (int j = i + 1; j < points.length; j++) {
-                    Point pointJ = points[j];
-                    if (pointJ == null || pointI.compareTo(pointJ) == 0) {
-                        return true;
-                    }
-                }
-            }
-        }*/
+        if (points == null) return true;
 
         for (Point point : points) if (point == null) return true;
+
         return false;
     }
 
     private boolean repeatedPoints(Point[] points) {
-        for (int i = 1; i < points.length; i++)
-            if (points[i - 1].compareTo(points[i]) == 0) return true;
+        for (int i = 0; i < points.length - 1; i++)
+            if (points[i].compareTo(points[i + 1]) == 0) return true;
         return false;
     }
 
