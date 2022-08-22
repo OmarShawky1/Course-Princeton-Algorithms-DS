@@ -42,7 +42,7 @@ public class FastCollinearPoints {
         // Furthermore, they hurt the logic because at last index, can't verify turning point
         for (int i = 0; i < points.length - 3; i++) {
             Point origin = points[i];
-            StdOut.println("origin is " + origin + " at index: " + i); // TODO: remove line
+//            StdOut.println("origin is " + origin + " at index: " + i); // TODO: remove line
             // Detect collinear points
             /*
             Technique:
@@ -61,9 +61,9 @@ public class FastCollinearPoints {
              */
 
             Point[] pointsClone = points.clone();
-            StdOut.println("pointsClone Before sorting: " + Arrays.toString(pointsClone)); //TODO remove Line
+//            StdOut.println("pointsClone Before sorting: " + Arrays.toString(pointsClone)); //TODO remove Line
             Arrays.sort(pointsClone, origin.slopeOrder());
-            StdOut.println("pointsClone After sorting: " + Arrays.toString(pointsClone)); //TODO remove Line
+//            StdOut.println("pointsClone After sorting: " + Arrays.toString(pointsClone)); //TODO remove Line
 
             // Detect turning point (from small to big) (to detect repeated segments))
             boolean thereIsBiggerP = false;
@@ -113,7 +113,7 @@ public class FastCollinearPoints {
                     thereIsBigP = true;
                 }
                 */
-                StdOut.println("I am in j: " + j + " & slope3: " + slope3); // TODO: remove line
+//                StdOut.println("I am in j: " + j + " & slope3: " + slope3); // TODO: remove line
 
                 // If there is already existing 3 collinear points from a previous iteration
                 if (!Double.isNaN(collSlope)) {
@@ -126,16 +126,15 @@ public class FastCollinearPoints {
                         else thereIsSmallerP = true;
 
                         collPoints.add(p3);
-                        StdOut.println("collpoints stored " + collPoints.size() + " points"); // TODO: remove line
+//                        StdOut.println("collpoints stored " + collPoints.size() + " points"); // TODO: remove line
                     }
 
                     // Else, add collPoints to lineSegments[numsegm++]; Flush collPoints & collSlope
                     else {
-                        StdOut.println("I will add " + collPoints.size() + " to Linesegment"); // TODO: remove line
+//                        StdOut.println("I will add " + collPoints.size() + " to Linesegment"); // TODO: remove line
 
                         // Adding
-                        StdOut.println("Before Adding: lineSegments.length: " + lineSegments.length +
-                                " ; numberOfSegments: " + numberOfSegments + " ; pointsClone.length: " + pointsClone.length);
+//                        StdOut.println("Before Adding: lineSegments.length: " + lineSegments.length + " ; numberOfSegments: " + numberOfSegments + " ; pointsClone.length: " + pointsClone.length);
                         isRefusedSlope = thereIsSmallerP && thereIsBiggerP;
 
                         // Add current lineSegment to lineSegments only if !isRefusedSlope
@@ -144,7 +143,7 @@ public class FastCollinearPoints {
                             lineSegments[numberOfSegments++] =
                                     new LineSegment(collPoints.peek(), collPoints.peekLast());
                         }
-                        StdOut.println("After Adding: LineSegment: " + Arrays.toString(lineSegments)); // TODO: remove line
+//                        StdOut.println("After Adding: LineSegment: " + Arrays.toString(lineSegments)); // TODO: remove line
 
                         // Flushing
                         collPoints = new LinkedList<>();
@@ -172,26 +171,25 @@ public class FastCollinearPoints {
                     collPoints.add(p2);
                     collPoints.add(p3);
                     collSlope = slope3;
-                    StdOut.println("collPoints stored 4 points"); // TODO: remove line
+//                    StdOut.println("collPoints stored 4 points"); // TODO: remove line
                 }
             }
             // This is repeated from loop j
-            StdOut.println("Outside j Loop but in loop i = " + i);
+//            StdOut.println("Outside j Loop but in loop i = " + i);
 
-            StdOut.println("I will add 4 or more points to Linesegment"); // TODO: remove line
+//            StdOut.println("I will add 4 or more points to Linesegment"); // TODO: remove line
 
             // Adding
-            StdOut.println("Before Adding: lineSegments.length: " + lineSegments.length +
-                    " ; numberOfSegments: " + numberOfSegments + " ; pointsClone.length: " + pointsClone.length);
+//            StdOut.println("Before Adding: lineSegments.length: " + lineSegments.length + " ; numberOfSegments: " + numberOfSegments + " ; pointsClone.length: " + pointsClone.length);
             isRefusedSlope = thereIsSmallerP && thereIsBiggerP;
 
             // Add current lineSegment to lineSegments only if !isRefusedSlope
-            if (!isRefusedSlope) {
+            if (!isRefusedSlope && collPoints.size() > 1) {
                 Collections.sort(collPoints); // Sort before taking first & last Points
                 lineSegments[numberOfSegments++] =
                         new LineSegment(collPoints.peek(), collPoints.peekLast());
             }
-            StdOut.println("After Adding: LineSegment: " + Arrays.toString(lineSegments)); // TODO: remove line
+//            StdOut.println("After Adding: LineSegment: " + Arrays.toString(lineSegments)); // TODO: remove line
 
             // Flushing
             collPoints = new LinkedList<>();
