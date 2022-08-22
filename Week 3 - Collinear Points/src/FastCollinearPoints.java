@@ -19,7 +19,12 @@ public class FastCollinearPoints {
         this.points = pts.clone(); // Cloning to refrain from being mutable (spotbugs)
         numberOfSegments = 0;
         // Instead of resizing, maximum segments count is length/4 assuming all points make segment
-        lineSegments = points.length >= 4 ? new LineSegment[points.length / 4] : new LineSegment[0];
+
+        // lineSegments = points.length >= 4 ? new LineSegment[points.length / 4] : new
+        // LineSegment[0]; // Wrong because the minimal is 4 but the maximal is every point
+        // making line with every other point (i.e., length^2)
+
+        lineSegments = points.length >= 4 ? new LineSegment[points.length * points.length] : new LineSegment[0];
 
         Arrays.sort(points);
         if (repeatedPoints(points)) throw new IllegalArgumentException();
@@ -126,7 +131,7 @@ public class FastCollinearPoints {
 
                     // Else, add collPoints to lineSegments[numsegm++]; Flush collPoints & collSlope
                     else {
-                        StdOut.println("I will add 4 or more points to Linesegment"); // TODO: remove line
+                        StdOut.println("I will add " + collPoints.size() + " to Linesegment"); // TODO: remove line
 
                         // Adding
                         StdOut.println("Before Adding: lineSegments.length: " + lineSegments.length +
