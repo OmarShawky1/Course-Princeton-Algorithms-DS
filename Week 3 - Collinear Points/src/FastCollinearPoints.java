@@ -3,6 +3,7 @@ import edu.princeton.cs.algs4.StdDraw;
 import edu.princeton.cs.algs4.StdOut;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedList;
 
 public class FastCollinearPoints {
@@ -19,8 +20,6 @@ public class FastCollinearPoints {
         numberOfSegments = 0;
         // Instead of resizing, maximum segments count is length/4 assuming all points make segment
         lineSegments = points.length >= 4 ? new LineSegment[points.length / 4] : new LineSegment[0];
-//        lineSegments = points.length >= 4 ? new LineSegment[points.length * points.length] : new LineSegment[0];
-
 
         Arrays.sort(points);
         if (repeatedPoints(points)) throw new IllegalArgumentException();
@@ -34,8 +33,9 @@ public class FastCollinearPoints {
         double collSlope = Double.NaN;
 
         // Iterate over points itself from smallest to largest point
-        // for (Point origin : points) {
-        for (int i = 0; i < points.length; i++) {
+        // Don't need to iterate over the last 4 index because we are sure that they are added
+        // Furthermore, they hurt the logic because at last index, can't verify turning point
+        for (int i = 0; i < points.length - 3; i++) {
             Point origin = points[i];
             StdOut.println("origin is " + origin + " at index: " + i); // TODO: remove line
             // Detect collinear points
@@ -44,52 +44,156 @@ public class FastCollinearPoints {
                 1. Sort the Array by slope in pointsClone.
                 2. Begin a for loop
                 3. Try to detect 3 consecutive points having same slope.
-                3. If found, Store them in collPoints; Store their slope in collSlope.
-                4. Check if there is more points having the same slope as collSlope; Add if found.
-                5. If not found, Add collPoints to lineSegm[numsegm++]; Erase collSlope & collPoints
+                4. If found, check if they are points of an existing/added slope.
+                    1) Detect a point smaller than origin (origin.compareTo(p) < 0).
+                    2) & Detect a point bigger than origin.
+                    3) If both found, then seg is already added; Therefore set isRefusedSlope = true
+                5. Store them in collPoints; Store their slope in collSlope.
+                6. Check if there is more points having the same slope as collSlope; Add if found.
+                7. If not found, check if seg is accepted (!isRefusedSlope) to add collPoints to
+                   lineSegment[numSegments++]
+                8. Erase collSlope & collPoints
              */
 
             Point[] pointsClone = points.clone();
             StdOut.println("pointsClone Before sorting: " + Arrays.toString(pointsClone)); //TODO remove Line
             Arrays.sort(pointsClone, origin.slopeOrder());
             StdOut.println("pointsClone After sorting: " + Arrays.toString(pointsClone)); //TODO remove Line
-            for (int j = i + 1; j < pointsClone.length - 2; j++) {
+
+            // Detect turning point (from small to big) (to detect repeated segments))
+            boolean thereIsBiggerP = false;
+            boolean thereIsSmallerP = false;
+            boolean isRefusedSlope = false;
+
+            // TODO: solve this bug, i & j has nothing to do with each other (different arrays);
+            //  "points" is for points sorted by smallest and the collPoints for points sorted by
+            //  slope relative to current origin.
+
+            // Start from 1 because 0 is origin
+            for (int j = 1; j < pointsClone.length - 2; j++) {
                 Point p1 = pointsClone[j];
                 Point p2 = pointsClone[j + 1];
                 Point p3 = pointsClone[j + 2];
-                double tempSlope = origin.slopeTo(p3);
-                StdOut.println("tempSlope: " + tempSlope); // TODO: remove line
-                // If there is already 3 collinear points
+
+                // Calculate slope from smallP to bigP.
+                // Don't multiply by -1 because this is duck typing (double isn't always a number)
+                // To detect number smallP or bigP, either origin.compare(p) or i < <jCurrent>
+
+                double slope1 = origin.compareTo(p1) < 0 ? p1.slopeTo(origin) : origin.slopeTo(p1);
+                double slope2 = origin.compareTo(p2) < 0 ? p2.slopeTo(origin) : origin.slopeTo(p2);
+                double slope3 = origin.compareTo(p3) < 0 ? p3.slopeTo(origin) : origin.slopeTo(p3);
+                /*
+                double slope1, slope2, slope3;
+                if (origin.compareTo(p1) < 0) {
+                    slope1 = p1.slopeTo(origin);
+                    thereIsSmallP = true;
+                } else {
+                    slope1 = origin.slopeTo(p1);
+                    thereIsBigP = true;
+                }
+
+                if (origin.compareTo(p2) < 0) {
+                    slope2 = p2.slopeTo(origin);
+                    thereIsSmallP = true;
+                } else {
+                    slope2 = origin.slopeTo(p2);
+                    thereIsBigP = true;
+                }
+
+                if (origin.compareTo(p3) < 0) {
+                    slope3 = p3.slopeTo(origin);
+                    thereIsSmallP = true;
+                } else {
+                    slope3 = origin.slopeTo(p3);
+                    thereIsBigP = true;
+                }
+                */
+                StdOut.println("I am in j: " + j + " & slope3: " + slope3); // TODO: remove line
+
+                // If there is already existing 3 collinear points from a previous iteration
                 if (!Double.isNaN(collSlope)) {
+
                     // check if this point is also on same line
-                    if (collSlope == tempSlope) {
+                    if (collSlope == slope3) {
+
+                        // Detect turning point in the current collinear points
+                        if (origin.compareTo(p3) < 0) thereIsBiggerP = true;
+                        else thereIsSmallerP = true;
+
                         collPoints.add(p3);
                         StdOut.println("collpoints stored " + collPoints.size() + " points"); // TODO: remove line
                     }
+
                     // Else, add collPoints to lineSegments[numsegm++]; Flush collPoints & collSlope
                     else {
-                        StdOut.println("I will add 4 points to Linesegment"); // TODO: remove line
+                        StdOut.println("I will add 4 or more points to Linesegment"); // TODO: remove line
+
                         // Adding
                         StdOut.println("Before Adding: lineSegments.length: " + lineSegments.length +
-                                " ; numberOfSegments: " + numberOfSegments + " ; points.length: " + pointsClone.length);
-                        lineSegments[numberOfSegments++] =
-                                new LineSegment(origin, collPoints.peekLast());
+                                " ; numberOfSegments: " + numberOfSegments + " ; pointsClone.length: " + pointsClone.length);
+                        isRefusedSlope = thereIsSmallerP && thereIsBiggerP;
+
+                        // Add current lineSegment to lineSegments only if !isRefusedSlope
+                        if (!isRefusedSlope) {
+                            Collections.sort(collPoints); // Sort before taking first & last Points
+                            lineSegments[numberOfSegments++] =
+                                    new LineSegment(collPoints.peek(), collPoints.peekLast());
+                        }
                         StdOut.println("After Adding: LineSegment: " + Arrays.toString(lineSegments)); // TODO: remove line
+
                         // Flushing
                         collPoints = new LinkedList<>();
                         collSlope = Double.NaN;
+                        thereIsSmallerP = false;
+                        thereIsBiggerP = false;
+                        isRefusedSlope = false;
                     }
                 }
+
                 // If not, Check if the current points have same slope to origin.
-                else if ((tempSlope == origin.slopeTo(p2)) && (tempSlope == origin.slopeTo(p3))) {
-                    // Yes, then add them to CollPoints
+                else if (slope1 == slope2 && slope2 == slope3) {
+
+                    // If yes, check if points are of an existing segment by detecting turning point
+                    if (origin.compareTo(p1) < 0) thereIsBiggerP = true;
+                    else thereIsSmallerP = true;
+                    if (origin.compareTo(p2) < 0) thereIsBiggerP = true;
+                    else thereIsSmallerP = true;
+                    if (origin.compareTo(p3) < 0) thereIsBiggerP = true;
+                    else thereIsSmallerP = true;
+
+                    // then add them to CollPoints
+                    collPoints.add(origin);
                     collPoints.add(p1);
                     collPoints.add(p2);
                     collPoints.add(p3);
-                    collSlope = tempSlope;
+                    collSlope = slope3;
                     StdOut.println("collPoints stored 4 points"); // TODO: remove line
                 }
             }
+            // This is repeated from loop j
+            StdOut.println("Outside j Loop but in loop i = " + i);
+
+            StdOut.println("I will add 4 or more points to Linesegment"); // TODO: remove line
+
+            // Adding
+            StdOut.println("Before Adding: lineSegments.length: " + lineSegments.length +
+                    " ; numberOfSegments: " + numberOfSegments + " ; pointsClone.length: " + pointsClone.length);
+            isRefusedSlope = thereIsSmallerP && thereIsBiggerP;
+
+            // Add current lineSegment to lineSegments only if !isRefusedSlope
+            if (!isRefusedSlope) {
+                Collections.sort(collPoints); // Sort before taking first & last Points
+                lineSegments[numberOfSegments++] =
+                        new LineSegment(collPoints.peek(), collPoints.peekLast());
+            }
+            StdOut.println("After Adding: LineSegment: " + Arrays.toString(lineSegments)); // TODO: remove line
+
+            // Flushing
+            collPoints = new LinkedList<>();
+            collSlope = Double.NaN;
+            thereIsSmallerP = false;
+            thereIsBiggerP = false;
+            isRefusedSlope = false;
         }
     }
 
