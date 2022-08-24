@@ -18,28 +18,18 @@ public class FastCollinearPoints {
         if (invalidPoints(pts)) throw new IllegalArgumentException();
         this.points = pts.clone(); // Cloning to refrain from being mutable (spotbugs)
         numberOfSegments = 0;
-        // Instead of resizing, maximum segments count is length/4 assuming all points make segment
+        // Instead of resizing, maximum segments count is length^2 as each point can create a
+        // whole new line with the remaining other points
+        lineSegments = points.length >= 4 ?
+                new LineSegment[points.length * points.length] : new LineSegment[0];
 
-        // lineSegments = points.length >= 4 ? new LineSegment[points.length / 4] : new
-        // LineSegment[0]; // Wrong because the minimal is 4 but the maximal is every point
-        // making line with every other point (i.e., length^2)
-
-        lineSegments = points.length >= 4 ? new LineSegment[points.length * points.length] : new LineSegment[0];
-
+        // Sorting by smallest to find repetition instead of insertion sort.
         Arrays.sort(points);
         if (repeatedPoints(points)) throw new IllegalArgumentException();
 
-        // Sorting by smallest to find repetition instead of insertion sort.
-        // Sort points w.r.t the slope with origin where origin is each individual point in input
-        // for (Point point : points) Arrays.sort(points, point.slopeOrder());
-
-        // Create a list that will remember the last collinear points
-        LinkedList<Point> collPoints = new LinkedList<>();
-        double collSlope = Double.NaN;
-
         // Iterate over points itself from smallest to largest point
         // Don't need to iterate over the last 4 index because we are sure that they are added
-        // Furthermore, they hurt the logic because at last index, can't verify turning point
+        // Furthermore, they cause errors as point can't verify turning point if it is the last
         for (int i = 0; i < points.length - 3; i++) {
             Point origin = points[i];
 //            StdOut.println("origin is " + origin + " at index: " + i); // TODO: remove line
@@ -60,20 +50,25 @@ public class FastCollinearPoints {
                 8. Erase collSlope & collPoints
              */
 
+            // 1. Sort the Array by slope in pointsClone.
             Point[] pointsClone = points.clone();
 //            StdOut.println("pointsClone Before sorting: " + Arrays.toString(pointsClone)); //TODO remove Line
+            // Sort points w.r.t slope with origin where origin is each individual point in input
             Arrays.sort(pointsClone, origin.slopeOrder());
 //            StdOut.println("pointsClone After sorting: " + Arrays.toString(pointsClone)); //TODO remove Line
 
+            // 4. If found, check if they are points of an existing/added slope.
             // Detect turning point (from small to big) (to detect repeated segments))
             boolean thereIsBiggerP = false;
             boolean thereIsSmallerP = false;
             boolean isRefusedSlope = false;
 
-            // TODO: solve this bug, i & j has nothing to do with each other (different arrays);
-            //  "points" is for points sorted by smallest and the collPoints for points sorted by
-            //  slope relative to current origin.
+            // 5. Store them in collPoints; Store their slope in collSlope.
+            // Create a list that will remember the last collinear points
+            LinkedList<Point> collPoints = new LinkedList<>();
+            double collSlope = Double.NaN;
 
+            // 2. Begin a for loop
             // Start from 1 because 0 is origin
             for (int j = 1; j < pointsClone.length - 2; j++) {
                 Point p1 = pointsClone[j];
@@ -87,37 +82,13 @@ public class FastCollinearPoints {
                 double slope1 = origin.compareTo(p1) < 0 ? p1.slopeTo(origin) : origin.slopeTo(p1);
                 double slope2 = origin.compareTo(p2) < 0 ? p2.slopeTo(origin) : origin.slopeTo(p2);
                 double slope3 = origin.compareTo(p3) < 0 ? p3.slopeTo(origin) : origin.slopeTo(p3);
-                /*
-                double slope1, slope2, slope3;
-                if (origin.compareTo(p1) < 0) {
-                    slope1 = p1.slopeTo(origin);
-                    thereIsSmallP = true;
-                } else {
-                    slope1 = origin.slopeTo(p1);
-                    thereIsBigP = true;
-                }
-
-                if (origin.compareTo(p2) < 0) {
-                    slope2 = p2.slopeTo(origin);
-                    thereIsSmallP = true;
-                } else {
-                    slope2 = origin.slopeTo(p2);
-                    thereIsBigP = true;
-                }
-
-                if (origin.compareTo(p3) < 0) {
-                    slope3 = p3.slopeTo(origin);
-                    thereIsSmallP = true;
-                } else {
-                    slope3 = origin.slopeTo(p3);
-                    thereIsBigP = true;
-                }
-                */
 //                StdOut.println("I am in j: " + j + " & slope3: " + slope3); // TODO: remove line
 
                 // If there is already existing 3 collinear points from a previous iteration
                 if (!Double.isNaN(collSlope)) {
 
+                    // 6. Check if there is more points having the same slope as collSlope; Add if
+                    // found.
                     // check if this point is also on same line
                     if (collSlope == slope3) {
 
@@ -129,6 +100,7 @@ public class FastCollinearPoints {
 //                        StdOut.println("collpoints stored " + collPoints.size() + " points"); // TODO: remove line
                     }
 
+                    // 5. Store them in collPoints; Store their slope in collSlope.
                     // Else, add collPoints to lineSegments[numsegm++]; Flush collPoints & collSlope
                     else {
 //                        StdOut.println("I will add " + collPoints.size() + " to Linesegment"); // TODO: remove line
@@ -137,6 +109,8 @@ public class FastCollinearPoints {
 //                        StdOut.println("Before Adding: lineSegments.length: " + lineSegments.length + " ; numberOfSegments: " + numberOfSegments + " ; pointsClone.length: " + pointsClone.length);
                         isRefusedSlope = thereIsSmallerP && thereIsBiggerP;
 
+                        // 7. If not found, check if seg is accepted (!isRefusedSlope) to add
+                        // collPoints to lineSegment[numSegments++]
                         // Add current lineSegment to lineSegments only if !isRefusedSlope
                         if (!isRefusedSlope) {
                             Collections.sort(collPoints); // Sort before taking first & last Points
@@ -145,6 +119,7 @@ public class FastCollinearPoints {
                         }
 //                        StdOut.println("After Adding: LineSegment: " + Arrays.toString(lineSegments)); // TODO: remove line
 
+                        // 8. Erase collSlope & collPoints
                         // Flushing
                         collPoints = new LinkedList<>();
                         collSlope = Double.NaN;
@@ -154,6 +129,7 @@ public class FastCollinearPoints {
                     }
                 }
 
+                // 3. Try to detect 3 consecutive points having same slope.
                 // If not, Check if the current points have same slope to origin.
                 else if (slope1 == slope2 && slope2 == slope3) {
 
@@ -183,6 +159,8 @@ public class FastCollinearPoints {
 //            StdOut.println("Before Adding: lineSegments.length: " + lineSegments.length + " ; numberOfSegments: " + numberOfSegments + " ; pointsClone.length: " + pointsClone.length);
             isRefusedSlope = thereIsSmallerP && thereIsBiggerP;
 
+            // 7. If not found, check if seg is accepted (!isRefusedSlope) to add
+            // collPoints to lineSegment[numSegments++]
             // Add current lineSegment to lineSegments only if !isRefusedSlope
             if (!isRefusedSlope && collPoints.size() > 1) {
                 Collections.sort(collPoints); // Sort before taking first & last Points
@@ -191,7 +169,8 @@ public class FastCollinearPoints {
             }
 //            StdOut.println("After Adding: LineSegment: " + Arrays.toString(lineSegments)); // TODO: remove line
 
-            // Flushing
+            // 8. Erase collSlope & collPoints
+            // Flushing (Although there is no need as the program finished and won't use them)
             collPoints = new LinkedList<>();
             collSlope = Double.NaN;
             thereIsSmallerP = false;
