@@ -63,11 +63,13 @@ public class Point implements Comparable<Point> {
         int deltaY = that.y - y;
         int deltaX = that.x - x;
 
-        if (deltaX == 0) {
-            if (deltaY == 0) {
-                return Double.NEGATIVE_INFINITY;
+        if (deltaY == 0) {
+            if (deltaX == 0) {
+                return Double.NEGATIVE_INFINITY; // Same Point
             }
-            return Double.POSITIVE_INFINITY;
+            return 0.0; // Horizontal Line
+        } else if (deltaX == 0) {
+            return Double.POSITIVE_INFINITY; // Vertical Line
         }
 
         return (double) deltaY / deltaX;
@@ -132,6 +134,7 @@ public class Point implements Comparable<Point> {
     /**
      * Unit tests the Point data type.
      */
+    /*
     public static void main(String[] args) {
 
         StdOut.println("###############RandomizedQueue Tests###############");
@@ -223,4 +226,5 @@ public class Point implements Comparable<Point> {
         // Testing Comparator Class (SlopeOrder)
         // Untested; To be tested in any sorting class instead of here.
     }
+    */
 }
