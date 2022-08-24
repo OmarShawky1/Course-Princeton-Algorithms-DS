@@ -10,7 +10,6 @@
 
 import edu.princeton.cs.algs4.StdDraw;
 import edu.princeton.cs.algs4.StdOut;
-
 import java.util.Comparator;
 
 public class Point implements Comparable<Point> {
@@ -87,8 +86,16 @@ public class Point implements Comparable<Point> {
      * argument point
      */
     public int compareTo(Point that) {
-        if (y < that.y || (y == that.y && x < that.x)) return -1; // Less?
-        if (y == that.y && x == that.x) return 0; // Equal?
+        // Less?
+        if (y < that.y || (y == that.y && x < that.x)) {
+            return -1;
+        }
+
+        // Equal?
+        if (y == that.y && x == that.x) {
+            return 0;
+        }
+
         return 1; // Otherwise, it's more.
     }
 
