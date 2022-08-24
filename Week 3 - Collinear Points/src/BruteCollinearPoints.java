@@ -25,9 +25,9 @@ public class BruteCollinearPoints {
                 Point pointJ = points[j];
                 for (int k = j + 1; k < points.length; k++) {
                     Point pointK = points[k];
-                    if (pointI.slopeTo(pointJ) == pointJ.slopeTo(pointK)) { //Two lines, same slope
-                        for (int l = k + 1; l < points.length; l++) {
-                            Point pointL = points[l];
+                    if (pointI.slopeTo(pointJ) == pointJ.slopeTo(pointK)) { // Two lines, same slope
+                        for (int m = k + 1; m < points.length; m++) {
+                            Point pointL = points[m];
                             if (pointK.slopeTo(pointL) == pointJ.slopeTo(pointL)) {
                                 lineSegments[numberOfSegments++] = new LineSegment(pointI, pointL);
                             }
@@ -77,6 +77,7 @@ public class BruteCollinearPoints {
         return false;
     }
 
+    /*
     public static void main(String[] args) {
         StdOut.println("###############BruteCollinearPoints Tests###############");
 
@@ -156,4 +157,5 @@ public class BruteCollinearPoints {
         }
         StdDraw.show();
     }
+    */
 }

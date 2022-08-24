@@ -9,15 +9,14 @@ public class FastCollinearPoints {
 
     // Global Variables
     private int numberOfSegments;
-    private Point[] points;
-    private LineSegment[] lineSegments;
+    private final LineSegment[] lineSegments;
 
     // finds all line segments containing 4 or more points
     public FastCollinearPoints(Point[] pts) {
         if (invalidPoints(pts)) {
             throw new IllegalArgumentException();
         }
-        this.points = pts.clone(); // Cloning to refrain from being mutable (spotbugs)
+        Point[] points = pts.clone(); // Cloning to refrain from being mutable (spotbugs)
         numberOfSegments = 0;
         // Instead of resizing, maximum segments count is length^2 as each point can create a
         // whole new line with the remaining other points
@@ -215,7 +214,7 @@ public class FastCollinearPoints {
         return false;
     }
 
-
+    /*
     public static void main(String[] args) {
 
         StdOut.println("###############FastCollinearPoints Tests###############");
@@ -233,7 +232,7 @@ public class FastCollinearPoints {
             points1[i] = new Point(i, i);
         }
 
-        //Testing if the line segment worked
+        // Testing if the line segment worked
         FastCollinearPoints fcp = new FastCollinearPoints(points1);
         assert (fcp.numberOfSegments() == 1) :
                 "Constructor Failed to connect points; it should've returned " +
@@ -261,7 +260,7 @@ public class FastCollinearPoints {
             StdOut.println("Null point input exception test succeeded");
         }
 
-        //Trying to put a repeated point
+        // Trying to put a repeated point
         points1[2] = new Point(1, 1);
         try {
             new FastCollinearPoints(points1);
@@ -301,6 +300,6 @@ public class FastCollinearPoints {
         }
         StdDraw.show();
         StdOut.println("I'm Done");
-        /**/
     }
+    */
 }
