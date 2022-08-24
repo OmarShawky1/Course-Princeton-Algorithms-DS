@@ -169,6 +169,7 @@ public class FastCollinearPoints {
             }
 //            StdOut.println("After Adding: LineSegment: " + Arrays.toString(lineSegments)); // TODO: remove line
 
+            /*
             // 8. Erase collSlope & collPoints
             // Flushing (Although there is no need as the program finished and won't use them)
             collPoints = new LinkedList<>();
@@ -176,6 +177,7 @@ public class FastCollinearPoints {
             thereIsSmallerP = false;
             thereIsBiggerP = false;
             isRefusedSlope = false;
+            */
         }
     }
 
