@@ -1,18 +1,18 @@
-import edu.princeton.cs.algs4.In;
-import edu.princeton.cs.algs4.StdDraw;
-import edu.princeton.cs.algs4.StdOut;
+// import edu.princeton.cs.algs4.In;
+// import edu.princeton.cs.algs4.StdDraw;
+// import edu.princeton.cs.algs4.StdOut;
 
 public class BruteCollinearPoints {
 
     // Global Variables
-    private int numberOfSegments;
+    private final int numberOfSegments;
     private final LineSegment[] lineSegments;
 
     // finds all line segments containing 4 points
     public BruteCollinearPoints(Point[] pts) {
         if (invalidPoints(pts)) throw new IllegalArgumentException();
         Point[] points = pts.clone(); // Cloning to refrain from being mutable (spotbugs)
-        numberOfSegments = 0;
+        int numbOfSegments = 0;
         // Instead of resizing, maximum segments count is length^2 as each point can create a
         // whole new line with the remaining other points
         lineSegments = points.length >= 4
@@ -29,13 +29,14 @@ public class BruteCollinearPoints {
                         for (int m = k + 1; m < points.length; m++) {
                             Point pointL = points[m];
                             if (pointK.slopeTo(pointL) == pointJ.slopeTo(pointL)) {
-                                lineSegments[numberOfSegments++] = new LineSegment(pointI, pointL);
+                                lineSegments[numbOfSegments++] = new LineSegment(pointI, pointL);
                             }
                         }
                     }
                 }
             }
         }
+        this.numberOfSegments = numbOfSegments;
     }
 
     // the number of line segments

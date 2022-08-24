@@ -1,6 +1,6 @@
-import edu.princeton.cs.algs4.In;
-import edu.princeton.cs.algs4.StdDraw;
-import edu.princeton.cs.algs4.StdOut;
+// import edu.princeton.cs.algs4.In;
+// import edu.princeton.cs.algs4.StdDraw;
+// import edu.princeton.cs.algs4.StdOut;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -8,7 +8,7 @@ import java.util.LinkedList;
 public class FastCollinearPoints {
 
     // Global Variables
-    private int numberOfSegments;
+    private final int numberOfSegments;
     private final LineSegment[] lineSegments;
 
     // finds all line segments containing 4 or more points
@@ -17,7 +17,7 @@ public class FastCollinearPoints {
             throw new IllegalArgumentException();
         }
         Point[] points = pts.clone(); // Cloning to refrain from being mutable (spotbugs)
-        numberOfSegments = 0;
+        int numbOfSegments = 0;
         // Instead of resizing, maximum segments count is length^2 as each point can create a
         // whole new line with the remaining other points
         lineSegments = points.length >= 4
@@ -111,7 +111,7 @@ public class FastCollinearPoints {
                         // Add current lineSegment to lineSegments only if !isRefusedSlope
                         if (!isRefusedSlope) {
                             Collections.sort(collPoints); // Sort before taking first & last Points
-                            lineSegments[numberOfSegments++] =
+                            lineSegments[numbOfSegments++] =
                                     new LineSegment(collPoints.peek(), collPoints.peekLast());
                         }
 
@@ -164,7 +164,7 @@ public class FastCollinearPoints {
             // Add current lineSegment to lineSegments only if !isRefusedSlope
             if (!isRefusedSlope && collPoints.size() > 1) {
                 Collections.sort(collPoints); // Sort before taking first & last Points
-                lineSegments[numberOfSegments++] =
+                lineSegments[numbOfSegments++] =
                         new LineSegment(collPoints.peek(), collPoints.peekLast());
             }
             /*
@@ -177,6 +177,7 @@ public class FastCollinearPoints {
             isRefusedSlope = false;
             */
         }
+        this.numberOfSegments = numbOfSegments;
     }
 
     // the number of line segments
