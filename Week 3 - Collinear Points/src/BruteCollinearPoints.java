@@ -6,15 +6,18 @@ public class BruteCollinearPoints {
 
     // Global Variables
     private int numberOfSegments;
-    private Point[] points;
-    private LineSegment[] lineSegments;
+//    private final Point[] points;
+    private final LineSegment[] lineSegments;
 
     // finds all line segments containing 4 points
     public BruteCollinearPoints(Point[] pts) {
         if (invalidPoints(pts)) throw new IllegalArgumentException();
-        this.points = pts.clone(); // Cloning to refrain from being mutable (spotbugs)
+        Point[] points = pts.clone(); // Cloning to refrain from being mutable (spotbugs)
         numberOfSegments = 0;
-        lineSegments = points.length >= 4 ? new LineSegment[points.length / 4] : new LineSegment[0];
+        // Instead of resizing, maximum segments count is length^2 as each point can create a
+        // whole new line with the remaining other points
+        lineSegments = points.length >= 4 ?
+                new LineSegment[points.length * points.length] : new LineSegment[0];
 
         // Didn't check that input is >= 4; It might blow
         for (int i = 0; i < points.length; i++) {
