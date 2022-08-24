@@ -6,7 +6,6 @@ public class BruteCollinearPoints {
 
     // Global Variables
     private int numberOfSegments;
-//    private final Point[] points;
     private final LineSegment[] lineSegments;
 
     // finds all line segments containing 4 points
@@ -16,8 +15,8 @@ public class BruteCollinearPoints {
         numberOfSegments = 0;
         // Instead of resizing, maximum segments count is length^2 as each point can create a
         // whole new line with the remaining other points
-        lineSegments = points.length >= 4 ?
-                new LineSegment[points.length * points.length] : new LineSegment[0];
+        lineSegments = points.length >= 4
+                ? new LineSegment[points.length * points.length] : new LineSegment[0];
 
         // Didn't check that input is >= 4; It might blow
         for (int i = 0; i < points.length; i++) {
