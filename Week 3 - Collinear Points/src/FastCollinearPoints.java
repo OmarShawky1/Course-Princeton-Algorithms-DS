@@ -177,7 +177,7 @@ public class FastCollinearPoints {
             isRefusedSlope = false;
             */
         }
-        this.numberOfSegments = numbOfSegments;
+        this.numberOfSegments = numbOfSegments; // Autograder's request (finalize numberOfSegments)
     }
 
     // the number of line segments

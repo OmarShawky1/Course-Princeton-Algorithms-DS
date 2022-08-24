@@ -2,6 +2,8 @@
 // import edu.princeton.cs.algs4.StdDraw;
 // import edu.princeton.cs.algs4.StdOut;
 
+import java.util.Arrays;
+
 public class BruteCollinearPoints {
 
     // Global Variables
@@ -18,6 +20,7 @@ public class BruteCollinearPoints {
         lineSegments = points.length >= 4
                 ? new LineSegment[points.length * points.length] : new LineSegment[0];
 
+        Arrays.sort(points); // Autograder's request (As small points must point to bigger)
         // Didn't check that input is >= 4; It might blow
         for (int i = 0; i < points.length; i++) {
             Point pointI = points[i];
@@ -36,7 +39,7 @@ public class BruteCollinearPoints {
                 }
             }
         }
-        this.numberOfSegments = numbOfSegments;
+        this.numberOfSegments = numbOfSegments; // Autograder's request (finalize numberOfSegments)
     }
 
     // the number of line segments
