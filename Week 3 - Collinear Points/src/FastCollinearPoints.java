@@ -1,6 +1,6 @@
- import edu.princeton.cs.algs4.In;
- import edu.princeton.cs.algs4.StdDraw;
- import edu.princeton.cs.algs4.StdOut;
+// import edu.princeton.cs.algs4.In;
+// import edu.princeton.cs.algs4.StdDraw;
+// import edu.princeton.cs.algs4.StdOut;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -34,7 +34,6 @@ public class FastCollinearPoints {
         // Furthermore, they cause errors as point can't verify turning point if it is the last
         for (int i = 0; i < points.length - 3; i++) {
             Point origin = points[i];
-            StdOut.println("origin is " + origin + " at index: " + i); // TODO: remove line
 
             // Detect collinear points
             /*
@@ -56,10 +55,8 @@ public class FastCollinearPoints {
 
             // 1. Sort the Array by slope in pointsClone.
             Point[] pointsClone = points.clone();
-            StdOut.println("pointsClone Before sorting: " + Arrays.toString(pointsClone)); //TODO remove Line
             // Sort points w.r.t slope with origin where origin is each individual point in input
             Arrays.sort(pointsClone, origin.slopeOrder());
-            StdOut.println("pointsClone After sorting: " + Arrays.toString(pointsClone)); //TODO remove
 
             // 4. If found, check if they are points of an existing/added slope.
             // Detect turning point (from small to big) (to detect repeated segments))
@@ -86,7 +83,6 @@ public class FastCollinearPoints {
                 double slope1 = origin.compareTo(p1) < 0 ? p1.slopeTo(origin) : origin.slopeTo(p1);
                 double slope2 = origin.compareTo(p2) < 0 ? p2.slopeTo(origin) : origin.slopeTo(p2);
                 double slope3 = origin.compareTo(p3) < 0 ? p3.slopeTo(origin) : origin.slopeTo(p3);
-                StdOut.println("I am in j: " + j + " & slope1: " + slope1); // TODO: remove line
 
                 // If there is already existing 3 collinear points from a previous iteration
                 if (!Double.isNaN(collSlope)) {
@@ -99,29 +95,21 @@ public class FastCollinearPoints {
                         // Detect turning point in the current collinear points
                         if (origin.compareTo(p3) < 0) {
                             thereIsBiggerP = true;
-
-                            StdOut.println("smallerP = true due to P3: " + p3); // TODO: remove line
                         } else {
                             thereIsSmallerP = true;
-                            StdOut.println("biggerP = true due to P3: " + p3); // TODO: remove line
                         }
 
                         collPoints.add(p3);
-                        StdOut.println("collpoints stored " + collPoints.size() + " points which are: " + collPoints); // TODO: remove line
                     } else {
                         // 5. Store them in collPoints; Store their slope in collSlope.
                         // Else, add collPoints to lineSegm[numsegm++]; Flush collPoints & collSlope
-                        StdOut.println("I will add " + collPoints.size() + " to Linesegment which are: " + collPoints); // TODO: remove line
-
                         // Adding
                         isRefusedSlope = thereIsSmallerP && thereIsBiggerP;
-                        StdOut.println("Before Adding: lineSegments.length: " + lineSegments.length + " ; numberOfSegments: " + numbOfSegments + " ; pointsClone.length: " + pointsClone.length);
 
                         // 7. If not found, check if seg is accepted (!isRefusedSlope) to add
                         // collPoints to lineSegment[numSegments++]
                         // Add current lineSegment to lineSegments only if !isRefusedSlope
                         if (!isRefusedSlope) {
-                            StdOut.println("collPoints before sorting: " + collPoints); // TODO: remove line
                             Collections.sort(collPoints); // Sort before taking first & last Points
 
                             // 4) Detect if origin is at end of segment; If true, don't add segment
@@ -131,8 +119,6 @@ public class FastCollinearPoints {
                                         new LineSegment(collPoints.peek(), collPoints.peekLast());
                             }
                         }
-                        StdOut.println("After Adding: LineSegment: " + Arrays.toString(lineSegments)); // TODO: remove line
-
                         // 8. Erase collSlope & collPoints
                         // Flushing
                         collPoints = new LinkedList<>();
@@ -150,19 +136,12 @@ public class FastCollinearPoints {
                     int compP2 = origin.compareTo(p2);
                     int compP3 = origin.compareTo(p3);
 
-                    // TODO: What if they are equal? it will be smaller
                     if (compP1 < 0 || compP2 < 0 || compP3 < 0) {
                         thereIsBiggerP = true;
-                        if (compP1 < 0) StdOut.println("biggerP = true due to P1: " + p1); // TODO: remove line
-                        if (compP2 < 0) StdOut.println("biggerP = true due to P2: " + p2); // TODO: remove line
-                        if (compP3 < 0) StdOut.println("biggerP = true due to P3: " + p3); // TODO: remove line
                     }
 
                     if (compP1 > 0 || compP2 > 0 || compP3 > 0) {
                         thereIsSmallerP = true;
-                        if (compP1 > 0) StdOut.println("smallerP = true due to P1: " + p1); // TODO: remove line
-                        if (compP2 > 0) StdOut.println("smallerP = true due to P2: " + p2); // TODO: remove line
-                        if (compP3 > 0) StdOut.println("smallerP = true due to P3: " + p3); // TODO: remove line
                     }
 
                     // then add them to CollPoints
@@ -171,25 +150,19 @@ public class FastCollinearPoints {
                     collPoints.add(p2);
                     collPoints.add(p3);
                     collSlope = slope3;
-                    StdOut.println("collPoints stored 4 points which are: " + collPoints); // TODO: remove line
                 }
             }
             // This is repeated from loop j
-            StdOut.println("Outside j Loop but in loop i: " + i);
-
             // 5. Store them in collPoints; Store their slope in collSlope.
             // Else, add collPoints to lineSegm[numsegm++]; Flush collPoints & collSlope
-            StdOut.println("I will add " + collPoints.size() + " to Linesegment which are: " + collPoints); // TODO: remove line
 
             // Adding
             isRefusedSlope = thereIsSmallerP && thereIsBiggerP;
-            StdOut.println("Before Adding: lineSegments.length: " + lineSegments.length + " ; numberOfSegments: " + numbOfSegments + " ; pointsClone.length: " + pointsClone.length);
 
             // 7. If not found, check if seg is accepted (!isRefusedSlope) to add
             // collPoints to lineSegment[numSegments++]
             // Add current lineSegment to lineSegments only if !isRefusedSlope
             if (!isRefusedSlope && !Double.isNaN(collSlope)) {
-                StdOut.println("collPoints before sorting: " + collPoints); // TODO: remove line
                 Collections.sort(collPoints); // Sort before taking first & last Points
 
                 // 4) Detect if origin is at end of segment; If true, don't add segment
@@ -199,7 +172,6 @@ public class FastCollinearPoints {
                             new LineSegment(collPoints.peek(), collPoints.peekLast());
                 }
             }
-            StdOut.println("After Adding: LineSegment: " + Arrays.toString(lineSegments)); // TODO: remove line
 
             /*
             // 8. Erase collSlope & collPoints
@@ -251,7 +223,7 @@ public class FastCollinearPoints {
 
 
     public static void main(String[] args) {
-
+        /*
         StdOut.println("###############FastCollinearPoints Tests###############");
 
         StdOut.println("##########My Own Test Cases##########");
@@ -335,6 +307,6 @@ public class FastCollinearPoints {
         }
         StdDraw.show();
         StdOut.println("I'm Done");
+        */
     }
-
 }
