@@ -46,6 +46,7 @@ public class FastCollinearPoints {
                     1) Detect a point smaller than origin (origin.compareTo(p) < 0).
                     2) & Detect a point bigger than origin.
                     3) If both found, then seg is already added; Therefore set isRefusedSlope = true
+                    4) Detect if origin is at end of segment; If true, don't add segment (its added)
                 5. Store them in collPoints; Store their slope in collSlope.
                 6. Check if there is more points having the same slope as collSlope; Add if found.
                 7. If not found, check if seg is accepted (!isRefusedSlope) to add collPoints to
@@ -85,7 +86,7 @@ public class FastCollinearPoints {
                 double slope1 = origin.compareTo(p1) < 0 ? p1.slopeTo(origin) : origin.slopeTo(p1);
                 double slope2 = origin.compareTo(p2) < 0 ? p2.slopeTo(origin) : origin.slopeTo(p2);
                 double slope3 = origin.compareTo(p3) < 0 ? p3.slopeTo(origin) : origin.slopeTo(p3);
-                StdOut.println("I am in j: " + j + " & slope3: " + slope3); // TODO: remove line
+                StdOut.println("I am in j: " + j + " & slope1: " + slope1); // TODO: remove line
 
                 // If there is already existing 3 collinear points from a previous iteration
                 if (!Double.isNaN(collSlope)) {
@@ -98,16 +99,19 @@ public class FastCollinearPoints {
                         // Detect turning point in the current collinear points
                         if (origin.compareTo(p3) < 0) {
                             thereIsBiggerP = true;
+
+                            StdOut.println("smallerP = true due to P3: " + p3); // TODO: remove line
                         } else {
                             thereIsSmallerP = true;
+                            StdOut.println("biggerP = true due to P3: " + p3); // TODO: remove line
                         }
 
                         collPoints.add(p3);
-                        StdOut.println("collpoints stored " + collPoints.size() + " points"); // TODO: remove line
+                        StdOut.println("collpoints stored " + collPoints.size() + " points which are: " + collPoints); // TODO: remove line
                     } else {
                         // 5. Store them in collPoints; Store their slope in collSlope.
                         // Else, add collPoints to lineSegm[numsegm++]; Flush collPoints & collSlope
-                        StdOut.println("I will add " + collPoints.size() + " to Linesegment"); // TODO: remove line
+                        StdOut.println("I will add " + collPoints.size() + " to Linesegment which are: " + collPoints); // TODO: remove line
 
                         // Adding
                         isRefusedSlope = thereIsSmallerP && thereIsBiggerP;
@@ -117,9 +121,15 @@ public class FastCollinearPoints {
                         // collPoints to lineSegment[numSegments++]
                         // Add current lineSegment to lineSegments only if !isRefusedSlope
                         if (!isRefusedSlope) {
+                            StdOut.println("collPoints before sorting: " + collPoints); // TODO: remove line
                             Collections.sort(collPoints); // Sort before taking first & last Points
-                            lineSegments[numbOfSegments++] =
-                                    new LineSegment(collPoints.peek(), collPoints.peekLast());
+
+                            // 4) Detect if origin is at end of segment; If true, don't add segment
+                            // (its added)
+                            if (!(collPoints.peekLast().compareTo(origin) == 0)) {
+                                lineSegments[numbOfSegments++] =
+                                        new LineSegment(collPoints.peek(), collPoints.peekLast());
+                            }
                         }
                         StdOut.println("After Adding: LineSegment: " + Arrays.toString(lineSegments)); // TODO: remove line
 
@@ -136,22 +146,23 @@ public class FastCollinearPoints {
                     // If not, Check if the current points have same slope to origin.
 
                     // If yes, check if points are of an existing segment by detecting turning point
-                    if (origin.compareTo(p1) < 0) {
+                    int compP1 = origin.compareTo(p1);
+                    int compP2 = origin.compareTo(p2);
+                    int compP3 = origin.compareTo(p3);
+
+                    // TODO: What if they are equal? it will be smaller
+                    if (compP1 < 0 || compP2 < 0 || compP3 < 0) {
                         thereIsBiggerP = true;
-                    } else {
-                        thereIsSmallerP = true;
+                        if (compP1 < 0) StdOut.println("biggerP = true due to P1: " + p1); // TODO: remove line
+                        if (compP2 < 0) StdOut.println("biggerP = true due to P2: " + p2); // TODO: remove line
+                        if (compP3 < 0) StdOut.println("biggerP = true due to P3: " + p3); // TODO: remove line
                     }
 
-                    if (origin.compareTo(p2) < 0) {
-                        thereIsBiggerP = true;
-                    } else {
+                    if (compP1 > 0 || compP2 > 0 || compP3 > 0) {
                         thereIsSmallerP = true;
-                    }
-
-                    if (origin.compareTo(p3) < 0) {
-                        thereIsBiggerP = true;
-                    } else {
-                        thereIsSmallerP = true;
+                        if (compP1 > 0) StdOut.println("smallerP = true due to P1: " + p1); // TODO: remove line
+                        if (compP2 > 0) StdOut.println("smallerP = true due to P2: " + p2); // TODO: remove line
+                        if (compP3 > 0) StdOut.println("smallerP = true due to P3: " + p3); // TODO: remove line
                     }
 
                     // then add them to CollPoints
@@ -160,24 +171,33 @@ public class FastCollinearPoints {
                     collPoints.add(p2);
                     collPoints.add(p3);
                     collSlope = slope3;
-                    StdOut.println("collPoints stored 4 points"); // TODO: remove line
+                    StdOut.println("collPoints stored 4 points which are: " + collPoints); // TODO: remove line
                 }
             }
             // This is repeated from loop j
-            StdOut.println("Outside j Loop but in loop i = " + i);
+            StdOut.println("Outside j Loop but in loop i: " + i);
 
-            StdOut.println("I will add 4 or more points to Linesegment"); // TODO: remove line
+            // 5. Store them in collPoints; Store their slope in collSlope.
+            // Else, add collPoints to lineSegm[numsegm++]; Flush collPoints & collSlope
+            StdOut.println("I will add " + collPoints.size() + " to Linesegment which are: " + collPoints); // TODO: remove line
 
             // Adding
             isRefusedSlope = thereIsSmallerP && thereIsBiggerP;
+            StdOut.println("Before Adding: lineSegments.length: " + lineSegments.length + " ; numberOfSegments: " + numbOfSegments + " ; pointsClone.length: " + pointsClone.length);
 
             // 7. If not found, check if seg is accepted (!isRefusedSlope) to add
             // collPoints to lineSegment[numSegments++]
             // Add current lineSegment to lineSegments only if !isRefusedSlope
-            if (!isRefusedSlope && collPoints.size() > 1) {
+            if (!isRefusedSlope && !Double.isNaN(collSlope)) {
+                StdOut.println("collPoints before sorting: " + collPoints); // TODO: remove line
                 Collections.sort(collPoints); // Sort before taking first & last Points
-                lineSegments[numbOfSegments++] =
-                        new LineSegment(collPoints.peek(), collPoints.peekLast());
+
+                // 4) Detect if origin is at end of segment; If true, don't add segment
+                // (its added)
+                if (!(collPoints.peekLast().compareTo(origin) == 0)) {
+                    lineSegments[numbOfSegments++] =
+                            new LineSegment(collPoints.peek(), collPoints.peekLast());
+                }
             }
             StdOut.println("After Adding: LineSegment: " + Arrays.toString(lineSegments)); // TODO: remove line
 
