@@ -15,3 +15,13 @@ The goal of this assignment is to implement elementary data structures using arr
 Grade: 100/100
 
 ![Deques and Randomized Queues](./Grades/DequesandRandomizedQueues.png)
+
+<br>
+
+# Collinear
+
+The goal, of this assingment, is to create a line pattern between any 4 points or more on the same line via two methods; The Brute force method which takes O(n)\~=N^4 when it tries to connect 4 points (or takes *n* in general where *n* is the number of consequitive collinear points; so if we want 5 consequitive points, it will take N^5). The other method is the mergesorting method which takes O(n)\~=n^2 despite the number of elements we are searching for; We use it to sort because it is the fastest & moststable (i.e., Items don't entirely re-arrange when we are re-sorting w.r.t another parameter).
+
+Grade: 100/100
+
+![Collinear](./Grades/collinear.png)
