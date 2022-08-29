@@ -31,14 +31,22 @@ public class Board {
 
     // board dimension n
     public int dimension() {
-        // TODO
-        return 0;
+        return tileLength;
     }
 
     // number of tiles out of place
     public int hamming() {
-        // TODO
-        return 0;
+        int numOfOut = 0;
+        for (int i = 0; i < tileLength; i++) {
+            int i1 = i+1;
+            for (int j = 0; j < tileLength; j++) {
+                int j1 = j+1;
+                if (tiles[i][j] != BLANK_TILE && tiles[i][j] != i1+(j1*tileLength)) {
+                    numOfOut++;
+                }
+            }
+        }
+        return numOfOut;
     }
 
     // sum of Manhattan distances between tiles and goal
@@ -96,7 +104,10 @@ public class Board {
 
         // Testing construction & printing
         Board board = new Board(exampleTiles);
+        assert (board.dimension() == 3):
+                "Dimensions didn't return 3 but instead" + board.dimension();
         StdOut.println("Printing board test: \n" + board);
+
 
         // Testing compare
         // When equal
@@ -115,5 +126,10 @@ public class Board {
         Board testBoard3 = new Board(new int[][]{{5, 0, 3}, {4, 2, 5}, {7, 8, 6}});
         assert !board.equals(testBoard3) : "Boards should not be equal but they are; board: "
                 + board + "\n and testBoard3: " + testBoard3;
+
+
+        // Testing Hamming
+        assert (board.hamming() == 0): "hamming() didn't return 0 but instead: " + board.hamming();
+
     }
 }
