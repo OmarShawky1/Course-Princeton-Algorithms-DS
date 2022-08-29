@@ -22,7 +22,7 @@ public class Board {
     public String toString() {
         StringBuilder tempString = new StringBuilder();
 
-        for (int[] tilesRow: tiles) {
+        for (int[] tilesRow : tiles) {
             tempString.append(Arrays.toString(tilesRow)).append("\n");
         }
 
@@ -55,9 +55,23 @@ public class Board {
 
     // does this board equal y?
     public boolean equals(Object y) {
-        // TODO
-        return false;
+        assert (y instanceof Board) : "equals received a non-board object";
+
+        if (((Board) y).tileLength != tileLength) {
+            return false;
+        }
+
+        for (int i = 0; i < tileLength; i++) {
+            for (int j = 0; j < tileLength; j++) {
+                if (((Board) y).tiles[i][j] != tiles[i][j]) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
+
     /*
     // all neighboring boards
     public Iterable<Board> neighbors() {
@@ -78,12 +92,28 @@ public class Board {
         StdOut.println("##########My Own Test Cases##########");
 
         StdOut.println("####Test 1####");
-        int[][] exampleTiles = {{1,0,3}, {4,2,5}, {7,8,6}};
+        int[][] exampleTiles = {{1, 0, 3}, {4, 2, 5}, {7, 8, 6}};
 
         // Testing construction & printing
         Board board = new Board(exampleTiles);
-        StdOut.println(board);
+        StdOut.println("Printing board test: \n" + board);
 
-        
+        // Testing compare
+        // When equal
+        Board testBoard1 = new Board(exampleTiles);
+        assert board.equals(testBoard1) :
+                "Boards should be equal but they are not; board: " + board + "\n and testBoard1: "
+                        + testBoard1;
+
+        // When different length
+        Board testBoard2 = new Board(new int[][]{{1, 2}, {3, 4}, {5, 6}});
+        assert !board.equals(testBoard2) : "Boards should not be equal but they are; board: "
+                + board + "\n and testBoard2: " + testBoard2;
+
+
+        // When tiles differ
+        Board testBoard3 = new Board(new int[][]{{5, 0, 3}, {4, 2, 5}, {7, 8, 6}});
+        assert !board.equals(testBoard3) : "Boards should not be equal but they are; board: "
+                + board + "\n and testBoard3: " + testBoard3;
     }
 }
