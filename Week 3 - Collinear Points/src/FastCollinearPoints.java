@@ -42,6 +42,7 @@ public class FastCollinearPoints {
                 2. Begin a for loop
                 3. Try to detect 3 consecutive points having same slope.
                 4. If found, check if they are points of an existing/added slope.
+                    *) You can check if current point is the lowest/origin or do as following:
                     1) Detect a point smaller than origin (origin.compareTo(p) < 0).
                     2) & Detect a point bigger than origin.
                     3) If both found, then seg is already added; Therefore set isRefusedSlope = true
