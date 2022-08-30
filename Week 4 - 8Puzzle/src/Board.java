@@ -56,10 +56,10 @@ public class Board {
         int numOfOut = 0;
         for (int i = 0; i < tileLength; i++) {
             for (int j = 0; j < tileLength; j++) {
-                StdOut.println("i: " + i + " & j: " + j); // TODO Remove line
+//                StdOut.println("i: " + i + " & j: " + j); // TODO Remove line
                 int tempTile = tiles[i][j];
                 if (tiles[i][j] != BLANK_TILE && tempTile != (i * tileLength + (j + 1))) {
-                    StdOut.println("tiles[" + i + "][" + j + "]: " + tiles[i][j] + ", (i * " + "tileLength + (j + 1)): " + (i * tileLength + (j + 1))); // TODO Remove line
+//                    StdOut.println("tiles[" + i + "][" + j + "]: " + tiles[i][j] + ", (i * " + "tileLength + (j + 1)): " + (i * tileLength + (j + 1))); // TODO Remove line
 
                     // check if tile is in correct row
                     int goalRow = (tempTile - 1) / tileLength;
@@ -72,7 +72,7 @@ public class Board {
                     int deltaCol = j - goalCol;
                     deltaCol = deltaCol < 0 ? deltaCol * -1 : deltaCol; // Getting absolute
                     numOfOut += deltaCol;
-                    StdOut.println("numOfOut: " + numOfOut + ", deltaRow:" + deltaRow + ", deltaCol" + ": " + deltaCol); // TODO Remove line
+//                    StdOut.println("numOfOut: " + numOfOut + ", deltaRow:" + deltaRow + ", deltaCol" + ": " + deltaCol); // TODO Remove line
                 }
             }
         }
@@ -81,8 +81,7 @@ public class Board {
 
     // is this board the goal board?
     public boolean isGoal() {
-        // TODO
-        return false;
+        return hamming() == 0; // or manhattan but hammins is faster
     }
 
     // does this board equal y?
@@ -124,54 +123,62 @@ public class Board {
         StdOut.println("##########My Own Test Cases##########");
 
         StdOut.println("####Test 1####");
+        int numberOfTests = 0;
         int[][] exampleTiles = {{1, 0, 3}, {4, 2, 5}, {7, 8, 6}};
 
         // Testing construction & printing
         Board board = new Board(exampleTiles);
         assert (board.dimension() == 3) : "Dimensions didn't return 3 but instead" + board.dimension();
         StdOut.println("Printing board test: \n" + board);
-        StdOut.println();
+        StdOut.println("Test: " + ++numberOfTests + " passed");
 
 
         // Testing compare
         // When equal
         Board board1 = new Board(exampleTiles);
         assert board.equals(board1) : "Boards should be equal but they are not; board: " + board + "\n and board1: " + board1;
-        StdOut.println();
+        StdOut.println("Test: " + ++numberOfTests + " passed");
 
         // When different length
         Board board2 = new Board(new int[][]{{1, 2}, {3, 4}, {5, 6}});
         assert !board.equals(board2) : "Boards should not be equal but they are; board: " + board + "\n and board2: " + board2;
-        StdOut.println();
+        StdOut.println("Test: " + ++numberOfTests + " passed");
 
 
         // When tiles differ
         Board board3 = new Board(new int[][]{{5, 0, 3}, {4, 2, 5}, {7, 8, 6}});
         assert !board.equals(board3) : "Boards should not be equal but they are; board: " + board + "\n and board3: " + board3;
-        StdOut.println();
+        StdOut.println("Test: " + ++numberOfTests + " passed");
 
 
         // Testing Hamming
         assert (board.hamming() == 3) : "hamming() didn't return 3 but instead: " + board.hamming();
-        StdOut.println();
+        StdOut.println("Test: " + ++numberOfTests + " passed");
 
         int[][] organizedInt = new int[][]{{1, 2, 3}, {4, 5, 6}, {7, 8, 0}};
         Board board4 = new Board(organizedInt);
         assert (board4.hamming() == 0) : "hamming() didn't return 0 but instead: " + board4.hamming();
+        StdOut.println("Test: " + ++numberOfTests + " passed");
 
-        StdOut.println();
         Board board5 = new Board(new int[][]{{8, 1, 3}, {4, 0, 2}, {7, 6, 5}});
         assert (board5.hamming() == 5) : "hamming() didn't return 5 but instead: " + board5.hamming();
 
         // Testing Manhattan
         assert board.manhattan() == 3 : "manhattan() didn't return 3 but instead: " + board.manhattan();
-        StdOut.println();
+        StdOut.println("Test: " + ++numberOfTests + " passed");
 
         assert (board5.manhattan() == 10) : "manhattan() didn't return 10 but instead: " + board5.manhattan();
+        StdOut.println("Test: " + ++numberOfTests + " passed");
 
-        StdOut.println();
         assert (board4.manhattan() == 0) : "manhattan() didn't return 0 but instead: " + board4.manhattan();
 
+        // Testing isGoal
+        assert (board4.isGoal()) : "board4 should've been sorted but it isn't";
+        StdOut.println("Test: " + ++numberOfTests + " passed");
+
+        assert (!board3.isGoal()): "board3 shouldn't be sorted but it is";
+        StdOut.println("Test: " + ++numberOfTests + " passed");
+        
 
     }
 }
