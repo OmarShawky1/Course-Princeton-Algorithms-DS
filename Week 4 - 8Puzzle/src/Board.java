@@ -2,6 +2,7 @@ import edu.princeton.cs.algs4.StdOut;
 
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.Stack;
 
 public class Board {
 
@@ -9,6 +10,7 @@ public class Board {
     private static final int BLANK_TILE = 0;
     private final int tilesLength; // n
     private final int[][] tiles;
+    private Stack<Board> boardStack; // TODO: check if that is correct & what should i do with it
 
     // create a board from an n-by-n array of tiles, where tiles[row][col] = tile at (row, col)
     public Board(int[][] tiles) {
@@ -16,6 +18,7 @@ public class Board {
 
         tilesLength = tiles.length;
         this.tiles = tiles.clone();
+        boardStack = new Stack<>(); // TODO: check if that is correct
     }
 
     // string representation of this board
@@ -142,7 +145,7 @@ public class Board {
     private class BoardIterator implements Iterable<Board> {
         @Override
         public Iterator<Board> iterator() {
-            return null;
+            return boardStack.iterator(); // TODO: check if that is correct
         }
     }
 
