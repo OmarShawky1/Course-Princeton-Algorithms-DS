@@ -6,14 +6,14 @@ public class Board {
 
     // Global Variables
     private static final int BLANK_TILE = 0;
-    private final int tileLength; // n
+    private final int tilesLength; // n
     private final int[][] tiles;
 
     // create a board from an n-by-n array of tiles, where tiles[row][col] = tile at (row, col)
     public Board(int[][] tiles) {
         assert ((2 <= tiles.length && tiles.length < 128) && (2 <= tiles[0].length && tiles[0].length < 128)) : "I received unacceptable tiles";
 
-        tileLength = tiles.length;
+        tilesLength = tiles.length;
         this.tiles = tiles.clone();
     }
 
@@ -25,22 +25,22 @@ public class Board {
             tempString.append(Arrays.toString(tilesRow)).append("\n");
         }
 
-        return tileLength + "\n" + tempString;
+        return tilesLength + "\n" + tempString;
     }
 
     // board dimension n
     public int dimension() {
-        return tileLength;
+        return tilesLength;
     }
 
     // number of tiles out of place
     public int hamming() {
         int numOfOut = 0;
-        for (int i = 0; i < tileLength; i++) {
-            for (int j = 0; j < tileLength; j++) {
+        for (int i = 0; i < tilesLength; i++) {
+            for (int j = 0; j < tilesLength; j++) {
                 int j1 = j + 1;
 //                StdOut.println("i: " + i + " & j: " + j); // TODO Remove line
-                if (tiles[i][j] != BLANK_TILE && tiles[i][j] != (i * tileLength + j1)) {
+                if (tiles[i][j] != BLANK_TILE && tiles[i][j] != (i * tilesLength + j1)) {
 //                    StdOut.println("(i * tileLength + j1): " + (i * tileLength + j1)); // TODO Remove line
 //                    StdOut.println("tiles[i][j]: " + tiles[i][j]); // TODO Remove line
                     numOfOut++;
@@ -54,21 +54,21 @@ public class Board {
     // sum of Manhattan distances between tiles and goal
     public int manhattan() {
         int numOfOut = 0;
-        for (int i = 0; i < tileLength; i++) {
-            for (int j = 0; j < tileLength; j++) {
+        for (int i = 0; i < tilesLength; i++) {
+            for (int j = 0; j < tilesLength; j++) {
 //                StdOut.println("i: " + i + " & j: " + j); // TODO Remove line
                 int tempTile = tiles[i][j];
-                if (tiles[i][j] != BLANK_TILE && tempTile != (i * tileLength + (j + 1))) {
+                if (tiles[i][j] != BLANK_TILE && tempTile != (i * tilesLength + (j + 1))) {
 //                    StdOut.println("tiles[" + i + "][" + j + "]: " + tiles[i][j] + ", (i * " + "tileLength + (j + 1)): " + (i * tileLength + (j + 1))); // TODO Remove line
 
                     // check if tile is in correct row
-                    int goalRow = (tempTile - 1) / tileLength;
+                    int goalRow = (tempTile - 1) / tilesLength;
                     int deltaRow = i - goalRow;
                     deltaRow = deltaRow < 0 ? deltaRow * -1 : deltaRow; // Getting absolute
                     numOfOut += deltaRow;
 
                     // check if tile is in correct col
-                    int goalCol = (tempTile - 1) % tileLength;
+                    int goalCol = (tempTile - 1) % tilesLength;
                     int deltaCol = j - goalCol;
                     deltaCol = deltaCol < 0 ? deltaCol * -1 : deltaCol; // Getting absolute
                     numOfOut += deltaCol;
@@ -86,14 +86,15 @@ public class Board {
 
     // does this board equal y?
     public boolean equals(Object y) {
+        // Could've used Arrays.deepEquals() as prescribed in the FAQs
         assert (y instanceof Board) : "equals received a non-board object";
 
-        if (((Board) y).tileLength != tileLength) {
+        if (((Board) y).tilesLength != tilesLength) {
             return false;
         }
 
-        for (int i = 0; i < tileLength; i++) {
-            for (int j = 0; j < tileLength; j++) {
+        for (int i = 0; i < tilesLength; i++) {
+            for (int j = 0; j < tilesLength; j++) {
                 if (((Board) y).tiles[i][j] != tiles[i][j]) {
                     return false;
                 }
@@ -111,8 +112,30 @@ public class Board {
     */
     // a board that is obtained by exchanging any pair of tiles
     public Board twin() {
-        // TODO
-        return new Board(tiles);
+        int[][] tilesClone = tiles.clone();
+        int swap;
+
+        for (int i = 1; i < tilesLength; i++) {
+            if (!tileNotBlank(i - 1, 0)) continue;
+
+//            StdOut.println("Loop i= " + i); // TODO: remove line
+            swap = tilesClone[i - 1][0];
+            if (tileNotBlank(i, 0)) {
+//                StdOut.println("I will swap tilesClone[" + (i - 1) + "][" + 0 + "]: " + tilesClone[i - 1][0] + " with tilesClone[" + i + "][" + 0 + "]: " + tilesClone[i][0]); // TODO: remove line
+                tilesClone[i - 1][0] = tilesClone[i][0];
+                tilesClone[i][0] = swap;
+            } else {
+//                StdOut.println("I will swap tilesClone[" + (i - 1) + "][" + 0 + "]: " + tilesClone[i - 1][0] + " with tilesClone[" + i + "][" + 1 + "]: " + tilesClone[i][1]); // TODO: remove line
+                tilesClone[i - 1][0] = tilesClone[i][1];
+                tilesClone[i][1] = swap;
+            }
+            break;
+        }
+        return new Board(tilesClone);
+    }
+
+    private boolean tileNotBlank(int row, int col) {
+        return tiles[row][col] != BLANK_TILE;
     }
 
     // unit testing (not graded)
@@ -176,9 +199,18 @@ public class Board {
         assert (board4.isGoal()) : "board4 should've been sorted but it isn't";
         StdOut.println("Test: " + ++numberOfTests + " passed");
 
-        assert (!board3.isGoal()): "board3 shouldn't be sorted but it is";
+        assert (!board3.isGoal()) : "board3 shouldn't be sorted but it is";
         StdOut.println("Test: " + ++numberOfTests + " passed");
-        
 
+        // Testing twin
+        Board board6 = new Board(new int[][]{{4, 0, 3}, {1, 2, 5}, {7, 8, 6}});
+        assert (board.twin().equals(board6)) : "board.twin should've been equal to board6 but " +
+                "board6 is: \n" + board6 + "while board.twin() is: \n" + board.twin();
+        StdOut.println("Test: " + ++numberOfTests + " passed");
+
+        Board board7 = new Board(new int[][]{{4, 1, 3}, {8, 0, 2}, {7, 6, 5}});
+        assert (board5.twin().equals(board7)) : "board5.twin should've been equal to board7 but " +
+                "board7 is: \n" + board7 + "while board5.twin() is: \n" + board5.twin();
+        StdOut.println("Test: " + ++numberOfTests + " passed");
     }
 }
