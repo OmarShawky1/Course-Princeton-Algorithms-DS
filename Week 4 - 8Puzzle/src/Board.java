@@ -1,6 +1,7 @@
 import edu.princeton.cs.algs4.StdOut;
 
 import java.util.Arrays;
+import java.util.Iterator;
 
 public class Board {
 
@@ -104,12 +105,12 @@ public class Board {
         return true;
     }
 
-    /*
+
     // all neighboring boards
     public Iterable<Board> neighbors() {
-        // TODO
+        return new BoardIterator();
     }
-    */
+
     // a board that is obtained by exchanging any pair of tiles
     public Board twin() {
         int[][] tilesClone = tiles.clone();
@@ -136,6 +137,13 @@ public class Board {
 
     private boolean tileNotBlank(int row, int col) {
         return tiles[row][col] != BLANK_TILE;
+    }
+
+    private class BoardIterator implements Iterable<Board> {
+        @Override
+        public Iterator<Board> iterator() {
+            return null;
+        }
     }
 
     // unit testing (not graded)
@@ -212,5 +220,7 @@ public class Board {
         assert (board5.twin().equals(board7)) : "board5.twin should've been equal to board7 but " +
                 "board7 is: \n" + board7 + "while board5.twin() is: \n" + board5.twin();
         StdOut.println("Test: " + ++numberOfTests + " passed");
+
+        // Testing Iterable
     }
 }
