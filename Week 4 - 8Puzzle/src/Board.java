@@ -5,12 +5,14 @@ import java.util.Iterator;
 import java.util.Stack;
 
 public class Board {
-    // TODO: Finish the enrichment in the FAQ
+
     // Global Variables
     private static final int BLANK_TILE = 0;
     private final int tilesLength; // n
     private final int[] tiles;
     private Stack<Board> boardStack;
+    private final int manhattan;
+    private final int hamming;
 
     // create a board from an n-by-n array of tiles, where tiles[row][col] = tile at (row, col)
     public Board(int[][] tilesIn) {
@@ -27,6 +29,9 @@ public class Board {
             }
         }
         boardStack = new Stack<>();
+
+        hamming = hammingInst();
+        manhattan = manhattanInst();
     }
 
     // string representation of this board
@@ -48,6 +53,10 @@ public class Board {
 
     // number of tiles out of place
     public int hamming() {
+        return hamming;
+    }
+
+    private int hammingInst() {
         int numOfOut = 0;
         for (int i = 0; i < tilesLength; i++) {
             for (int j = 0; j < tilesLength; j++) {
@@ -66,6 +75,11 @@ public class Board {
 
     // sum of Manhattan distances between tiles and goal
     public int manhattan() {
+        return manhattan;
+    }
+
+    // Calculate manhattan at instantiation
+    private int manhattanInst() {
         int numOfOut = 0;
         for (int i = 0; i < tilesLength; i++) {
             for (int j = 0; j < tilesLength; j++) {
