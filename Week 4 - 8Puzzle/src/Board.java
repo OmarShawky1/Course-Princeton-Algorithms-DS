@@ -5,20 +5,22 @@ import java.util.Iterator;
 import java.util.Stack;
 
 public class Board {
-
+    // TODO: Finish the enrichment in the FAQ
     // Global Variables
     private static final int BLANK_TILE = 0;
     private final int tilesLength; // n
     private final int[][] tiles;
-    private Stack<Board> boardStack; // TODO: check if that is correct & what should i do with it
+    private Stack<Board> boardStack;
 
     // create a board from an n-by-n array of tiles, where tiles[row][col] = tile at (row, col)
     public Board(int[][] tiles) {
-        assert ((2 <= tiles.length && tiles.length < 128) && (2 <= tiles[0].length && tiles[0].length < 128)) : "I received unacceptable tiles";
+        assert ((2 <= tiles.length && tiles.length < 128) &&
+                (2 <= tiles[0].length && tiles[0].length < 128))
+                : "I received unacceptable tiles";
 
         tilesLength = tiles.length;
         this.tiles = tiles.clone();
-        boardStack = new Stack<>(); // TODO: check if that is correct
+        boardStack = new Stack<>();
     }
 
     // string representation of this board
@@ -85,7 +87,7 @@ public class Board {
 
     // is this board the goal board?
     public boolean isGoal() {
-        return hamming() == 0; // or manhattan but hammins is faster
+        return hamming() == 0; // or manhattan but hamming is faster
     }
 
     // does this board equal y?
@@ -111,12 +113,83 @@ public class Board {
 
     // all neighboring boards
     public Iterable<Board> neighbors() {
+        // First, find the index of the Blank tile
+        int blankI = -1;
+        int blankJ = -1;
+        for (int i = 0; i < tilesLength; i++) {
+            for (int j = 0; j < tilesLength; j++) {
+                if (tiles[i][j] == BLANK_TILE) {
+                    blankI = i;
+                    blankJ = j;
+                }
+            }
+        }
+
+        // Second, try to switch it with the four directions (up, down, left, right)
+
+        int[][] tilesClone = new int[tilesLength][tilesLength];
+        // If not up, switch with up
+        if (blankI != 0) {
+            for (int i = 0; i < tilesLength; i++) {
+                tilesClone[i] = tiles[i].clone();
+            }
+//            StdOut.println("U: tilesClone:\n" + Arrays.deepToString(tilesClone).replace("], ", "]\n").replace("[[", "[").replace("]]", "]")); //TODO remove line
+            int swap = tilesClone[blankI - 1][blankJ];
+            tilesClone[blankI - 1][blankJ] = BLANK_TILE;
+            tilesClone[blankI][blankJ] = swap;
+
+            boardStack.push(new Board(tilesClone));
+        }
+
+        // If not down, switch with down
+        if (blankI != tilesLength - 1) {
+            for (int i = 0; i < tilesLength; i++) {
+                tilesClone[i] = tiles[i].clone();
+            }
+//            StdOut.println("D: tilesClone:\n" + Arrays.deepToString(tilesClone).replace("], ", "]\n").replace("[[", "[").replace("]]", "]")); //TODO remove line
+            int swap = tilesClone[blankI + 1][blankJ];
+            tilesClone[blankI + 1][blankJ] = BLANK_TILE;
+            tilesClone[blankI][blankJ] = swap;
+
+            boardStack.push(new Board(tilesClone));
+        }
+
+        // If not left, switch with left
+        if (blankJ != 0) {
+            for (int i = 0; i < tilesLength; i++) {
+                tilesClone[i] = tiles[i].clone();
+            }
+//            StdOut.println("L: tilesClone:\n" + Arrays.deepToString(tilesClone).replace("], ", "]\n").replace("[[", "[").replace("]]", "]")); //TODO remove line
+            int swap = tilesClone[blankI][blankJ - 1];
+            tilesClone[blankI][blankJ - 1] = BLANK_TILE;
+            tilesClone[blankI][blankJ] = swap;
+
+            boardStack.push(new Board(tilesClone));
+        }
+
+        // If not right, switch with right
+        if (blankJ != tilesLength - 1) {
+            for (int i = 0; i < tilesLength; i++) {
+                tilesClone[i] = tiles[i].clone();
+            }
+//            StdOut.println("R: tilesClone:\n" + Arrays.deepToString(tilesClone).replace("], ", "]\n").replace("[[", "[").replace("]]", "]")); //TODO remove line
+            int swap = tilesClone[blankI][blankJ + 1];
+            tilesClone[blankI][blankJ + 1] = BLANK_TILE;
+            tilesClone[blankI][blankJ] = swap;
+
+            boardStack.push(new Board(tilesClone));
+        }
+
         return new BoardIterator();
     }
 
     // a board that is obtained by exchanging any pair of tiles
     public Board twin() {
-        int[][] tilesClone = tiles.clone();
+        int[][] tilesClone = new int[tilesLength][tilesLength];
+        for (int i = 0; i < tilesLength; i++) {
+            tilesClone[i] = tiles[i].clone();
+        }
+
         int swap;
 
         for (int i = 1; i < tilesLength; i++) {
@@ -225,5 +298,53 @@ public class Board {
         StdOut.println("Test: " + ++numberOfTests + " passed");
 
         // Testing Iterable
+        Board board8 = new Board(new int[][]{{8, 1, 3}, {4, 0, 2}, {7, 6, 5}});
+        Iterator<Board> iterator = board8.neighbors().iterator();
+
+        Board upBoard = iterator.next();
+        assert (upBoard.equals(new Board(new int[][]{{8, 0, 3}, {4, 1, 2}, {7, 6, 5}}))) :
+                "Up Blank tile switch failed and neighbour is:\n" + upBoard;
+        StdOut.println("Test: " + ++numberOfTests + " passed");
+
+        Board downBoard = iterator.next();
+        assert (downBoard.equals(new Board(new int[][]{{8, 1, 3}, {4, 6, 2}, {7, 0, 5}}))) :
+                "Down Blank tile switch failed and neighbour is:\n" + downBoard;
+        StdOut.println("Test: " + ++numberOfTests + " passed");
+
+        Board leftBoard = iterator.next();
+        assert (leftBoard.equals(new Board(new int[][]{{8, 1, 3}, {0, 4, 2}, {7, 6, 5}}))) :
+                "Left Blank tile switch failed and neighbour is:\n" + leftBoard;
+        StdOut.println("Test: " + ++numberOfTests + " passed");
+
+        Board rightBoard = iterator.next();
+        assert (rightBoard.equals(new Board(new int[][]{{8, 1, 3}, {4, 2, 0}, {7, 6, 5}}))) :
+                "Right Blank tile switch failed and neighbour is:\n" + rightBoard;
+        StdOut.println("Test: " + ++numberOfTests + " passed");
+
+        Board board9 = new Board(new int[][]{{0, 1, 3}, {4, 2, 5}, {7, 8, 6}});
+        Iterator<Board> iterator2 = board9.neighbors().iterator();
+
+        Board downBoard2 = iterator2.next();
+        assert (downBoard2.equals(new Board(new int[][]{{4, 1, 3}, {0, 2, 5}, {7, 8, 6}}))) :
+                "Down Blank tile switch failed and neighbour is:\n" + downBoard2;
+        StdOut.println("Test: " + ++numberOfTests + " passed");
+
+        Board rightBoard2 = iterator2.next();
+        assert (rightBoard2.equals(new Board(new int[][]{{1, 0, 3}, {4, 2, 5}, {7, 8, 6}}))) :
+                "Right Blank tile switch failed and neighbour is:\n" + rightBoard2;
+        StdOut.println("Test: " + ++numberOfTests + " passed");
+
+        Board board10 = new Board(new int[][]{{6, 1, 3}, {4, 2, 5}, {7, 8, 0}});
+        Iterator<Board> iterator3 = board10.neighbors().iterator();
+
+        Board upBoard3 = iterator3.next();
+        assert (upBoard3.equals(new Board(new int[][]{{6, 1, 3}, {4, 2, 0}, {7, 8, 5}}))) :
+                "Up Blank tile switch failed and neighbour is:\n" + upBoard3;
+        StdOut.println("Test: " + ++numberOfTests + " passed");
+
+        Board leftBoard3 = iterator3.next();
+        assert (leftBoard3.equals(new Board(new int[][]{{6, 1, 3}, {4, 2, 5}, {7, 0, 8}}))) :
+                "Left Blank tile switch failed and neighbour is:\n" + leftBoard3;
+        StdOut.println("Test: " + ++numberOfTests + " passed");
     }
 }
