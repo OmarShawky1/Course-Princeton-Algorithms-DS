@@ -9,17 +9,23 @@ public class Board {
     // Global Variables
     private static final int BLANK_TILE = 0;
     private final int tilesLength; // n
-    private final int[][] tiles;
+    private final int[] tiles;
     private Stack<Board> boardStack;
 
     // create a board from an n-by-n array of tiles, where tiles[row][col] = tile at (row, col)
-    public Board(int[][] tiles) {
-        assert ((2 <= tiles.length && tiles.length < 128) &&
-                (2 <= tiles[0].length && tiles[0].length < 128))
+    public Board(int[][] tilesIn) {
+        assert ((2 <= tilesIn.length && tilesIn.length < 128) &&
+                (2 <= tilesIn[0].length && tilesIn[0].length < 128))
                 : "I received unacceptable tiles";
 
-        tilesLength = tiles.length;
-        this.tiles = tiles.clone();
+        tilesLength = tilesIn.length;
+        // tiles = tiles.clone();
+        this.tiles = new int[tilesLength * tilesLength];
+        for (int i = 0; i < tilesLength; i++) {
+            for (int j = 0; j < tilesLength; j++) {
+                tiles[twoDto1D(i, j)] = tilesIn[i][j];
+            }
+        }
         boardStack = new Stack<>();
     }
 
@@ -27,9 +33,10 @@ public class Board {
     public String toString() {
         StringBuilder tempString = new StringBuilder();
 
-        for (int[] tilesRow : tiles) {
+        /*for (int[] tilesRow : tiles) {
             tempString.append(Arrays.toString(tilesRow)).append("\n");
-        }
+        }*/
+        tempString.append(Arrays.toString(tiles)).append("\n");
 
         return tilesLength + "\n" + tempString;
     }
@@ -45,12 +52,12 @@ public class Board {
         for (int i = 0; i < tilesLength; i++) {
             for (int j = 0; j < tilesLength; j++) {
                 int j1 = j + 1;
-//                StdOut.println("i: " + i + " & j: " + j); // TODO Remove line
-                if (tiles[i][j] != BLANK_TILE && tiles[i][j] != (i * tilesLength + j1)) {
-//                    StdOut.println("(i * tileLength + j1): " + (i * tileLength + j1)); // TODO Remove line
-//                    StdOut.println("tiles[i][j]: " + tiles[i][j]); // TODO Remove line
+                // StdOut.println("i: " + i + " & j: " + j); // TODO Remove line
+                if (tiles[twoDto1D(i, j)] != BLANK_TILE && tiles[twoDto1D(i, j)] != (i * tilesLength + j1)) {
+                // StdOut.println("(i * tileLength + j1): " + (i * tileLength + j1)); // TODO Remove line
+                // StdOut.println("tiles[i][j]: " + tiles[i][j]); // TODO Remove line
                     numOfOut++;
-//                    StdOut.println("numOfOut: " + numOfOut); // TODO Remove line
+                // StdOut.println("numOfOut: " + numOfOut); // TODO Remove line
                 }
             }
         }
@@ -62,10 +69,10 @@ public class Board {
         int numOfOut = 0;
         for (int i = 0; i < tilesLength; i++) {
             for (int j = 0; j < tilesLength; j++) {
-//                StdOut.println("i: " + i + " & j: " + j); // TODO Remove line
-                int tempTile = tiles[i][j];
-                if (tiles[i][j] != BLANK_TILE && tempTile != (i * tilesLength + (j + 1))) {
-//                    StdOut.println("tiles[" + i + "][" + j + "]: " + tiles[i][j] + ", (i * " + "tileLength + (j + 1)): " + (i * tileLength + (j + 1))); // TODO Remove line
+                // StdOut.println("i: " + i + " & j: " + j); // TODO Remove line
+                int tempTile = tiles[twoDto1D(i, j)];
+                if (tiles[twoDto1D(i, j)] != BLANK_TILE && tempTile != (i * tilesLength + (j + 1))) {
+                    // StdOut.println("tiles[" + i + "][" + j + "]: " + tiles[i][j] + ", (i * " + "tileLength + (j + 1)): " + (i * tileLength + (j + 1))); // TODO Remove line
 
                     // check if tile is in correct row
                     int goalRow = (tempTile - 1) / tilesLength;
@@ -78,7 +85,7 @@ public class Board {
                     int deltaCol = j - goalCol;
                     deltaCol = deltaCol < 0 ? deltaCol * -1 : deltaCol; // Getting absolute
                     numOfOut += deltaCol;
-//                    StdOut.println("numOfOut: " + numOfOut + ", deltaRow:" + deltaRow + ", deltaCol" + ": " + deltaCol); // TODO Remove line
+                    // StdOut.println("numOfOut: " + numOfOut + ", deltaRow:" + deltaRow + ", deltaCol" + ": " + deltaCol); // TODO Remove line
                 }
             }
         }
@@ -101,7 +108,7 @@ public class Board {
 
         for (int i = 0; i < tilesLength; i++) {
             for (int j = 0; j < tilesLength; j++) {
-                if (((Board) y).tiles[i][j] != tiles[i][j]) {
+                if (((Board) y).tiles[twoDto1D(i, j)] != tiles[twoDto1D(i, j)]) {
                     return false;
                 }
             }
@@ -118,7 +125,7 @@ public class Board {
         int blankJ = -1;
         for (int i = 0; i < tilesLength; i++) {
             for (int j = 0; j < tilesLength; j++) {
-                if (tiles[i][j] == BLANK_TILE) {
+                if (tiles[twoDto1D(i, j)] == BLANK_TILE) {
                     blankI = i;
                     blankJ = j;
                 }
@@ -127,57 +134,65 @@ public class Board {
 
         // Second, try to switch it with the four directions (up, down, left, right)
 
-        int[][] tilesClone = new int[tilesLength][tilesLength];
+        int[] tilesClone = new int[tilesLength * tilesLength];
         // If not up, switch with up
         if (blankI != 0) {
-            for (int i = 0; i < tilesLength; i++) {
+            /*for (int i = 0; i < tilesLength; i++) {
                 tilesClone[i] = tiles[i].clone();
-            }
-//            StdOut.println("U: tilesClone:\n" + Arrays.deepToString(tilesClone).replace("], ", "]\n").replace("[[", "[").replace("]]", "]")); //TODO remove line
-            int swap = tilesClone[blankI - 1][blankJ];
-            tilesClone[blankI - 1][blankJ] = BLANK_TILE;
-            tilesClone[blankI][blankJ] = swap;
+            }*/
+            tilesClone = tiles.clone();
+            // StdOut.println("U: tilesClone:\n" + Arrays.deepToString(tilesClone).replace("], ", "]\n").replace("[[", "[").replace("]]", "]")); //TODO remove line
+            int swap = tilesClone[twoDto1D(blankI - 1, blankJ)];
+            tilesClone[twoDto1D(blankI - 1, blankJ)] = BLANK_TILE;
+            tilesClone[twoDto1D(blankI, blankJ)] = swap;
 
-            boardStack.push(new Board(tilesClone));
+            // boardStack.push(new Board(tilesClone));
+            boardStack.push(new Board(oneDto2D(tilesClone))); // Done as requested by Enrichment
         }
 
         // If not down, switch with down
         if (blankI != tilesLength - 1) {
-            for (int i = 0; i < tilesLength; i++) {
+            /*for (int i = 0; i < tilesLength; i++) {
                 tilesClone[i] = tiles[i].clone();
-            }
-//            StdOut.println("D: tilesClone:\n" + Arrays.deepToString(tilesClone).replace("], ", "]\n").replace("[[", "[").replace("]]", "]")); //TODO remove line
-            int swap = tilesClone[blankI + 1][blankJ];
-            tilesClone[blankI + 1][blankJ] = BLANK_TILE;
-            tilesClone[blankI][blankJ] = swap;
+            }*/
+            tilesClone = tiles.clone();
+            // StdOut.println("D: tilesClone:\n" + Arrays.deepToString(tilesClone).replace("], ", "]\n").replace("[[", "[").replace("]]", "]")); //TODO remove line
+            int swap = tilesClone[twoDto1D(blankI + 1, blankJ)];
+            tilesClone[twoDto1D(blankI + 1, blankJ)] = BLANK_TILE;
+            tilesClone[twoDto1D(blankI, blankJ)] = swap;
 
-            boardStack.push(new Board(tilesClone));
+            // boardStack.push(new Board(tilesClone));
+            boardStack.push(new Board(oneDto2D(tilesClone))); // Done as requested by Enrichment
         }
 
         // If not left, switch with left
         if (blankJ != 0) {
-            for (int i = 0; i < tilesLength; i++) {
+            /*for (int i = 0; i < tilesLength; i++) {
                 tilesClone[i] = tiles[i].clone();
-            }
-//            StdOut.println("L: tilesClone:\n" + Arrays.deepToString(tilesClone).replace("], ", "]\n").replace("[[", "[").replace("]]", "]")); //TODO remove line
-            int swap = tilesClone[blankI][blankJ - 1];
-            tilesClone[blankI][blankJ - 1] = BLANK_TILE;
-            tilesClone[blankI][blankJ] = swap;
+            }*/
+            tilesClone = tiles.clone();
+            // StdOut.println("L: tilesClone:\n" + Arrays.deepToString(tilesClone).replace("], ", "]\n").replace("[[", "[").replace("]]", "]")); //TODO remove line
+            int swap = tilesClone[twoDto1D(blankI, blankJ - 1)];
+            tilesClone[twoDto1D(blankI, blankJ - 1)] = BLANK_TILE;
+            tilesClone[twoDto1D(blankI, blankJ)] = swap;
 
-            boardStack.push(new Board(tilesClone));
+            // boardStack.push(new Board(tilesClone));
+            boardStack.push(new Board(oneDto2D(tilesClone))); // Done as requested by Enrichment
         }
 
         // If not right, switch with right
         if (blankJ != tilesLength - 1) {
-            for (int i = 0; i < tilesLength; i++) {
+            /*for (int i = 0; i < tilesLength; i++) {
                 tilesClone[i] = tiles[i].clone();
-            }
-//            StdOut.println("R: tilesClone:\n" + Arrays.deepToString(tilesClone).replace("], ", "]\n").replace("[[", "[").replace("]]", "]")); //TODO remove line
-            int swap = tilesClone[blankI][blankJ + 1];
-            tilesClone[blankI][blankJ + 1] = BLANK_TILE;
-            tilesClone[blankI][blankJ] = swap;
+            }*/
+            tilesClone = tiles.clone();
+            // StdOut.println("R: tilesClone:\n" + Arrays.deepToString(tilesClone).replace("], ", "]\n").replace("[[", "[").replace("]]", "]")); //TODO remove line
+            int swap = tilesClone[twoDto1D(blankI, blankJ + 1)];
+            tilesClone[twoDto1D(blankI, blankJ + 1)] = BLANK_TILE;
+            tilesClone[twoDto1D(blankI, blankJ)] = swap;
 
-            boardStack.push(new Board(tilesClone));
+            // boardStack.push(new Board(tilesClone));
+            boardStack.push(new Board(oneDto2D(tilesClone))); // Done as requested by Enrichment
         }
 
         return new BoardIterator();
@@ -185,10 +200,11 @@ public class Board {
 
     // a board that is obtained by exchanging any pair of tiles
     public Board twin() {
-        int[][] tilesClone = new int[tilesLength][tilesLength];
+        /*int[][] tilesClone = new int[tilesLength][tilesLength];
         for (int i = 0; i < tilesLength; i++) {
             tilesClone[i] = tiles[i].clone();
-        }
+        }*/
+        int[] tilesClone = tiles.clone();
 
         int swap;
 
@@ -196,23 +212,23 @@ public class Board {
             if (!tileNotBlank(i - 1, 0)) continue;
 
 //            StdOut.println("Loop i= " + i); // TODO: remove line
-            swap = tilesClone[i - 1][0];
+            swap = tilesClone[twoDto1D(i - 1, 0)];
             if (tileNotBlank(i, 0)) {
 //                StdOut.println("I will swap tilesClone[" + (i - 1) + "][" + 0 + "]: " + tilesClone[i - 1][0] + " with tilesClone[" + i + "][" + 0 + "]: " + tilesClone[i][0]); // TODO: remove line
-                tilesClone[i - 1][0] = tilesClone[i][0];
-                tilesClone[i][0] = swap;
+                tilesClone[twoDto1D(i - 1, 0)] = tilesClone[twoDto1D(i, 0)];
+                tilesClone[twoDto1D(i, 0)] = swap;
             } else {
 //                StdOut.println("I will swap tilesClone[" + (i - 1) + "][" + 0 + "]: " + tilesClone[i - 1][0] + " with tilesClone[" + i + "][" + 1 + "]: " + tilesClone[i][1]); // TODO: remove line
-                tilesClone[i - 1][0] = tilesClone[i][1];
-                tilesClone[i][1] = swap;
+                tilesClone[twoDto1D(i - 1, 0)] = tilesClone[twoDto1D(i, 1)];
+                tilesClone[twoDto1D(i, 1)] = swap;
             }
             break;
         }
-        return new Board(tilesClone);
+        return new Board(oneDto2D(tilesClone));
     }
 
     private boolean tileNotBlank(int row, int col) {
-        return tiles[row][col] != BLANK_TILE;
+        return tiles[twoDto1D(row, col)] != BLANK_TILE;
     }
 
     private class BoardIterator implements Iterable<Board> {
@@ -220,6 +236,20 @@ public class Board {
         public Iterator<Board> iterator() {
             return boardStack.iterator(); // TODO: check if that is correct
         }
+    }
+
+    private int twoDto1D(int row, int col) {
+        return row * tilesLength + col;
+    }
+
+    private int[][] oneDto2D(int[] oneDA) {
+        int[][] tempArray = new int[tilesLength][tilesLength];
+        for (int i = 0; i < tilesLength; i++) {
+            for (int j = 0; j < tilesLength; j++) {
+                tempArray[i][j] = oneDA[twoDto1D(i, j)];
+            }
+        }
+        return tempArray;
     }
 
     // unit testing (not graded)
@@ -247,7 +277,7 @@ public class Board {
         StdOut.println("Test: " + ++numberOfTests + " passed");
 
         // When different length
-        Board board2 = new Board(new int[][]{{1, 2}, {3, 4}, {5, 6}});
+        Board board2 = new Board(new int[][]{{1, 2, 7}, {3, 4, 8}, {5, 6, 0}});
         assert !board.equals(board2) : "Boards should not be equal but they are; board: " + board + "\n and board2: " + board2;
         StdOut.println("Test: " + ++numberOfTests + " passed");
 
