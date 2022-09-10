@@ -1,24 +1,62 @@
 import edu.princeton.cs.algs4.MinPQ;
+import edu.princeton.cs.algs4.Stack;
 import edu.princeton.cs.algs4.StdOut;
 
-public class Solver { //TODO: he is asking for immutable class (I/P no. 11) tho, he didn't make it final
+import java.util.Comparator;
+
+public class Solver { //TODO: he is asking for immutable class (I/P no. 14) tho, he didn't make it final
 
     // Global Variables
-    private final MinPQ<Board> minPQ;
+    private final MinPQ<SearchNode> minPQ;
+    private final Stack<SearchNode> gameTree;
     private final Board initialBoard;
-    private int moves;
+    private final int moves;
 
     // find a solution to the initial board (using the A* algorithm)
     public Solver(Board initial) {
-        if (initial != null) {
+        if (initial == null) {
             throw new IllegalArgumentException("null argument to constructor");
         }
 
-        moves = 0;
         minPQ = new MinPQ<>();
+        gameTree = new Stack<>();
         initialBoard = initial;
-        minPQ.insert(initial);
-        minPQ.delMin(); //TODO: not sure of the solution, This is requirement no.
+
+
+        SearchNode initialNode = new SearchNode(initialBoard, 0, null);
+        minPQ.insert(initialNode); // Based on I/P no. 6;
+        gameTree.push(initialNode); // Based on I/P no. 12;
+
+
+        // Based on I/P no. 9;
+        SearchNode currentNode;
+        Board currentBoard;
+        int moves = 0;
+        do { //TODO: wrong because doesn't use isSolvable
+            currentNode = move(moves);
+            currentBoard = currentNode.currentBoard;
+        } while (!currentBoard.isGoal());
+
+        this.moves = currentNode.moves;
+    }
+
+    private SearchNode move(int prevMoves) {
+
+        // Based on I/P no. 13;
+        SearchNode minPriorityNode = minPQ.delMin(); //TODO: Check how to make delMin using "compare"
+        // by priority
+        gameTree.push(minPriorityNode);
+        Board minPriorityBoard = minPriorityNode.currentBoard;
+
+        for (Board neighbor : minPriorityBoard.neighbors()) {
+
+            // Based on I/P no. 18;
+            if (!neighbor.equals(minPriorityNode.predecessor)) { // Don't add predecessor
+                // Based on I/P no. 8 & 13;
+                minPQ.insert(new SearchNode( neighbor, prevMoves + 1, minPriorityBoard));
+            }
+        }
+        return minPriorityNode;
     }
 
     // is the initial board solvable? (see below)
@@ -41,6 +79,32 @@ public class Solver { //TODO: he is asking for immutable class (I/P no. 11) tho,
             return null;
         }
         return (new Board(new int[][]{})).neighbors();
+    }
+
+    private class SearchNode implements Comparator<SearchNode> {
+
+        // Based on I/P no. 5;
+        private final Board currentBoard;
+        private final Board predecessor;
+        private final int moves;
+        private final int priority;
+
+        public SearchNode(Board currentBoard, int moves ,Board predecessor) {
+            this.predecessor = predecessor;
+            this.currentBoard = currentBoard;
+            this.moves = moves;
+            priority = this.currentBoard.manhattan() + moves; // Based on I/P no. 11;
+        }
+
+        @Override
+        public int compare(SearchNode searchNode, SearchNode t1) {
+            if (searchNode.priority > t1.priority) {
+                return 1;
+            } else if (searchNode.priority < t1.priority) {
+                return -1;
+            }
+            return 0;
+        }
     }
 
 
