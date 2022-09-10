@@ -36,7 +36,15 @@ public class Board {
     // string representation of this board
     public String toString() {
         StringBuilder tempString = new StringBuilder();
-        tempString.append(Arrays.toString(tiles)).append("\n");
+
+        for (int i=0; i < tilesLength; i++) {
+            tempString.append("[");
+            for (int j = 0; j < tilesLength - 1; j++) {
+                tempString.append(tiles[twoDto1D(i,j)]).append(", ");
+            }
+            tempString.append(tiles[twoDto1D(i,tilesLength - 1)]);
+            tempString.append("]\n");
+        }
 
         return tilesLength + "\n" + tempString;
     }
