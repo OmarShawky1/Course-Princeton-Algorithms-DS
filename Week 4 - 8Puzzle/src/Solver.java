@@ -18,26 +18,23 @@ public class Solver {
             throw new IllegalArgumentException("null argument to constructor");
         }
 
-        minPQ = new MinPQ<>(new CompareNodes());
-        // minPQ = new MinPQ<>(new SearchNode(null,0,null)); //TODO: Find Difference between this and the above
         gameTree = new Stack<>();
-
-
         SearchNode initialNode = new SearchNode(initial, 0, null);
-        minPQ.insert(initialNode); // Based on I/P no. 6;
-        // gameTree.push(initialNode); // Based on I/P no. 12;
+        minPQ = new MinPQ<>(initialNode);
+        // minPQ = new MinPQ<>(new CompareNodes()); // Same as aforementioned line (check in
+        // class "CompareNodes" reasons for commenting this line in case you wanted explanation)
 
+
+        minPQ.insert(initialNode); // Based on I/P no. 6;
 
         // Based on I/P no. 9;
-        SearchNode currentNode;
-        Board currentBoard;
-        int moves = 0;
-        do { //TODO: wrong because doesn't use isSolvable
-            currentNode = move(moves);
-            currentBoard = currentNode.currentBoard;
-        } while (!currentBoard.isGoal());
+        SearchNode currentNode = initialNode;
+        int moves = -1;
+        while (!minPQ.min().currentBoard.isGoal()) { //TODO: wrong because doesn't use isSolvable
+            currentNode = move(++moves);
+        }
 
-        goalBoard = currentBoard;
+        goalBoard = minPQ.min().currentBoard;
         this.moves = currentNode.moves;
     }
 
@@ -45,17 +42,28 @@ public class Solver {
 
         // Based on I/P no. 13;
         SearchNode minPriorityNode = minPQ.delMin();
-        gameTree.push(minPriorityNode);
+        gameTree.push(minPriorityNode); // Based on I/P no. 12;
         Board minPriorityBoard = minPriorityNode.currentBoard;
+        StdOut.println("Move: delMin().minPriorityNode.board: " + minPriorityBoard); //TODO: Remove line
 
         for (Board neighbor : minPriorityBoard.neighbors()) {
             // Based on I/P no. 18;
-            if (!neighbor.equals(minPriorityNode.predecessor)) { // Don't add predecessor
+            if (neighborNotPredecessor(neighbor)) { // Don't add predecessor
+                StdOut.print("neighbor is not pred.: " + neighbor); //TODO: Remove line
                 // Based on I/P no. 8 & 13;
                 minPQ.insert(new SearchNode(neighbor, prevMoves + 1, minPriorityBoard));
             }
         }
-        return minPriorityNode;
+        return minPQ.min();
+    }
+
+    private boolean neighborNotPredecessor(Board neighbor) {
+        for (SearchNode searchNode : gameTree) {
+            if (neighbor.equals(searchNode.currentBoard)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     // is the initial board solvable? (see below)
@@ -84,7 +92,7 @@ public class Solver {
         return solution;
     }
 
-    private class SearchNode implements Comparator<SearchNode> {
+    private static class SearchNode implements Comparator<SearchNode> {
 
         // Based on I/P no. 5;
         private final Board currentBoard;
@@ -99,7 +107,6 @@ public class Solver {
             priority = this.currentBoard.manhattan() + moves; // Based on I/P no. 11;
         }
 
-        //TODO: to be deleted
         @Override
         public int compare(SearchNode searchNode, SearchNode t1) {
             if (searchNode.priority > t1.priority) {
@@ -111,6 +118,8 @@ public class Solver {
         }
     }
 
+    /*
+    // It is better to leave comparator in its relative class rather than keeping it outside
     private static class CompareNodes implements Comparator<SearchNode> {
 
         @Override
@@ -123,6 +132,7 @@ public class Solver {
             return 0;
         }
     }
+    */
 
 
     // test client (see below)
@@ -133,6 +143,7 @@ public class Solver {
 
         StdOut.println("####Test 1####");
         int numberOfTests = 0;
+
         int[][] solvedPuzzle = {{1, 2, 3}, {4, 5, 6}, {7, 8, 0}};
         Board board1 = new Board(solvedPuzzle);
         Solver solver1 = new Solver(board1);
@@ -155,14 +166,14 @@ public class Solver {
 
         int[][] mediumPuzzle = {{0, 1, 2},
                                 {4, 5, 3},
-                                {7, 0, 4}};
+                                {7, 8, 6}};
         Board board3 = new Board(mediumPuzzle);
         Solver solver3 = new Solver(board3);
 
         assert solver3.isSolvable(): "solver3: Should've been solvable but it isn't";
         StdOut.println("Test: " + ++numberOfTests + " passed");
 
-        assert solver3.moves == 4: "moves should've been 1 but instead it is " + solver1.moves;
+        assert solver3.moves == 4: "moves should've been 1 but instead it is " + solver3.moves;
         StdOut.println("Test: " + ++numberOfTests + " passed");
 
         /*
