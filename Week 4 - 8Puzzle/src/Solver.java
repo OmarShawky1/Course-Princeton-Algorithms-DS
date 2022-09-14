@@ -1,8 +1,8 @@
-import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.MinPQ;
 import edu.princeton.cs.algs4.Stack;
 import edu.princeton.cs.algs4.StdOut;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 
 public class Solver {
@@ -10,8 +10,8 @@ public class Solver {
     // Global Variables
     private boolean isSolvable;
     private final MinPQ<SearchNode> minPQ;
-    private final Stack<SearchNode> gameTree;
     private final int moves;
+    private ArrayList<SearchNode> goalNodes;
 
     // find a solution to the initial board (using the A* algorithm)
     public Solver(Board initial) {
@@ -19,72 +19,59 @@ public class Solver {
             throw new IllegalArgumentException("null argument to constructor");
         }
 
-        // Initializing default values & references
-        gameTree = new Stack<>();
+        // Initializing default values
+        goalNodes = new ArrayList<>();
         SearchNode initialNode = new SearchNode(initial, 0, null);
-        minPQ = new MinPQ<>(initialNode);
-        // minPQ = new MinPQ<>(new CompareNodes()); // Same as aforementioned line (check in
-        // class "CompareNodes" reasons for commenting this line in case you wanted explanation)
+        minPQ = new MinPQ<>();
         minPQ.insert(initialNode); // Based on I/P no. 6;
 
         // Creating a twin board to check if its solvable (hence initial isn't)
-        Board twin = initial.twin();
-        SearchNode twinInitialNode = new SearchNode(twin, 0, null);
-        MinPQ<SearchNode> twinMinPQ = new MinPQ<>(twinInitialNode);
-        twinMinPQ.insert(twinInitialNode);
+        MinPQ<SearchNode> twinMinPQ = new MinPQ<>(); // passing comparator via initial
+        twinMinPQ.insert(new SearchNode(initial.twin(), 0, null));
 
         // Based on I/P no. 9;
-        SearchNode currentNode = initialNode;
-        int moves = -1;
-        while (!minPQ.isEmpty() && !minPQ.min().currentBoard.isGoal()) { //TODO: wrong because doesn't use isSolvable
-            currentNode = move(minPQ, gameTree, ++moves);
-            move(twinMinPQ, new Stack<>(), moves); // References doesn't matter to twin
+        while (!minPQ.isEmpty()) {
+
+            // Add every solution to goalNodes
+            if (minPQ.min().currentBoard.isGoal()) {
+                isSolvable = true;
+                goalNodes.add(minPQ.min());
+                break; //TODO: This is a bug, you should not break
+            }
+
+            // Check if the board is unsolvable
             if (twinMinPQ.min().currentBoard.isGoal()) {
+                isSolvable = false;
                 break;
             }
+
+            addNeighbor(minPQ);
+            addNeighbor(twinMinPQ);
         }
 
-        if (!minPQ.isEmpty() && minPQ.min().currentBoard.isGoal()) {
-            this.moves = currentNode.moves;
-            isSolvable = true;
-        } else {
-            this.moves = -1;
-            isSolvable = false;
-        }
+        this.moves = isSolvable? goalNodes.get(0).moves: -1;
     }
 
-    private SearchNode move(MinPQ<SearchNode> minPQ, Stack<SearchNode> gameTree, int prevMoves) {
+    private static void addNeighbor(MinPQ<SearchNode> minPQ) {
+        SearchNode currentParent = minPQ.delMin(); // For inserting new node as the predecessors
+        SearchNode currentNode = currentParent; // For iterating over predecessors
+        for (Board neighbor : currentNode.currentBoard.neighbors()) {
 
-        // Based on I/P no. 13;
-        SearchNode minPriorityNode = minPQ.delMin();
-        gameTree.push(minPriorityNode); // Based on I/P no. 12;
-        Board minPriorityBoard = minPriorityNode.currentBoard;
-//        StdOut.println("Move: delMin().minPriorityNode.board: " + minPriorityBoard); //TODO: Remove line
-
-        for (Board neighbor : minPriorityBoard.neighbors()) {
-            // Based on I/P no. 18;
-            if (neighborNotPredecessor(neighbor)) { // Don't add predecessor
-//                StdOut.print("neighbor is not pred.: " + neighbor); //TODO: Remove line
-                // Based on I/P no. 8 & 13;
-                minPQ.insert(new SearchNode(neighbor, prevMoves + 1, minPriorityBoard));
+            // check neighbor with all predecessors (pointed with current until it is null)
+            while (currentNode != null) {
+                if (neighbor.equals(currentNode.currentBoard)) {
+                    break;
+                }
+                currentNode = currentNode.predecessorNode;
+            }
+            if (currentNode == null) {
+                minPQ.insert(new SearchNode(neighbor, currentParent.moves + 1, currentParent));
             }
         }
-        return minPQ.min();
-    }
-
-    private boolean neighborNotPredecessor(Board neighbor) {
-        for (SearchNode searchNode : gameTree) {
-            if (neighbor.equals(searchNode.currentBoard)) {
-                return false;
-            }
-        }
-        return true;
     }
 
     // is the initial board solvable? (see below)
     public boolean isSolvable() {
-        //TODO: This is wrong because I need to use two priority queues
-
         return isSolvable;
     }
 
@@ -98,61 +85,47 @@ public class Solver {
 
     // sequence of boards in the shortest solution; null if unsolvable
     public Iterable<Board> solution() {
+        //TODO: Update solution using new goalBoard
         if (!isSolvable()) {
             return null;
         }
 
         Stack<Board> solution = new Stack<>();
         if (isSolvable()){
-            while (gameTree.iterator().hasNext()){
-                solution.push(gameTree.pop().currentBoard);
+            SearchNode goalSearchNode = minPQ.min();
+            while (goalSearchNode != null) {
+                solution.push(goalSearchNode.currentBoard);
+                goalSearchNode = goalSearchNode.predecessorNode;
             }
         }
         return solution;
     }
 
-    private static class SearchNode implements Comparator<SearchNode> {
+    private static class SearchNode implements Comparable<SearchNode> {
 
         // Based on I/P no. 5;
         private final Board currentBoard;
-        private final Board predecessor;
+        private final SearchNode predecessorNode;
         private final int moves;
         private final int priority;
 
-        public SearchNode(Board currentBoard, int moves, Board predecessor) {
-            this.predecessor = predecessor;
+        public SearchNode(Board currentBoard, int moves, SearchNode predecessorNode) {
+            this.predecessorNode = predecessorNode;
             this.currentBoard = currentBoard;
             this.moves = moves;
             priority = this.currentBoard.manhattan() + moves; // Based on I/P no. 11;
         }
 
         @Override
-        public int compare(SearchNode searchNode, SearchNode t1) {
-            if (searchNode.priority > t1.priority) {
+        public int compareTo(SearchNode searchNode) {
+            if (this.priority > searchNode.priority) {
                 return 1;
-            } else if (searchNode.priority < t1.priority) {
+            } else if (this.priority < searchNode.priority) {
                 return -1;
             }
             return 0;
         }
     }
-
-    /*
-    // It is better to leave comparator in its relative class rather than keeping it outside
-    private static class CompareNodes implements Comparator<SearchNode> {
-
-        @Override
-        public int compare(SearchNode searchNode, SearchNode t1) {
-            if (searchNode.priority > t1.priority) {
-                return 1;
-            } else if (searchNode.priority < t1.priority) {
-                return -1;
-            }
-            return 0;
-        }
-    }
-    */
-
 
     // test client (see below)
     public static void main(String[] args) {
@@ -197,8 +170,8 @@ public class Solver {
         assert solver3.moves == 4: "moves should've been 4 but instead it is " + solver3.moves;
         StdOut.println("Test: " + ++numberOfTests + " passed");
 
-        int[][] impossiblePuzzle = {{1, 2, 3},
-                                    {4, 6, 5},
+        int[][] impossiblePuzzle = {{4, 2, 3},
+                                    {1, 5, 6},
                                     {7, 8, 0}};
         Board board4 = new Board(impossiblePuzzle);
         Solver solver4 = new Solver(board4);
@@ -207,6 +180,18 @@ public class Solver {
         StdOut.println("Test: " + ++numberOfTests + " passed");
 
         assert solver4.moves == -1: "moves should've been -1 but instead it is " + solver4.moves;
+        StdOut.println("Test: " + ++numberOfTests + " passed");
+
+        int[][] impossiblePuzzle1 = {{1, 2, 3},
+                                     {4, 6, 5},
+                                     {7, 8, 0}};
+        Board board5 = new Board(impossiblePuzzle1);
+        Solver solver5 = new Solver(board5);
+
+        assert !solver5.isSolvable(): "solver5: Shouldn't been solvable but it is";
+        StdOut.println("Test: " + ++numberOfTests + " passed");
+
+        assert solver5.moves == -1: "moves should've been -1 but instead it is " + solver5.moves;
         StdOut.println("Test: " + ++numberOfTests + " passed");
 
 
