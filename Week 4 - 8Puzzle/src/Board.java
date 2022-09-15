@@ -114,8 +114,9 @@ public class Board {
             return false;
         }
 
-        assert (y.getClass() == this.getClass())
-                : "equals received a non-board object";
+        if (y.getClass() != this.getClass()) {
+            return false;
+        }
 
         if (((Board) y).tilesLength != tilesLength) {
             return false;
