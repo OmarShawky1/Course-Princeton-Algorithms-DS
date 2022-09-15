@@ -38,12 +38,11 @@ public class Board {
         StringBuilder tempString = new StringBuilder();
 
         for (int i=0; i < tilesLength; i++) {
-            tempString.append("[");
             for (int j = 0; j < tilesLength - 1; j++) {
-                tempString.append(tiles[twoDto1D(i,j)]).append(", ");
+                tempString.append(tiles[twoDto1D(i,j)]).append("  ");
             }
             tempString.append(tiles[twoDto1D(i,tilesLength - 1)]);
-            tempString.append("]\n");
+            tempString.append("\n");
         }
 
         return tilesLength + "\n" + tempString;
@@ -194,19 +193,14 @@ public class Board {
         int[] tilesClone = tiles.clone();
 
         int swap;
-
-        for (int i = 1; i < tilesLength; i++) {
-            if (!tileNotBlank(i - 1, 0)) continue;
-
-            swap = tilesClone[twoDto1D(i - 1, 0)];
-            if (tileNotBlank(i, 0)) {
-                tilesClone[twoDto1D(i - 1, 0)] = tilesClone[twoDto1D(i, 0)];
-                tilesClone[twoDto1D(i, 0)] = swap;
-            } else {
-                tilesClone[twoDto1D(i - 1, 0)] = tilesClone[twoDto1D(i, 1)];
-                tilesClone[twoDto1D(i, 1)] = swap;
-            }
-            break;
+        if (tileNotBlank(0, 0) && tileNotBlank(0, 1)) {
+            swap = tilesClone[twoDto1D(0, 0)];
+            tilesClone[twoDto1D(0, 0)] = tilesClone[twoDto1D(0, 1)];
+            tilesClone[twoDto1D(0, 1)] = swap;
+        } else {
+            swap = tilesClone[twoDto1D(1, 0)];
+            tilesClone[twoDto1D(1, 0)] = tilesClone[twoDto1D(1, 1)];
+            tilesClone[twoDto1D(1, 1)] = swap;
         }
         return new Board(oneDto2D(tilesClone));
     }
@@ -237,7 +231,7 @@ public class Board {
         StdOut.println("##########My Own Test Cases##########");
 
         StdOut.println("####Test 1####");
-        /*
+
         int numberOfTests = 0;
         int[][] exampleTiles = {{1, 0, 3}, {4, 2, 5}, {7, 8, 6}};
 
@@ -277,7 +271,9 @@ public class Board {
                 + board4.hamming();
         StdOut.println("Test: " + ++numberOfTests + " passed");
 
-        Board board5 = new Board(new int[][]{{8, 1, 3}, {4, 0, 2}, {7, 6, 5}});
+        Board board5 = new Board(new int[][]{{8, 1, 3},
+                                             {4, 0, 2},
+                                             {7, 6, 5}});
         assert (board5.hamming() == 5) : "hamming() didn't return 5 but instead: "
                 + board5.hamming();
 
@@ -301,12 +297,20 @@ public class Board {
         StdOut.println("Test: " + ++numberOfTests + " passed");
 
         // Testing twin
-        Board board6 = new Board(new int[][]{{4, 0, 3}, {1, 2, 5}, {7, 8, 6}});
+        Board board2x2 = new Board(new int[][]{{0, 2},
+                                               {3, 1}});
+        assert (board2x2.twin().equals(new Board(new int[][]{{0, 2},
+                                                             {1, 3}}))) :
+                "board.twin for 2x2 failed by returning " + board2x2.twin();
+
+        Board board6 = new Board(new int[][]{{1, 0, 3},
+                                             {2, 4, 5},
+                                             {7, 8, 6}});
         assert (board.twin().equals(board6)) : "board.twin should've been equal to board6 but "
                 + "board6 is: \n" + board6 + "while board.twin() is: \n" + board.twin();
         StdOut.println("Test: " + ++numberOfTests + " passed");
 
-        Board board7 = new Board(new int[][]{{4, 1, 3}, {8, 0, 2}, {7, 6, 5}});
+        Board board7 = new Board(new int[][]{{1, 8, 3}, {4, 0, 2}, {7, 6, 5}});
         assert (board5.twin().equals(board7)) : "board5.twin should've been equal to board7 but "
                 + "board7 is: \n" + board7 + "while board5.twin() is: \n" + board5.twin();
         StdOut.println("Test: " + ++numberOfTests + " passed");
@@ -360,6 +364,6 @@ public class Board {
         assert (upBoard3.equals(new Board(new int[][]{{6, 1, 3}, {4, 2, 0}, {7, 8, 5}}))) :
                 "Up Blank tile switch failed and neighbour is:\n" + upBoard3;
         StdOut.println("Test: " + ++numberOfTests + " passed");
-        */
+
     }
 }
