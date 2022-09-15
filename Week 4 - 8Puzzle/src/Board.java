@@ -1,7 +1,6 @@
 import edu.princeton.cs.algs4.Stack;
 import edu.princeton.cs.algs4.StdOut;
 
-import java.util.Arrays;
 import java.util.Iterator;
 
 public class Board {
@@ -10,7 +9,6 @@ public class Board {
     private static final int BLANK_TILE = 0;
     private final int tilesLength; // n
     private final int[] tiles;
-    private final Stack<Board> boardStack;
     private final int manhattan;
     private final int hamming;
 
@@ -27,8 +25,6 @@ public class Board {
                 tiles[twoDto1D(i, j)] = tilesIn[i][j];
             }
         }
-        boardStack = new Stack<>();
-
         hamming = hammingInst();
         manhattan = manhattanInst();
     }
@@ -150,6 +146,7 @@ public class Board {
 
         // Second, try to switch it with the four directions (up, down, left, right)
         int[] tilesClone = new int[tilesLength * tilesLength];
+        Stack<Board> boardStack = new Stack<>();
         // If not up, switch with up
         if (blankI != 0) {
             tilesClone = tiles.clone();
