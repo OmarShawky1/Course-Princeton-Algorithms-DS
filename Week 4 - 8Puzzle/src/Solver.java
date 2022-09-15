@@ -28,15 +28,23 @@ public class Solver {
         // Creating a twin board to check if its solvable (hence initial isn't)
         MinPQ<SearchNode> twinMinPQ = new MinPQ<>(); // passing comparator via initial
         twinMinPQ.insert(new SearchNode(initial.twin(), 0, null));
-
+	
+	// boolean otherAvailableSolution = false;
         // Based on I/P no. 9;
         while (!minPQ.isEmpty()) {
-
+	    
+	    // Add solutions that only has the same priority as previous goal
+	    if (!goalNodes.isEmpty()) {
+		    if (minPQ.min().priority > goalNodes.get(0).priority) {
+			    // minPQ = new MinPQ<>(); // Remove all PQ as there are no other similar short solutions
+                            break;
+		    }
+	    }
+	    
             // Add every solution to goalNodes
             if (minPQ.min().currentBoard.isGoal()) {
                 isSolvable = true;
                 goalNodes.add(minPQ.min());
-                break; //TODO: This is a bug, you should not break
             }
 
             // Check if the board is unsolvable
@@ -85,18 +93,20 @@ public class Solver {
 
     // sequence of boards in the shortest solution; null if unsolvable
     public Iterable<Board> solution() {
-        //TODO: Update solution using new goalBoard
+
         if (!isSolvable()) {
             return null;
         }
 
         Stack<Board> solution = new Stack<>();
         if (isSolvable()){
-            SearchNode goalSearchNode = minPQ.min();
-            while (goalSearchNode != null) {
-                solution.push(goalSearchNode.currentBoard);
-                goalSearchNode = goalSearchNode.predecessorNode;
-            }
+		for(int i=0; !goalNodes.isEmpty(); i++) {
+            		SearchNode goalSearchNode = goalNodes.get(i);
+		            while (goalSearchNode != null) {
+                			solution.push(goalSearchNode.currentBoard);
+			                goalSearchNode = goalSearchNode.predecessorNode;
+			            }
+		}
         }
         return solution;
     }
