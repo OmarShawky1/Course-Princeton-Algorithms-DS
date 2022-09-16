@@ -7,7 +7,7 @@ public class Board {
 
     // Global Variables
     private static final int BLANK_TILE = 0;
-    private final int tilesLength; // n
+    private final int tilesLength;
     private final int[] tiles;
     private final int manhattan;
     private final int hamming;
@@ -145,62 +145,66 @@ public class Board {
         }
 
         // Second, try to switch it with the four directions (up, down, left, right)
-        int[] tilesClone = new int[tilesLength * tilesLength];
+        int[] tilesClone = tiles;
         Stack<Board> boardStack = new Stack<>();
         // If not up, switch with up
         if (blankI != 0) {
-            tilesClone = tiles.clone();
-            int swap = tilesClone[twoDto1D(blankI - 1, blankJ)];
-            tilesClone[twoDto1D(blankI - 1, blankJ)] = BLANK_TILE;
-            tilesClone[twoDto1D(blankI, blankJ)] = swap;
+            swapEmptyTiles(tilesClone, blankI - 1, blankJ, blankI, blankJ);
             boardStack.push(new Board(oneDto2D(tilesClone))); // Done as requested by Enrichment
+            swapEmptyTiles(tilesClone, blankI, blankJ, blankI - 1, blankJ);
         }
 
         // If not down, switch with down
         if (blankI != tilesLength - 1) {
-            tilesClone = tiles.clone();
-            int swap = tilesClone[twoDto1D(blankI + 1, blankJ)];
-            tilesClone[twoDto1D(blankI + 1, blankJ)] = BLANK_TILE;
-            tilesClone[twoDto1D(blankI, blankJ)] = swap;
+            swapEmptyTiles(tilesClone, blankI + 1, blankJ, blankI, blankJ);
             boardStack.push(new Board(oneDto2D(tilesClone))); // Done as requested by Enrichment
+            swapEmptyTiles(tilesClone, blankI, blankJ, blankI + 1, blankJ);
         }
 
         // If not left, switch with left
         if (blankJ != 0) {
-            tilesClone = tiles.clone();
-            int swap = tilesClone[twoDto1D(blankI, blankJ - 1)];
-            tilesClone[twoDto1D(blankI, blankJ - 1)] = BLANK_TILE;
-            tilesClone[twoDto1D(blankI, blankJ)] = swap;
+            swapEmptyTiles(tilesClone, blankI, blankJ - 1, blankI, blankJ);
             boardStack.push(new Board(oneDto2D(tilesClone))); // Done as requested by Enrichment
+            swapEmptyTiles(tilesClone, blankI, blankJ, blankI, blankJ -1);
         }
 
         // If not right, switch with right
         if (blankJ != tilesLength - 1) {
-            tilesClone = tiles.clone();
-            int swap = tilesClone[twoDto1D(blankI, blankJ + 1)];
-            tilesClone[twoDto1D(blankI, blankJ + 1)] = BLANK_TILE;
-            tilesClone[twoDto1D(blankI, blankJ)] = swap;
+            swapEmptyTiles(tilesClone, blankI, blankJ + 1, blankI, blankJ);
             boardStack.push(new Board(oneDto2D(tilesClone))); // Done as requested by Enrichment
+            swapEmptyTiles(tilesClone, blankI, blankJ, blankI, blankJ + 1);
         }
 
         return boardStack; // Should've cloned it before returning but wouldn't matter in this case
     }
 
+    private void swapEmptyTiles(int[] tilesClone, int row1, int col1, int row2, int col2) {
+        int swap = tilesClone[twoDto1D(row1, col1)];
+        tilesClone[twoDto1D(row1, col1)] = BLANK_TILE;
+        tilesClone[twoDto1D(row2, col2)] = swap;
+    }
+
     // a board that is obtained by exchanging any pair of tiles
     public Board twin() {
-        int[] tilesClone = tiles.clone();
+        int[] tilesClone = tiles;
+        Board temp;
 
-        int swap;
         if (tileNotBlank(0, 0) && tileNotBlank(0, 1)) {
-            swap = tilesClone[twoDto1D(0, 0)];
-            tilesClone[twoDto1D(0, 0)] = tilesClone[twoDto1D(0, 1)];
-            tilesClone[twoDto1D(0, 1)] = swap;
+            swapTiles(tilesClone, 0, 0, 0, 1);
+            temp = new Board(oneDto2D(tilesClone));
+            swapTiles(tilesClone, 0, 1, 0, 0);
         } else {
-            swap = tilesClone[twoDto1D(1, 0)];
-            tilesClone[twoDto1D(1, 0)] = tilesClone[twoDto1D(1, 1)];
-            tilesClone[twoDto1D(1, 1)] = swap;
+            swapTiles(tilesClone, 1, 0, 1, 1);
+            temp = new Board(oneDto2D(tilesClone));
+            swapTiles(tilesClone, 1, 1, 1, 0);
         }
-        return new Board(oneDto2D(tilesClone));
+        return temp;
+    }
+
+    private void swapTiles(int[] tilesClone, int row1, int col1, int row2, int col2) {
+        int swap = tilesClone[twoDto1D(row1, col1)];
+        tilesClone[twoDto1D(row1, col1)] = tilesClone[twoDto1D(row2, col2)];
+        tilesClone[twoDto1D(row2, col2)] = swap;
     }
 
     private boolean tileNotBlank(int row, int col) {
