@@ -39,27 +39,26 @@ public class Solver {
         // Finding a solution
         while (!minPQ.isEmpty()) {
             // Add solutions that only has the same priority as previous goal
-            if (!solution.isEmpty()) {
-                if (minPQ.min().priority > solutionPriority) {
+            if (!solution.isEmpty() && minPQ.min().priority > solutionPriority) {
                     break;
-                }
             }
 
             // Add every solution to goalNodes
-            if (minPQ.min().currentBoard.isGoal()) {
+            if (minPQ.min().board.isGoal()) {
                 isSolvable = true;
                 SearchNode currNode = minPQ.min();
                 solutionPriority = currNode.priority;
                 moves = currNode.moves;
+
                 while (currNode != null) {
-                    solution.push(currNode.currentBoard);
-                    currNode = currNode.predecessorNode;
+                    solution.push(currNode.board);
+                    currNode = currNode.previous;
                 }
                 // break; // enhances the complexity but noy by much
             }
 
             // Check if the board is unsolvable
-            if (twinMinPQ.min().currentBoard.isGoal()) {
+            if (twinMinPQ.min().board.isGoal()) {
                 isSolvable = false;
                 moves = -1;
                 break;
@@ -73,8 +72,8 @@ public class Solver {
 
     private static void addNeighbors(MinPQ<SearchNode> minPQ) {
         SearchNode parent = minPQ.delMin(); // Predecessor for new neighbors
-        for (Board neighbor : parent.currentBoard.neighbors()) {
-            if (parent.predecessorNode == null || !neighbor.equals(parent.predecessorNode.currentBoard)) {
+        for (Board neighbor : parent.board.neighbors()) {
+            if (parent.previous == null || !neighbor.equals(parent.previous.board)) {
                 minPQ.insert(new SearchNode(neighbor, parent.moves + 1, parent));
             }
         }
@@ -96,16 +95,16 @@ public class Solver {
     }
 
     private static class SearchNode implements Comparable<SearchNode> {
-        private final Board currentBoard;
-        private final SearchNode predecessorNode;
+        private final Board board;
+        private final SearchNode previous;
         private final int moves;
         private final int priority;
 
-        public SearchNode(Board currentBoard, int moves, SearchNode predecessorNode) {
-            this.predecessorNode = predecessorNode;
-            this.currentBoard = currentBoard;
+        public SearchNode(Board board, int moves, SearchNode previous) {
+            this.previous = previous;
+            this.board = board;
             this.moves = moves;
-            priority = this.currentBoard.manhattan() + this.moves;
+            priority = this.board.manhattan() + this.moves;
         }
 
         @Override
