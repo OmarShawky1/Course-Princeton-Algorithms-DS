@@ -11,6 +11,8 @@ public class Board {
     private final int[] tiles;
     private final int manhattan;
     private final int hamming;
+    private Stack<Board> neighbors;
+    private Board twin;
 
     // create a board from an n-by-n array of tiles, where tiles[row][col] = tile at (row, col)
     public Board(int[][] tilesIn) {
@@ -33,11 +35,11 @@ public class Board {
     public String toString() {
         StringBuilder tempString = new StringBuilder();
 
-        for (int i=0; i < tilesLength; i++) {
+        for (int i = 0; i < tilesLength; i++) {
             for (int j = 0; j < tilesLength - 1; j++) {
-                tempString.append(tiles[twoDto1D(i,j)]).append("  ");
+                tempString.append(tiles[twoDto1D(i, j)]).append("  ");
             }
-            tempString.append(tiles[twoDto1D(i,tilesLength - 1)]);
+            tempString.append(tiles[twoDto1D(i, tilesLength - 1)]);
             tempString.append("\n");
         }
 
@@ -132,6 +134,10 @@ public class Board {
 
     // all neighboring boards
     public Iterable<Board> neighbors() {
+        return neighbors == null ? neighborsInst() : neighbors;
+    }
+
+    private Iterable<Board> neighborsInst() {
         // First, find the index of the Blank tile
         int blankI = -1;
         int blankJ = -1;
@@ -146,36 +152,36 @@ public class Board {
 
         // Second, try to switch it with the four directions (up, down, left, right)
         int[] tilesClone = tiles;
-        Stack<Board> boardStack = new Stack<>();
+        neighbors = new Stack<>();
         // If not up, switch with up
         if (blankI != 0) {
             swapEmptyTiles(tilesClone, blankI - 1, blankJ, blankI, blankJ);
-            boardStack.push(new Board(oneDto2D(tilesClone))); // Done as requested by Enrichment
+            neighbors.push(new Board(oneDto2D(tilesClone))); // Done as requested by Enrichment
             swapEmptyTiles(tilesClone, blankI, blankJ, blankI - 1, blankJ);
         }
 
         // If not down, switch with down
         if (blankI != tilesLength - 1) {
             swapEmptyTiles(tilesClone, blankI + 1, blankJ, blankI, blankJ);
-            boardStack.push(new Board(oneDto2D(tilesClone))); // Done as requested by Enrichment
+            neighbors.push(new Board(oneDto2D(tilesClone))); // Done as requested by Enrichment
             swapEmptyTiles(tilesClone, blankI, blankJ, blankI + 1, blankJ);
         }
 
         // If not left, switch with left
         if (blankJ != 0) {
             swapEmptyTiles(tilesClone, blankI, blankJ - 1, blankI, blankJ);
-            boardStack.push(new Board(oneDto2D(tilesClone))); // Done as requested by Enrichment
-            swapEmptyTiles(tilesClone, blankI, blankJ, blankI, blankJ -1);
+            neighbors.push(new Board(oneDto2D(tilesClone))); // Done as requested by Enrichment
+            swapEmptyTiles(tilesClone, blankI, blankJ, blankI, blankJ - 1);
         }
 
         // If not right, switch with right
         if (blankJ != tilesLength - 1) {
             swapEmptyTiles(tilesClone, blankI, blankJ + 1, blankI, blankJ);
-            boardStack.push(new Board(oneDto2D(tilesClone))); // Done as requested by Enrichment
+            neighbors.push(new Board(oneDto2D(tilesClone))); // Done as requested by Enrichment
             swapEmptyTiles(tilesClone, blankI, blankJ, blankI, blankJ + 1);
         }
 
-        return boardStack; // Should've cloned it before returning but wouldn't matter in this case
+        return neighbors; // Should've cloned it before returning but wouldn't matter in this case
     }
 
     private void swapEmptyTiles(int[] tilesClone, int row1, int col1, int row2, int col2) {
@@ -186,19 +192,22 @@ public class Board {
 
     // a board that is obtained by exchanging any pair of tiles
     public Board twin() {
+        return twin == null ? twinInst() : twin;
+    }
+
+    private Board twinInst() {
         int[] tilesClone = tiles;
-        Board temp;
 
         if (tileNotBlank(0, 0) && tileNotBlank(0, 1)) {
             swapTiles(tilesClone, 0, 0, 0, 1);
-            temp = new Board(oneDto2D(tilesClone));
+            twin = new Board(oneDto2D(tilesClone));
             swapTiles(tilesClone, 0, 1, 0, 0);
         } else {
             swapTiles(tilesClone, 1, 0, 1, 1);
-            temp = new Board(oneDto2D(tilesClone));
+            twin = new Board(oneDto2D(tilesClone));
             swapTiles(tilesClone, 1, 1, 1, 0);
         }
-        return temp;
+        return twin;
     }
 
     private void swapTiles(int[] tilesClone, int row1, int col1, int row2, int col2) {
@@ -274,8 +283,8 @@ public class Board {
         StdOut.println("Test: " + ++numberOfTests + " passed");
 
         Board board5 = new Board(new int[][]{{8, 1, 3},
-                                             {4, 0, 2},
-                                             {7, 6, 5}});
+                {4, 0, 2},
+                {7, 6, 5}});
         assert (board5.hamming() == 5) : "hamming() didn't return 5 but instead: "
                 + board5.hamming();
 
@@ -300,14 +309,14 @@ public class Board {
 
         // Testing twin
         Board board2x2 = new Board(new int[][]{{0, 2},
-                                               {3, 1}});
+                {3, 1}});
         assert (board2x2.twin().equals(new Board(new int[][]{{0, 2},
-                                                             {1, 3}}))) :
+                {1, 3}}))) :
                 "board.twin for 2x2 failed by returning " + board2x2.twin();
 
         Board board6 = new Board(new int[][]{{1, 0, 3},
-                                             {2, 4, 5},
-                                             {7, 8, 6}});
+                {2, 4, 5},
+                {7, 8, 6}});
         assert (board.twin().equals(board6)) : "board.twin should've been equal to board6 but "
                 + "board6 is: \n" + board6 + "while board.twin() is: \n" + board.twin();
         StdOut.println("Test: " + ++numberOfTests + " passed");
