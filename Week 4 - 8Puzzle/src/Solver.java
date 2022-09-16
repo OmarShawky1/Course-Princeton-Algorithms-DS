@@ -8,9 +8,8 @@ import java.util.ArrayList;
 public class Solver {
 
     // Global Variables
-    private boolean isSolvable;
+    private boolean isSolvable; //!!: to be removed later
     private final int moves;
-    // private final ArrayList<SearchNode> goalNodes;
     private final Stack<Board> solution;
 
     // find a solution to the initial board (using the A* algorithm)
@@ -27,7 +26,6 @@ public class Solver {
             4. store solution/solutions
          */
 
-
         // Initializing default values
         solution = new Stack<>();
         ArrayList<SearchNode> goalNodes = new ArrayList<>();
@@ -38,47 +36,32 @@ public class Solver {
         // Creating a twin board to check if its solvable (hence initial isn't)
         MinPQ<SearchNode> twinMinPQ = new MinPQ<>();
         twinMinPQ.insert(new SearchNode(initial.twin(), 0, null));
-//        StdOut.println("Finished Initializing nodes & stacks, will start checking minPQ.isEmpty(): "); //TODO: Remove line
 
         // Finding a solution
         while (!minPQ.isEmpty()) {
-//            StdOut.println("Started !minPQ.isEmpty()"); //TODO: Remove line
             // Add solutions that only has the same priority as previous goal
             if (!goalNodes.isEmpty()) {
-//                StdOut.println("Started !goalNodes.isEmpty()"); //TODO: Remove line
                 if (minPQ.min().priority > goalNodes.get(0).priority) {
-//                    StdOut.println("Finished minPQ.min().priority > goalNodes.get(0).priority"); //TODO: Remove line
                     break;
                 }
-//                StdOut.println("Finished !goalNodes.isEmpty()"); //TODO: Remove line
             }
 
             // Add every solution to goalNodes
             if (minPQ.min().currentBoard.isGoal()) {
-//                StdOut.println("Started minPQ.min().currentBoard.isGoal()"); //TODO: Remove line
                 isSolvable = true;
                 goalNodes.add(minPQ.min());
-//                StdOut.println("Finished minPQ.min().currentBoard.isGoal()"); //TODO: Remove line
+                // break; //TODO: Remove line //Failed attempt to solve bug
             }
 
             // Check if the board is unsolvable
             if (twinMinPQ.min().currentBoard.isGoal()) {
-//                StdOut.println("Started twinMinPQ.min().currentBoard.isGoal()"); //TODO: Remove line
                 isSolvable = false;
-//                StdOut.println("Finished twinMinPQ.min().currentBoard.isGoal()"); //TODO: Remove line
                 break;
             }
-            
-            // TODO: There is a bug in addNeighbor that makes the complexity non-linear
-//            StdOut.println("Started addNeighbor(minPQ)"); //TODO: Remove line
-            addNeighbor(minPQ);
-//            StdOut.println("Finished addNeighbor(minPQ)"); //TODO: Remove line
-//            StdOut.println("Started addNeighbor(twinMinPQ)"); //TODO: Remove line
-            addNeighbor(twinMinPQ);
-//            StdOut.println("Finished addNeighbor(twinMinPQ)"); //TODO: Remove line
-        }
 
-        // this.moves = isSolvable ? goalNodes.get(0).moves : -1; //TODO: Remove line
+            addNeighbors(minPQ);
+            addNeighbors(twinMinPQ);
+        }
 
         // Creating the solution
         // Could've merged it into the previous step but kept it separate for readability
@@ -95,20 +78,11 @@ public class Solver {
         }
     }
 
-    private static void addNeighbor(MinPQ<SearchNode> minPQ) {
-        SearchNode currentParent = minPQ.delMin(); // Predecessor for new neighbors
-        SearchNode currentNode = currentParent; // For iterating over predecessors
-        for (Board neighbor : currentNode.currentBoard.neighbors()) {
-
-            // check neighbor with all predecessors (pointed with current until it is null)
-            while (currentNode != null) {
-                if (neighbor.equals(currentNode.currentBoard)) {
-                    break;
-                }
-                currentNode = currentNode.predecessorNode;
-            }
-            if (currentNode == null) {
-                minPQ.insert(new SearchNode(neighbor, currentParent.moves + 1, currentParent));
+    private static void addNeighbors(MinPQ<SearchNode> minPQ) {
+        SearchNode parent = minPQ.delMin(); // Predecessor for new neighbors
+        for (Board neighbor : parent.currentBoard.neighbors()) {
+            if (!neighbor.equals(parent.currentBoard)) {
+                minPQ.insert(new SearchNode(neighbor, parent.moves + 1, parent));
             }
         }
     }
@@ -125,7 +99,7 @@ public class Solver {
 
     // sequence of boards in the shortest solution; null if unsolvable
     public Iterable<Board> solution() {
-        return isSolvable? solution: null;
+        return isSolvable ? solution : null;
     }
 
     private static class SearchNode implements Comparable<SearchNode> {
@@ -242,6 +216,5 @@ public class Solver {
                 StdOut.println(board);
             }
         }
-
     }
 }
