@@ -12,9 +12,7 @@ public class Solver {
 
     // find a solution to the initial board (using the A* algorithm)
     public Solver(Board initial) {
-        if (initial == null) {
-            throw new IllegalArgumentException("null argument to constructor");
-        }
+        if (initial == null) throw new IllegalArgumentException("null argument to constructor");
 
         /*
         Code Logic composition/order:
@@ -35,7 +33,7 @@ public class Solver {
         twinMinPQ.insert(new SearchNode(initial.twin(), 0, null));
         
         int solutionPriority = 0;
-        int moves = 0;
+        int movesTemp = 0;
         // Finding a solution
         while (!minPQ.isEmpty()) {
             SearchNode min = minPQ.min();
@@ -44,33 +42,38 @@ public class Solver {
                     break;
             }
 
-            // Add every solution to goalNodes
+            // Add solution steps to solution Stack
             if (min.board.isGoal()) {
                 isSolvable = true;
-                SearchNode currNode = min;
-                solutionPriority = currNode.priority;
-                moves = currNode.moves;
+                solutionPriority = min.priority;
+                movesTemp = min.moves;
 
-                while (currNode != null) {
-                    solution.push(currNode.board);
-                    currNode = currNode.previous;
-                }
-                 // break; // enhances the complexity but noy by much
+                solutionInst(min);
             }
 
             // Check if the board is unsolvable
             if (twinMinPQ.min().board.isGoal()) {
                 isSolvable = false;
-                moves = -1;
+                movesTemp = -1;
                 break;
             }
 
             addNeighbors(minPQ);
             addNeighbors(twinMinPQ);
         }
-        this.moves = moves;
+        this.moves = movesTemp;
     }
 
+    // create solution instance
+    private void solutionInst(SearchNode min) {
+        SearchNode currNode = min;
+        while (currNode != null) {
+            solution.push(currNode.board);
+            currNode = currNode.previous;
+        }
+    }
+
+    // Move & add (min deleted PQ node)'s neighbors to PQ
     private static void addNeighbors(MinPQ<SearchNode> minPQ) {
         SearchNode parent = minPQ.delMin(); // I.e., move; Predecessor for new neighbors
         for (Board neighbor : parent.board.neighbors()) {
@@ -110,19 +113,14 @@ public class Solver {
 
         @Override
         public int compareTo(SearchNode searchNode) {
-            if (this.priority > searchNode.priority) {
-                return 1;
-            } else if (this.priority < searchNode.priority) {
-                return -1;
-            }
-            return 0;
+            return Integer.compare(this.priority, searchNode.priority);
         }
     }
 
     // test client (see below)
     public static void main(String[] args) {
         StdOut.println("###############Solver Tests###############");
-
+        /*
         StdOut.println("##########My Own Test Cases##########");
 
         StdOut.println("####Test 1####");
@@ -186,7 +184,7 @@ public class Solver {
         assert solver5.moves == -1 : "moves should've been -1 but instead it is " + solver5.moves;
         StdOut.println("Test: " + ++numberOfTests + " passed");
 
-
+        */
         StdOut.println("##########His Test Cases##########");
         // create initial board from file
         In in = new In(args[0]);
