@@ -37,6 +37,10 @@ public class Solver {
         MinPQ<SearchNode> twinMinPQ = new MinPQ<>();
         twinMinPQ.insert(new SearchNode(initial.twin(), 0, null));
 
+        MinPQ<SearchNode> pq = new MinPQ<>();
+        pq.insert(new SearchNode(initial, 0, null));
+        pq.insert(new SearchNode(initial.twin(), 0, null));
+
         // Finding a solution
         while (!minPQ.isEmpty()) {
             // Add solutions that only has the same priority as previous goal
@@ -78,10 +82,20 @@ public class Solver {
         }
     }
 
-    private static void addNeighbors(MinPQ<SearchNode> minPQ) {
+
+    private static void addNeighbor(MinPQ<SearchNode> minPQ) {
         SearchNode parent = minPQ.delMin(); // Predecessor for new neighbors
         for (Board neighbor : parent.currentBoard.neighbors()) {
             if (!neighbor.equals(parent.currentBoard)) {
+                minPQ.insert(new SearchNode(neighbor, parent.moves + 1, parent));
+            }
+        }
+    }
+
+    private static void addNeighbors(MinPQ<SearchNode> minPQ) {
+        SearchNode parent = minPQ.delMin(); // Predecessor for new neighbors
+        for (Board neighbor : parent.currentBoard.neighbors()) {
+            if (parent.predecessorNode == null || !neighbor.equals(parent.predecessorNode.currentBoard)) {
                 minPQ.insert(new SearchNode(neighbor, parent.moves + 1, parent));
             }
         }
