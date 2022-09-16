@@ -3,12 +3,10 @@ import edu.princeton.cs.algs4.MinPQ;
 import edu.princeton.cs.algs4.Stack;
 import edu.princeton.cs.algs4.StdOut;
 
-import java.util.ArrayList;
-
 public class Solver {
 
     // Global Variables
-    private boolean isSolvable; //!!: to be removed later
+    private boolean isSolvable;
     private final int moves;
     private final Stack<Board> solution;
 
@@ -28,7 +26,6 @@ public class Solver {
 
         // Initializing default values
         solution = new Stack<>();
-        ArrayList<SearchNode> goalNodes = new ArrayList<>();
         SearchNode initialNode = new SearchNode(initial, 0, null);
         MinPQ<SearchNode> minPQ = new MinPQ<>();
         minPQ.insert(initialNode);
@@ -36,16 +33,14 @@ public class Solver {
         // Creating a twin board to check if its solvable (hence initial isn't)
         MinPQ<SearchNode> twinMinPQ = new MinPQ<>();
         twinMinPQ.insert(new SearchNode(initial.twin(), 0, null));
-
-        MinPQ<SearchNode> pq = new MinPQ<>();
-        pq.insert(new SearchNode(initial, 0, null));
-        pq.insert(new SearchNode(initial.twin(), 0, null));
-
+        
+        int solutionPriority = 0;
+        int moves = 0;
         // Finding a solution
         while (!minPQ.isEmpty()) {
             // Add solutions that only has the same priority as previous goal
-            if (!goalNodes.isEmpty()) {
-                if (minPQ.min().priority > goalNodes.get(0).priority) {
+            if (!solution.isEmpty()) {
+                if (minPQ.min().priority > solutionPriority) {
                     break;
                 }
             }
@@ -53,43 +48,27 @@ public class Solver {
             // Add every solution to goalNodes
             if (minPQ.min().currentBoard.isGoal()) {
                 isSolvable = true;
-                goalNodes.add(minPQ.min());
-                // break; //TODO: Remove line //Failed attempt to solve bug
+                SearchNode currNode = minPQ.min();
+                solutionPriority = currNode.priority;
+                moves = currNode.moves;
+                while (currNode != null) {
+                    solution.push(currNode.currentBoard);
+                    currNode = currNode.predecessorNode;
+                }
+                // break; // enhances the complexity but noy by much
             }
 
             // Check if the board is unsolvable
             if (twinMinPQ.min().currentBoard.isGoal()) {
                 isSolvable = false;
+                moves = -1;
                 break;
             }
 
             addNeighbors(minPQ);
             addNeighbors(twinMinPQ);
         }
-
-        // Creating the solution
-        // Could've merged it into the previous step but kept it separate for readability
-        if (isSolvable) {
-            this.moves = goalNodes.get(0).moves;
-            for (SearchNode goalSearchNode : goalNodes) {
-                while (goalSearchNode != null) {
-                    solution.push(goalSearchNode.currentBoard);
-                    goalSearchNode = goalSearchNode.predecessorNode;
-                }
-            }
-        } else {
-            this.moves = -1;
-        }
-    }
-
-
-    private static void addNeighbor(MinPQ<SearchNode> minPQ) {
-        SearchNode parent = minPQ.delMin(); // Predecessor for new neighbors
-        for (Board neighbor : parent.currentBoard.neighbors()) {
-            if (!neighbor.equals(parent.currentBoard)) {
-                minPQ.insert(new SearchNode(neighbor, parent.moves + 1, parent));
-            }
-        }
+        this.moves = moves;
     }
 
     private static void addNeighbors(MinPQ<SearchNode> minPQ) {
