@@ -55,7 +55,7 @@ public class Solver {
                     solution.push(currNode.board);
                     currNode = currNode.previous;
                 }
-                // break; // enhances the complexity but noy by much
+                 // break; // enhances the complexity but noy by much
             }
 
             // Check if the board is unsolvable
@@ -72,7 +72,7 @@ public class Solver {
     }
 
     private static void addNeighbors(MinPQ<SearchNode> minPQ) {
-        SearchNode parent = minPQ.delMin(); // Predecessor for new neighbors
+        SearchNode parent = minPQ.delMin(); // I.e., move; Predecessor for new neighbors
         for (Board neighbor : parent.board.neighbors()) {
             if (parent.previous == null || !neighbor.equals(parent.previous.board)) {
                 minPQ.insert(new SearchNode(neighbor, parent.moves + 1, parent));
