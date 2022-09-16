@@ -38,15 +38,16 @@ public class Solver {
         int moves = 0;
         // Finding a solution
         while (!minPQ.isEmpty()) {
+            SearchNode min = minPQ.min();
             // Add solutions that only has the same priority as previous goal
-            if (!solution.isEmpty() && minPQ.min().priority > solutionPriority) {
+            if (!solution.isEmpty() && min.priority > solutionPriority) {
                     break;
             }
 
             // Add every solution to goalNodes
-            if (minPQ.min().board.isGoal()) {
+            if (min.board.isGoal()) {
                 isSolvable = true;
-                SearchNode currNode = minPQ.min();
+                SearchNode currNode = min;
                 solutionPriority = currNode.priority;
                 moves = currNode.moves;
 
