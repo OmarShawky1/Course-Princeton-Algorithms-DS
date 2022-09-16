@@ -107,12 +107,11 @@ public class Board {
 
     // does this board equal y?
     public boolean equals(Object y) {
-        // Could've used Arrays.deepEquals() as prescribed in the FAQs
-        if (y == null) { // Requested by Autograder
-            return false;
+        if (this == y) {
+            return true;
         }
 
-        if (y.getClass() != this.getClass()) {
+        if (y == null || y.getClass() != this.getClass()) { // Requested by Autograder
             return false;
         }
 
@@ -127,7 +126,6 @@ public class Board {
                 }
             }
         }
-
         return true;
     }
 
