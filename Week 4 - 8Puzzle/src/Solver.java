@@ -31,24 +31,28 @@ public class Solver {
         // Creating a twin board to check if its solvable (hence initial isn't)
         MinPQ<SearchNode> twinMinPQ = new MinPQ<>();
         twinMinPQ.insert(new SearchNode(initial.twin(), 0, null));
-        
-        int solutionPriority = 0;
+
+        // int solutionPriority = 0; // Diff
         int movesTemp = 0;
         // Finding a solution
         while (!minPQ.isEmpty()) {
             SearchNode min = minPQ.min();
+
+            /* Diff
+            // Code that causes 81/100
             // Add solutions that only has the same priority as previous goal
             if (!solution.isEmpty() && min.priority > solutionPriority) {
-                    break;
+                break;
             }
+            */
 
             // Add solution steps to solution Stack
             if (min.board.isGoal()) {
                 isSolvable = true;
-                solutionPriority = min.priority;
+                // solutionPriority = min.priority; // Diff
                 movesTemp = min.moves;
-
                 solutionInst(min);
+                break; // Diff
             }
 
             // Check if the board is unsolvable
@@ -64,6 +68,15 @@ public class Solver {
         this.moves = movesTemp;
     }
 
+    // create solution instance
+    private void solutionInst(SearchNode min) {
+        SearchNode currNode = min;
+        while (currNode != null) {
+            solution.push(currNode.board);
+            currNode = currNode.previous;
+        }
+    }
+
     // Move & add (min deleted PQ node)'s neighbors to PQ
     private static void addNeighbors(MinPQ<SearchNode> minPQ) {
         SearchNode parent = minPQ.delMin(); // I.e., move; Predecessor for new neighbors
@@ -71,15 +84,6 @@ public class Solver {
             if (parent.previous == null || !neighbor.equals(parent.previous.board)) {
                 minPQ.insert(new SearchNode(neighbor, parent.moves + 1, parent));
             }
-        }
-    }
-
-    // create solution instance
-    private void solutionInst(SearchNode min) {
-        SearchNode currNode = min;
-        while (currNode != null) {
-            solution.push(currNode.board);
-            currNode = currNode.previous;
         }
     }
 
