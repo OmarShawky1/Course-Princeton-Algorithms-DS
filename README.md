@@ -1,6 +1,6 @@
 # Percolation
 
-This is the first Homework; It is about utilizing Union Find Algorithm & Weighted Quick Find in specific. We use the algorithm to calculate numerically the probability *p* that can make a system percolate (any top cell connected to any bottom cell); We are required to proof the claim that *p*~=0.5931 and the homework does exactly that. The percolation symbolisis a lot of real world applications such as insulating material in a conducting material (or vise versa) or finding a connection between two persons in a large social network and so on.
+This is the first Homework; It is about utilizing Union Find Algorithm & Weighted Quick Find in specific. We use the algorithm to calculate numerically the probability *p* that can make a system percolate (any top cell connected to any bottom cell); We are required to proof the claim that $p\approx 0.5931$ and the homework does exactly that. The percolation symbolisis a lot of real world applications such as insulating material in a conducting material (or vise versa) or finding a connection between two persons in a large social network and so on.
 
 Grade: 100/100
 
@@ -20,7 +20,7 @@ Grade: 100/100
 
 # Collinear
 
-The goal of this assingment is to create a line pattern between any 4 points or more on the same line via two methods; The Brute force method which takes O(n)\~=N^4 when it tries to connect 4 points (or takes *n* in general where *n* is the number of consequitive collinear points; so if we want 5 consequitive points, it will take N^5). The other method is the mergesorting method which takes O(n)\~=n^2 despite the number of elements we are searching for; We use it to sort because it is the fastest & moststable (i.e., Items don't entirely re-arrange when we are re-sorting w.r.t another parameter).
+The goal of this assingment is to create a line pattern between any 4 points or more on the same line via two methods; The Brute force method which takes $O(n)\approx N^4$ when it tries to connect 4 points (or takes *n* in general where *n* is the number of consequitive collinear points; so if we want 5 consequitive points, it will take $N^5$). The other method is the mergesorting method which takes $O(n)\approx N^2$ despite the number of elements we are searching for; We use it to sort because it is the fastest & moststable (i.e., Items don't entirely re-arrange when we are re-sorting w.r.t another parameter).
 
 Grade: 100/100
 
