@@ -37,14 +37,12 @@ public class PointSET {
 
     // draw all points to standard draw
     public void draw() {
-        // TODO: not sure if its implemented correctly
-        // Before drawing points
         StdDraw.setPenColor(StdDraw.BLACK);
         StdDraw.setPenRadius(0.01);
-
-        // Before splitting lines
-        StdDraw.setPenColor(StdDraw.RED);
-        StdDraw.setPenRadius();
+        for (Point2D p : rbt) {
+            p.draw();
+        }
+        StdDraw.show();
     }
 
     // all points that are inside the rectangle (or on the boundary)
@@ -52,8 +50,8 @@ public class PointSET {
         LinkedList<Point2D> list = new LinkedList<>();
 
         for (Point2D currentP : rbt) {
-            if ((currentP.x() >= rect.xmin() && currentP.x() <= rect.xmax()) &&
-                    (currentP.y() >= rect.ymin() && currentP.y() <= rect.ymax())) {
+            if ((currentP.x() >= rect.xmin() && currentP.x() <= rect.xmax())
+                    && (currentP.y() >= rect.ymin() && currentP.y() <= rect.ymax())) {
                 list.add(currentP);
             }
         }
@@ -92,7 +90,7 @@ public class PointSET {
 
         // Testing insert
         PointSET pointSET = new PointSET();
-        pointSET.insert(new Point2D(0,0));
+        pointSET.insert(new Point2D(0, 0));
         StdOut.println("Test: " + ++numberOfTests + " passed");
 
         try {
@@ -104,19 +102,21 @@ public class PointSET {
 
 
         // Testing Contains
-        if (!pointSET.contains(new Point2D(0,0))) throw new RuntimeException("Should've contained origin");
+        if (!pointSET.contains(new Point2D(0, 0)))
+            throw new RuntimeException("Should've contained origin");
         StdOut.println("Test: " + ++numberOfTests + " passed");
 
-        if (pointSET.contains(new Point2D(0,1))) throw new RuntimeException("Shouldn't contain (0,1)");
+        if (pointSET.contains(new Point2D(0, 1)))
+            throw new RuntimeException("Shouldn't contain (0,1)");
         StdOut.println("Test: " + ++numberOfTests + " passed");
 
         // Testing range
-        Point2D origin = new Point2D(0,0);
-        Point2D P01 = new Point2D(0,1);
-        Point2D P10 = new Point2D(1,0);
-        Point2D P11 = new Point2D(1,1);
-        Point2D P21 = new Point2D(2,1);
-        RectHV rectHV = new RectHV(0,0,1,1);
+        Point2D origin = new Point2D(0, 0);
+        Point2D P01 = new Point2D(0, 0.1);
+        Point2D P10 = new Point2D(0.1, 0);
+        Point2D P11 = new Point2D(0.1, 0.1);
+        Point2D P21 = new Point2D(0.2, 0.1);
+        RectHV rectHV = new RectHV(0, 0, 0.1, 0.1);
 
         pointSET = new PointSET();
         pointSET.insert(origin);
@@ -125,11 +125,16 @@ public class PointSET {
         pointSET.insert(P11);
         pointSET.insert(P21);
 
-        if (((LinkedList) pointSET.range(rectHV)).size() != 4) throw new RuntimeException("Should've gotten exactly 4 points but instead: " + ((LinkedList) pointSET.range(rectHV)).size());
+        if (((LinkedList) pointSET.range(rectHV)).size() != 4)
+            throw new RuntimeException("Should've gotten exactly 4 points but instead: " + ((LinkedList) pointSET.range(rectHV)).size());
         StdOut.println("Test: " + ++numberOfTests + " passed");
 
         // Testing nearest
-        if (pointSET.nearest(new Point2D(2,2)).compareTo(P21) != 0) throw new RuntimeException("Nearest should've been P21 but instead it is " + pointSET.nearest(P21));
+        if (pointSET.nearest(new Point2D(0.2, 0.2)).compareTo(P21) != 0) throw new RuntimeException(
+                "Nearest should've been P21 but instead it is " + pointSET.nearest(P21));
         StdOut.println("Test: " + ++numberOfTests + " passed");
+
+        // Testing Draw
+        pointSET.draw();
     }
 }
