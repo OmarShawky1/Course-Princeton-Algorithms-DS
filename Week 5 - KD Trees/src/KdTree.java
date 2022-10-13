@@ -37,8 +37,10 @@ public class KdTree {
         }
 
         Node current = root;
-        int comp = current.compareTo(temp);
+        int comp = temp.compareTo(current);
         while (true) {
+            // StdOut.println("current: " + current.point); //TODO remove line
+            // StdOut.println("I will try to insert: " + p + " and comparison is: " + comp); //TODO remove line
             if (comp > 0) {
                 if (current.right != null) {
                     current = current.right;
@@ -56,12 +58,9 @@ public class KdTree {
                     break;
                 }
             } else {
-                // check if it is the same point
-                if (current.point.compareTo(p) == 0)
-                    break; // new point is already stored
+                if (current.point.compareTo(p) == 0) break; // new point is already stored
 
-                // Else pass it to comparison bigger than
-                comp = 1;
+                comp = 1; // Else pass it to comparison greater than
             }
         }
     }
@@ -69,8 +68,16 @@ public class KdTree {
     // does the set contain point p?
     public boolean contains(Point2D p) {
         if (p == null) throw new IllegalArgumentException("can't search null");
-        // TODO
-        // return twoDTree.contains(new Node(null, p, Node.VERTICAL)); //TODO: this is wrong
+
+        Node current = root;
+        Node tempNode = new Node(null, p, Node.VERTICAL); // direction doesn't matter
+        while (current != null) {
+            // StdOut.println("current.point is: " + current.point + " while p: " + p); //TODO remove line
+            // StdOut.println("current.isVertical: " + current.isVertical); //TODO remove line
+            if (current.point.compareTo(p) == 0) return true;
+            if (tempNode.compareTo(current) >= 0) current = current.right;
+            else current = current.left;
+        }
         return false;
     }
 
@@ -116,7 +123,7 @@ public class KdTree {
     private class Node implements Comparable<Node> {
         //TODO revise on everything here
         private Node parent, right, left;
-        private boolean isVertical = false;
+        private boolean isVertical;
         private Point2D point;
         private static final boolean VERTICAL = true;
         private static final boolean HORIZONTAL = false;
@@ -129,6 +136,10 @@ public class KdTree {
 
         @Override
         public int compareTo(Node node) {
+            // StdOut.println("This is Node.compareTo; isVertical is: " + isVertical);//TODO remove line
+            // StdOut.println("point.x(): " + point.x()); //TODO remove line
+            // StdOut.println("node.point.x(): " + node.point.x()); //TODO remove line
+            // StdOut.println("Double.compare(point.x(), node.point.x()): " + Double.compare(point.x(), node.point.x())); //TODO remove line
             return isVertical ? Double.compare(point.x(), node.point.x()) :
                     Double.compare(point.y(), node.point.y());
         }
@@ -151,9 +162,10 @@ public class KdTree {
 
         // inserting to empty tree
         KdTree kdTree = new KdTree();
-        kdTree.insert(new Point2D(0, 0));
-        if (kdTree.size() != 1) throw new RuntimeException("Size should've been 1 but instead it " +
-                "is: " + kdTree.size());
+        Point2D P00 = new Point2D(0, 0);
+        kdTree.insert(P00);
+        if (kdTree.root.point.compareTo(P00) != 0) throw new RuntimeException("root should've " +
+                "been: " + P00 + " instead it is " + kdTree.root.point);
         StdOut.println("Test: " + ++numberOfTests + " passed");
 
         // inserting null
@@ -173,33 +185,48 @@ public class KdTree {
         StdOut.println("Test: " + ++numberOfTests + " passed");
 
         // inserting new point above root
-        kdTree.insert(new Point2D(0, 0.1));
-        if (kdTree.size() != 2) throw new RuntimeException("Size should've been 2 but instead it " +
-                "is: " + kdTree.size());
+        Point2D P01 = new Point2D(0, 0.1);
+        kdTree.insert(P01);
+        if (kdTree.root.right.point.compareTo(P01) != 0) throw new RuntimeException("root.right " +
+                "should've been " + P01 + " but instead it is " + kdTree.root.right.point);
         StdOut.println("Test: " + ++numberOfTests + " passed");
 
         // inserting new point to the left
-        kdTree.insert(new Point2D(-0.1, 0));
-        if (kdTree.size() != 3) throw new RuntimeException("Size should've been 3 but instead it " +
-                "is: " + kdTree.size());
+        Point2D Pn10 = new Point2D(-0.1, 0);
+        kdTree.insert(Pn10);
+        if (kdTree.root.left.point.compareTo(Pn10) != 0) throw new RuntimeException("root.left " +
+                "should've been " + Pn10 + " but instead it is: " + kdTree.root.left.point);
         StdOut.println("Test: " + ++numberOfTests + " passed");
 
         // inserting new point to the right
-        kdTree.insert(new Point2D(0.1, 0));
-        if (kdTree.size() != 4) throw new RuntimeException("Size should've been 4 but instead it " +
-                "is: " + kdTree.size());
+        Point2D P10 = new Point2D(0.1, 0);
+        kdTree.insert(P10);
+        if (kdTree.root.right.right.point.compareTo(P10) != 0) throw new RuntimeException("root.right.right " +
+                "should've been " + P10 + " but instead it is: " + kdTree.root.right.right.point);
         StdOut.println("Test: " + ++numberOfTests + " passed");
 
-        /*
+
         // Testing Contains
-        if (!kdTree.contains(new Point2D(0, 0)))
-            throw new RuntimeException("Should've contained origin");
+        // checking if root is available
+        if (!kdTree.contains(P00)) throw new RuntimeException("Should've contained origin");
         StdOut.println("Test: " + ++numberOfTests + " passed");
 
-        if (kdTree.contains(new Point2D(0, 1)))
-            throw new RuntimeException("Shouldn't contain (0,1)");
+        // checking for a non-existing point
+        if (kdTree.contains(new Point2D(0, 1))) throw new RuntimeException("Shouldn't contained (0,1)");
         StdOut.println("Test: " + ++numberOfTests + " passed");
 
+        // checking for point on left
+        if (!kdTree.contains(Pn10)) throw new RuntimeException("Should've contained " + Pn10);
+        StdOut.println("Test: " + ++numberOfTests + " passed");
+
+        // inserting new point to the right
+        if (!kdTree.contains(P10)) throw new RuntimeException("Should've contained " + P10);
+        StdOut.println("Test: " + ++numberOfTests + " passed");
+
+        if (!kdTree.contains(P01)) throw new RuntimeException("Should've contained " + P01);
+        StdOut.println("Test: " + ++numberOfTests + " passed");
+        
+        /*
         // Testing range
         Point2D origin = new Point2D(0, 0);
         Point2D P01 = new Point2D(0, 0.1);
