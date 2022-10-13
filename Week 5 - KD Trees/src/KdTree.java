@@ -95,9 +95,28 @@ public class KdTree {
     // all points that are inside the rectangle (or on the boundary)
     public Iterable<Point2D> range(RectHV rect) {
         LinkedList<Point2D> list = new LinkedList<>();
-        // TODO: implement it
-
+        addPointsInRange(rect, list, root);
         return list;
+    }
+
+    private void addPointsInRange(RectHV rect, LinkedList<Point2D> list, Node current) {
+        if (current == null) return;
+
+        // check if current lies within rect
+        if (current.point.x() >= rect.xmin() && current.point.x() <= rect.xmax()
+                && current.point.y() >= rect.ymin() && current.point.y() <= rect.ymax()) {
+            list.add(current.point);
+        }
+
+        // check if current.right lies within rect, if so discover it
+        if (current.rightRect.intersects(rect)) {
+            addPointsInRange(rect, list, current.right);
+        }
+
+        // check if current.left lies within rect, if so discover it
+        if (current.leftRect.intersects(rect)) {
+            addPointsInRange(rect, list, current.left);
+        }
     }
 
     // a nearest neighbor in the set to point p; null if the set is empty
@@ -119,29 +138,47 @@ public class KdTree {
         return closestPoint;*/
         return p;
     }
+
     private Iterator<Node> iterator() {
         LinkedList<Node> l = new LinkedList<>();
-        add (l, root);
+        addToIteratorList(l, root);
         return l.iterator();
     }
 
-    private static void add (LinkedList<Node> l, Node n) {
+    private static void addToIteratorList(LinkedList<Node> l, Node n) {
         if (n == null) return;
         l.add(n);
-        add(l, n.left);
-        add(l, n.right);
+        addToIteratorList(l, n.left);
+        addToIteratorList(l, n.right);
     }
 
-    private class Node implements Comparable<Node> {
-        private Node parent, right, left;
-        private boolean isVertical;
-        private Point2D point;
+    private static class Node implements Comparable<Node> {
+        private final Node parent;
+        private Node right;
+        private Node left;
+        private final boolean isVertical;
+        private final Point2D point;
         private static final boolean VERTICAL = true;
+        private final RectHV rightRect, leftRect;
 
         public Node(Node parent, Point2D point, boolean isVertical) {
             this.parent = parent;
             this.point = point;
             this.isVertical = isVertical;
+
+            // instantiating rectangles that will be used to find intersection in range()
+
+            // if the point cuts canvas vertically, create right & left rectangles
+            if (isVertical) {
+                boolean isParentNull = parent == null;
+                double yMinLimit = !isParentNull ? parent.point.y() : 0;
+                double yMaxLimit = !isParentNull ? parent.point.y() : 1;
+                rightRect = new RectHV(point.x(), yMinLimit, point.x(), 1);
+                leftRect = new RectHV(point.x(), 0, point.x(), yMaxLimit);
+            } else { // otherwise, point cuts canvas horizontally, create up (right) & down (left) r
+                rightRect = new RectHV(parent.point.x(), point.y(), 1, point.y());
+                leftRect = new RectHV(0, point.y(), parent.point.x(), point.y());
+            }
         }
 
         @Override
@@ -166,9 +203,9 @@ public class KdTree {
 
             } else {
                 StdDraw.setPenColor(StdDraw.BLUE);
-                    int comp = point.compareTo(parent.point);
-                    if (comp > 0) StdDraw.line(parent.point.x(), point.y(), 1, point.y());
-                    else StdDraw.line(-1, point.y(), parent.point.x(), point.y());
+                int comp = point.compareTo(parent.point);
+                if (comp > 0) StdDraw.line(parent.point.x(), point.y(), 1, point.y());
+                else StdDraw.line(-1, point.y(), parent.point.x(), point.y());
             }
         }
     }
@@ -225,8 +262,9 @@ public class KdTree {
         // inserting new point to the right
         Point2D P10 = new Point2D(0.1, 0);
         kdTree.insert(P10);
-        if (kdTree.root.right.right.point.compareTo(P10) != 0) throw new RuntimeException("root.right.right " +
-                "should've been " + P10 + " but instead it is: " + kdTree.root.right.right.point);
+        if (kdTree.root.right.right.point.compareTo(P10) != 0)
+            throw new RuntimeException("root.right.right " +
+                    "should've been " + P10 + " but instead it is: " + kdTree.root.right.right.point);
         StdOut.println("Test: " + ++numberOfTests + " passed");
 
 
@@ -236,7 +274,8 @@ public class KdTree {
         StdOut.println("Test: " + ++numberOfTests + " passed");
 
         // checking for a non-existing point
-        if (kdTree.contains(new Point2D(0, 1))) throw new RuntimeException("Shouldn't contained (0,1)");
+        if (kdTree.contains(new Point2D(0, 1)))
+            throw new RuntimeException("Shouldn't contained (0,1)");
         StdOut.println("Test: " + ++numberOfTests + " passed");
 
         // checking for point on left
@@ -256,7 +295,7 @@ public class KdTree {
             StdOut.println(itr.next().point);
         }
 
-        /*
+
         // Testing range
         Point2D P11 = new Point2D(0.1, 0.1);
         Point2D P21 = new Point2D(0.2, 0.1);
@@ -269,7 +308,7 @@ public class KdTree {
             throw new RuntimeException("Should've gotten exactly 4 points but instead: " + ((LinkedList) kdTree.range(rectHV)).size());
         StdOut.println("Test: " + ++numberOfTests + " passed");
 
-
+        /*
         // Testing nearest
         if (kdTree.nearest(new Point2D(0.2, 0.2)).compareTo(P21) != 0) throw new RuntimeException(
                 "Nearest should've been P21 but instead it is " + kdTree.nearest(P21));
