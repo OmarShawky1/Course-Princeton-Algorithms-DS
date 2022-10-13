@@ -85,10 +85,10 @@ public class KdTree {
     public void draw() {
         StdDraw.setPenColor(StdDraw.BLACK);
         StdDraw.setPenRadius(0.01);
-        // TODO: draw the horizontal and vertical lines
-
-        //TODO: draw rectangles
-
+        Iterator<Node> itr = iterator();
+        while (itr.hasNext()) {
+            itr.next().draw();
+        }
         StdDraw.show();
     }
 
@@ -119,14 +119,24 @@ public class KdTree {
         return closestPoint;*/
         return p;
     }
+    private Iterator<Node> iterator() {
+        LinkedList<Node> l = new LinkedList<>();
+        add (l, root);
+        return l.iterator();
+    }
+
+    private static void add (LinkedList<Node> l, Node n) {
+        if (n == null) return;
+        l.add(n);
+        add(l, n.left);
+        add(l, n.right);
+    }
 
     private class Node implements Comparable<Node> {
-        //TODO revise on everything here
         private Node parent, right, left;
         private boolean isVertical;
         private Point2D point;
         private static final boolean VERTICAL = true;
-        private static final boolean HORIZONTAL = false;
 
         public Node(Node parent, Point2D point, boolean isVertical) {
             this.parent = parent;
@@ -136,16 +146,30 @@ public class KdTree {
 
         @Override
         public int compareTo(Node node) {
-            // StdOut.println("This is Node.compareTo; isVertical is: " + isVertical);//TODO remove line
-            // StdOut.println("point.x(): " + point.x()); //TODO remove line
-            // StdOut.println("node.point.x(): " + node.point.x()); //TODO remove line
-            // StdOut.println("Double.compare(point.x(), node.point.x()): " + Double.compare(point.x(), node.point.x())); //TODO remove line
             return isVertical ? Double.compare(point.x(), node.point.x()) :
                     Double.compare(point.y(), node.point.y());
         }
 
         public void draw() {
-            // TODO
+            StdDraw.setPenColor(StdDraw.BLACK);
+            StdDraw.setPenRadius(0.01);
+            point.draw();
+
+            StdDraw.setPenRadius();
+            if (isVertical) {
+                StdDraw.setPenColor(StdDraw.RED);
+                if (parent != null) {
+                    int comp = point.compareTo(parent.point);
+                    if (comp > 0) StdDraw.line(point.x(), parent.point.y(), point.x(), 1);
+                    else StdDraw.line(point.x(), -1, point.x(), parent.point.y());
+                } else StdDraw.line(point.x(), -1, point.x(), 1);
+
+            } else {
+                StdDraw.setPenColor(StdDraw.BLUE);
+                    int comp = point.compareTo(parent.point);
+                    if (comp > 0) StdDraw.line(parent.point.x(), point.y(), 1, point.y());
+                    else StdDraw.line(-1, point.y(), parent.point.x(), point.y());
+            }
         }
     }
 
@@ -225,20 +249,19 @@ public class KdTree {
 
         if (!kdTree.contains(P01)) throw new RuntimeException("Should've contained " + P01);
         StdOut.println("Test: " + ++numberOfTests + " passed");
-        
+
+        // Testing Iterator
+        Iterator<Node> itr = kdTree.iterator();
+        while (itr.hasNext()) {
+            StdOut.println(itr.next().point);
+        }
+
         /*
         // Testing range
-        Point2D origin = new Point2D(0, 0);
-        Point2D P01 = new Point2D(0, 0.1);
-        Point2D P10 = new Point2D(0.1, 0);
         Point2D P11 = new Point2D(0.1, 0.1);
         Point2D P21 = new Point2D(0.2, 0.1);
         RectHV rectHV = new RectHV(0, 0, 0.1, 0.1);
 
-        kdTree = new KdTree();
-        kdTree.insert(origin);
-        kdTree.insert(P01);
-        kdTree.insert(P10);
         kdTree.insert(P11);
         kdTree.insert(P21);
 
@@ -246,12 +269,13 @@ public class KdTree {
             throw new RuntimeException("Should've gotten exactly 4 points but instead: " + ((LinkedList) kdTree.range(rectHV)).size());
         StdOut.println("Test: " + ++numberOfTests + " passed");
 
+
         // Testing nearest
         if (kdTree.nearest(new Point2D(0.2, 0.2)).compareTo(P21) != 0) throw new RuntimeException(
                 "Nearest should've been P21 but instead it is " + kdTree.nearest(P21));
         StdOut.println("Test: " + ++numberOfTests + " passed");
-
+        */
         // Testing Draw
-        kdTree.draw();*/
+        kdTree.draw();
     }
 }
