@@ -85,9 +85,7 @@ public class KdTree {
     // draw all points to standard draw
     public void draw() {
         Iterator<Node> itr = iterator();
-        while (itr.hasNext()) {
-            itr.next().draw();
-        }
+        while (itr.hasNext()) itr.next().draw();
         StdDraw.show();
     }
 
@@ -102,47 +100,26 @@ public class KdTree {
         if (current == null) return;
 
         // check if current lies within rect
-        if (current.point.x() >= rect.xmin() && current.point.x() <= rect.xmax()
-                && current.point.y() >= rect.ymin() && current.point.y() <= rect.ymax()) {
-            list.add(current.point);
-        }
+        boolean xInRange = current.point.x() >= rect.xmin() && current.point.x() <= rect.xmax();
+        boolean yInRange = current.point.y() >= rect.ymin() && current.point.y() <= rect.ymax();
+        if (xInRange && yInRange) list.add(current.point);
 
         // TODO: Enhance checking speed as per FAQs advice (checking the splitting line instead of rect
-
         // check if current.right lies within rect, if so discover it
-        if (current.rightRect.intersects(rect)) {
-            addPointsInRange(rect, list, current.right);
-        }
+        if (current.rightRect.intersects(rect)) addPointsInRange(rect, list, current.right);
 
         // check if current.left lies within rect, if so discover it
-        if (current.leftRect.intersects(rect)) {
-            addPointsInRange(rect, list, current.left);
-        }
+        if (current.leftRect.intersects(rect)) addPointsInRange(rect, list, current.left);
     }
 
     // a nearest neighbor in the set to point p; null if the set is empty
     public Point2D nearest(Point2D p) {
         if (p == null) throw new IllegalArgumentException("can't search nearest for null");
-
-        // TODO
-        /*Iterator<Node> twoDIterator = twoDTree.iterator();
-        if (!twoDIterator.hasNext()) {
-            return null;
-        }
-
-        // current is root
-        Node closestNode = twoDIterator.next();
-        Point2D closestPoint = closestNode.point;
-        double closestDistance = closestPoint.distanceTo(p);
-        // TODO: Implement
-
-        return closestPoint;*/
         Node champion = root;
         return root != null ? discoverNearest(p, root, champion).point : null;
     }
 
     private Node discoverNearest(Point2D p, Node current, Node champion) {
-        
         /* Code Logic
             // if rightRec is closer than champion
                 // if right not null
@@ -164,8 +141,8 @@ public class KdTree {
                 // else, return champion
             // else, return champion
         */
-        // if current node is closer than champion -so far-; assign current to champion
 
+        // if current node is closer than champion -so far-; assign current to champion
         double distanceToChampion = champion.point.distanceSquaredTo(p);
         if (current.point.distanceSquaredTo(p) < champion.point.distanceSquaredTo(p)) {
             champion = current;
@@ -175,85 +152,28 @@ public class KdTree {
         double distToLeft = current.leftRect.distanceSquaredTo(p);
         boolean distToLeftCloser = distToLeft < distanceToChampion;
         // if rightRec is closer than champion
-        if (distToRight < distanceToChampion) {
-            StdOut.println("rightRec is closer than champion"); //TODO: remove line
-            // if right not null
-            if (current.right != null) {
-                StdOut.println("right not null"); //TODO: remove line
-                // if leftRec is closer than champion
-                if (distToLeftCloser) {
-                    StdOut.println("leftRec is closer than champion"); //TODO: remove line
-                    // if left is not null
-                    if (current.left != null) {
-                        StdOut.println("left is not null"); //TODO: remove line
-                        // if rightRect is closer than leftRec
-                        if (distToRight <= distToLeft) {
-                            StdOut.println("rightRect is closer than leftRec"); //TODO: remove line
-                            // discover right then left
-                            champion = discoverNearest(p, current.right, champion);
-                            champion = discoverNearest(p, current.left, champion);
-                        } else {
-                            // else, discover left then right
-                            StdOut.println("leftRec is closer than rightRect"); //TODO: remove line
-                            champion = discoverNearest(p, current.left, champion);
-                            champion = discoverNearest(p, current.right, champion);
-                        }
-                    } else {
-                        StdOut.println("left is null"); //TODO: remove line
-                        champion = discoverNearest(p, current.right, champion); // else, just discover right
-                    }
-                } else {
-                    StdOut.println("leftRec is not closer than champion"); //TODO: remove line
-                    champion = discoverNearest(p, current.right, champion); // else, just discover right(*)
-                }
-            }
-            // else, if leftRec is closer than champion (*)
-            else if (distToLeftCloser) {
-                StdOut.println("leftRec is closer than champion"); //TODO: remove line
-                // if left is not null
-                if (current.left != null) {
-                    StdOut.println("left is not null"); //TODO: remove line
-                    discoverNearest(p, current.left, champion); // discover left
-                } else {
-                    StdOut.println("else, return champion"); //TODO: remove line
-                    return champion; // else, return champion (*)
-                }
-            } else {
-                StdOut.println("else, return champion"); //TODO: remove line
-                return champion; // else, return champion (*)
-            }
-        } // else, if leftRec is closer than champion (*)
-        else if (distToLeftCloser) {
-            StdOut.println("leftRec is closer than champion"); //TODO: remove line
+        // if right not null
+        if (distToRight < distanceToChampion && current.right != null) {
+            // if leftRec is closer than champion
             // if left is not null
-            if (current.left != null) {
-                StdOut.println("left is not null"); //TODO: remove line
-                discoverNearest(p, current.left, champion); // discover left
-            } else {
-                StdOut.println("else, return champion"); //TODO: remove line
-                return champion; // else, return champion
-            }
+            if (distToLeftCloser && current.left != null) {
+                    // if rightRect is closer than leftRec
+                    if (distToRight <= distToLeft) {
+                        // discover right then left
+                        champion = discoverNearest(p, current.right, champion);
+                        champion = discoverNearest(p, current.left, champion);
+                    } else {
+                        // else, discover left then right
+                        champion = discoverNearest(p, current.left, champion);
+                        champion = discoverNearest(p, current.right, champion);
+                    }
+            } else champion = discoverNearest(p, current.right, champion); // else, just discover right
         }
-        StdOut.println("else, return champion"); //TODO: remove line
+        // else, if leftRec is closer than champion
+        // if left is not null
+        else if (distToLeftCloser && current.left != null) discoverNearest(p, current.left, champion); // discover left
         return champion; // else, return champion
     }
-
-    /*private Point2D discoverNearestLeft(Point2D p, Node current, Node champion, double distToLeft, double distanceToChampion) {
-        if (distToLeft > distanceToChampion) {
-            StdOut.println("leftRec is closer than champion"); //TODO: remove line
-            // if left is not null
-            if (current.left != null) {
-                StdOut.println("left is not null"); //TODO: remove line
-                discoverNearest(p, current.left, champion); // discover left
-            }
-            else {
-                StdOut.println("else, return champion"); //TODO: remove line
-                return champion.point; // else, return champion
-            }
-        }
-        StdOut.println("else, return champion"); //TODO: remove line
-        return champion.point; // else, return champion
-    }*/
 
     private Iterator<Node> iterator() {
         LinkedList<Node> l = new LinkedList<>();
@@ -270,18 +190,16 @@ public class KdTree {
 
     private static class Node implements Comparable<Node> {
         private final Node parent;
-        private Node right;
-        private Node left;
+        private Node right, left;
+        private final RectHV rightRect, leftRect, canvas;
         private final boolean isVertical;
         private final Point2D point;
         private static final boolean VERTICAL = true;
-        private final RectHV rightRect, leftRect, canvas;
 
         public Node(Node parent, Point2D point, boolean isVertical) {
             this.parent = parent;
             this.point = point;
             this.isVertical = isVertical;
-
 
             // instantiating rectangles that will be used to find intersection in range()
             if (parent == null) {
@@ -306,8 +224,8 @@ public class KdTree {
                     // if this node is the down-side
                     else canvas = new RectHV(xmin, ymin, xmax, parent.point.y());
 
-                    rightRect = new RectHV(point.x(), canvas.ymin(), canvas.xmax(), canvas.ymax()); // right-side
-                    leftRect = new RectHV(canvas.xmin(), canvas.ymin(), point.x(), canvas.ymax()); // left-side
+                    rightRect = new RectHV(point.x(), canvas.ymin(), canvas.xmax(), canvas.ymax());
+                    leftRect = new RectHV(canvas.xmin(), canvas.ymin(), point.x(), canvas.ymax());
                 } else { // else it splits canvas horizontally, means parent splits vertically
                     // If this node is the right-side
                     if (comp >= 0) canvas = new RectHV(parent.point.x(), ymin, xmax, ymax);
@@ -324,8 +242,7 @@ public class KdTree {
 
         @Override
         public int compareTo(Node node) {
-            return isVertical ? Double.compare(point.x(), node.point.x()) :
-                    Double.compare(point.y(), node.point.y());
+            return isVertical ? Double.compare(point.x(), node.point.x()) : Double.compare(point.y(), node.point.y());
         }
 
         public void draw() {
@@ -338,15 +255,18 @@ public class KdTree {
                 int comp = parent.compareTo(this) * -1;
                 if (isVertical) {
                     StdDraw.setPenColor(StdDraw.RED);
+                    // if point is up, line is from y of (horizontal parent) till parents' ymax; x is constant
                     if (comp >= 0) StdDraw.line(point.x(), parent.point.y(), point.x(), canvas.ymax());
+                    // if point is down, line is from parents' ymin till y of (horizontal parent); x is constant
                     else StdDraw.line(point.x(), canvas.ymin(), point.x(), parent.point.y());
-
                 } else {
                     StdDraw.setPenColor(StdDraw.BLUE);
+                    // if point is right, line from x of (vertical parent) till parents' xmax; y is constant
                     if (comp >= 0) StdDraw.line(parent.point.x(), point.y(), canvas.xmax(), point.y());
+                    // if point is right, line from parents' xmin till x of (vertical parent); y is constant
                     else StdDraw.line(canvas.xmin(), point.y(), parent.point.x(), point.y());
                 }
-            } else StdDraw.line(point.x(), 0, point.x(), 1);
+            } else StdDraw.line(point.x(), 0, point.x(), 1); // parent's line has main canvas size
         }
     }
 
@@ -446,22 +366,16 @@ public class KdTree {
             throw new RuntimeException("Should've gotten exactly 4 points but instead: " + ((LinkedList) kdTree.range(rectHV)).size());
         StdOut.println("Test: " + ++numberOfTests + " passed");
 
-        /* TODO: uncomment it when you test nearest
         // Testing Draw
-        kdTree.draw();*/
+        kdTree.draw();
 
         // Creating a simpler points to debug errors
         kdTree = new KdTree();
         kdTree.insert(P55); // Origin
-        // kdTree.insert(P56);
         kdTree.insert(P44); // Left
         kdTree.insert(P66); // right
         kdTree.insert(P76); // up
         kdTree.insert(P65); // down
-
-        // Testing Draw
-        kdTree.draw();
-
 
         // Testing nearest
         if (kdTree.nearest(new Point2D(0.7, 0.7)).compareTo(P76) != 0) throw new RuntimeException(
