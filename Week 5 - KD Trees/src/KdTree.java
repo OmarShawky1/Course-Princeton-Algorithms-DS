@@ -39,11 +39,14 @@ public class KdTree {
 
         // otherwise, check where to add point by comparing with nodes until reaching null link
         Node current = root;
-        int comp = temp.compareTo(current);
+        // Comparing temp to current; Can't compare "temp" to "current" directly because "isVertical" influences the
+        // comparison, and it is fake in temp, so we invert sign
+        int comp = current.compareTo(temp) * -1;
         while (true) {
             if (comp > 0) {
                 if (current.right != null) {
                     current = current.right;
+                    comp = current.compareTo(temp) * -1;
                 } else {
                     current.right = new Node(current, p, !current.isVertical);
                     size++;
@@ -52,6 +55,7 @@ public class KdTree {
             } else if (comp < 0) {
                 if (current.left != null) {
                     current = current.left;
+                    comp = current.compareTo(temp) * -1;
                 } else {
                     current.left = new Node(current, p, !current.isVertical);
                     size++;
@@ -72,7 +76,7 @@ public class KdTree {
         Node tempNode = new Node(null, p, Node.VERTICAL); // direction doesn't matter
         while (current != null) {
             if (current.point.compareTo(p) == 0) return true;
-            if (tempNode.compareTo(current) >= 0) current = current.right;
+            if ((current.compareTo(tempNode) * -1) >= 0) current = current.right;
             else current = current.left;
         }
         return false;
@@ -185,7 +189,7 @@ public class KdTree {
                     if (current.left != null) {
                         StdOut.println("left is not null"); //TODO: remove line
                         // if rightRect is closer than leftRec
-                        if (distToRight <= current.leftRect.distanceSquaredTo(p)) {
+                        if (distToRight <= distToLeft) {
                             StdOut.println("rightRect is closer than leftRec"); //TODO: remove line
                             // discover right then left
                             discoverNearest(p, current.right, champion);
@@ -300,15 +304,13 @@ public class KdTree {
 
                 // if this node splits canvas vertically, means parent splits horizontally
                 if (isVertical) {
-                    if (comp > 0)
-                        canvas = new RectHV(xmin, parent.point.y(), xmax, ymax); // if this node is the up-side
+                    if (comp > 0) canvas = new RectHV(xmin, parent.point.y(), xmax, ymax); // if this node is the up-side
                     else canvas = new RectHV(xmin, ymin, xmax, parent.point.y()); // if this node is the down-side
 
                     rightRect = new RectHV(point.x(), ymin, xmax, ymax); // right-side
                     leftRect = new RectHV(xmin, ymin, point.x(), ymax); // left-side
                 } else { // else it splits canvas horizontally, means parent splits vertically
-                    if (comp > 0)
-                        canvas = new RectHV(parent.point.x(), ymin, xmax, ymax); // If this node is the right-side
+                    if (comp > 0) canvas = new RectHV(parent.point.x(), ymin, xmax, ymax); // If this node is the right-side
                     else canvas = new RectHV(xmin, ymin, parent.point.x(), ymax); // if this node is the left-side
 
                     rightRect = new RectHV(canvas.xmin(), point.y(), canvas.xmax(), canvas.ymax()); // up-side
@@ -370,10 +372,10 @@ public class KdTree {
         // Testing insert
         // inserting to empty tree
         KdTree kdTree = new KdTree();
-        Point2D P00 = new Point2D(0, 0);
-        kdTree.insert(P00);
-        if (kdTree.root.point.compareTo(P00) != 0) throw new RuntimeException("root should've " +
-                "been: " + P00 + " instead it is " + kdTree.root.point);
+        Point2D P55 = new Point2D(0.5, 0.5);
+        kdTree.insert(P55);
+        if (kdTree.root.point.compareTo(P55) != 0) throw new RuntimeException("root should've " +
+                "been: " + P55 + " instead it is " + kdTree.root.point);
         StdOut.println("Test: " + ++numberOfTests + " passed");
 
         // inserting null
@@ -387,38 +389,37 @@ public class KdTree {
         StdOut.println("Test: " + ++numberOfTests + " passed");
 
         // inserting same point twice
-        kdTree.insert(new Point2D(0, 0));
+        kdTree.insert(P55);
         if (kdTree.size() != 1) throw new RuntimeException("Size should've been 1 but instead it " +
                 "is: " + kdTree.size());
         StdOut.println("Test: " + ++numberOfTests + " passed");
 
         // inserting new point above root
-        Point2D P01 = new Point2D(0, 0.1);
-        kdTree.insert(P01);
-        if (kdTree.root.right.point.compareTo(P01) != 0) throw new RuntimeException("root.right " +
-                "should've been " + P01 + " but instead it is " + kdTree.root.right.point);
+        Point2D P56 = new Point2D(0.5, 0.6);
+        kdTree.insert(P56);
+        if (kdTree.root.right.point.compareTo(P56) != 0) throw new RuntimeException("root.right " +
+                "should've been " + P56 + " but instead it is " + kdTree.root.right.point);
         StdOut.println("Test: " + ++numberOfTests + " passed");
 
         // inserting new point to the left
-        //TODO: remove this line values should be 0<v<1
-        /*Point2D Pn10 = new Point2D(-0.1, 0);
-        kdTree.insert(Pn10);
-        if (kdTree.root.left.point.compareTo(Pn10) != 0) throw new RuntimeException("root.left " +
-                "should've been " + Pn10 + " but instead it is: " + kdTree.root.left.point);
-        StdOut.println("Test: " + ++numberOfTests + " passed");*/
+        Point2D P44 = new Point2D(0.4, 0.4);
+        kdTree.insert(P44);
+        if (kdTree.root.left.point.compareTo(P44) != 0) throw new RuntimeException("root.left " +
+                "should've been " + P44 + " but instead it is: " + kdTree.root.left.point);
+        StdOut.println("Test: " + ++numberOfTests + " passed");
 
-        // inserting new point to the right
-        Point2D P10 = new Point2D(0.1, 0);
-        kdTree.insert(P10);
-        if (kdTree.root.right.right.point.compareTo(P10) != 0)
+        // inserting new point to the left
+        Point2D P65 = new Point2D(0.6, 0.5);
+        kdTree.insert(P65);
+        if (kdTree.root.right.left.point.compareTo(P65) != 0)
             throw new RuntimeException("root.right.right " +
-                    "should've been " + P10 + " but instead it is: " + kdTree.root.right.right.point);
+                    "should've been " + P65 + " but instead it is: " + kdTree.root.right.left.point);
         StdOut.println("Test: " + ++numberOfTests + " passed");
 
 
         // Testing Contains
         // checking if root is available
-        if (!kdTree.contains(P00)) throw new RuntimeException("Should've contained origin");
+        if (!kdTree.contains(P55)) throw new RuntimeException("Should've contained origin");
         StdOut.println("Test: " + ++numberOfTests + " passed");
 
         // checking for a non-existing point
@@ -426,16 +427,15 @@ public class KdTree {
             throw new RuntimeException("Shouldn't contained (0,1)");
         StdOut.println("Test: " + ++numberOfTests + " passed");
 
-        /*// checking for point on left
-        //TODO: remove this line values should be 0<v<1
-        if (!kdTree.contains(Pn10)) throw new RuntimeException("Should've contained " + Pn10);
-        StdOut.println("Test: " + ++numberOfTests + " passed");*/
-
-        // inserting new point to the right
-        if (!kdTree.contains(P10)) throw new RuntimeException("Should've contained " + P10);
+        // checking for point on left
+        if (!kdTree.contains(P44)) throw new RuntimeException("Should've contained " + P44);
         StdOut.println("Test: " + ++numberOfTests + " passed");
 
-        if (!kdTree.contains(P01)) throw new RuntimeException("Should've contained " + P01);
+        // inserting new point to the right
+        if (!kdTree.contains(P65)) throw new RuntimeException("Should've contained " + P65);
+        StdOut.println("Test: " + ++numberOfTests + " passed");
+
+        if (!kdTree.contains(P56)) throw new RuntimeException("Should've contained " + P56);
         StdOut.println("Test: " + ++numberOfTests + " passed");
 
         /*// Testing Iterator
@@ -445,32 +445,45 @@ public class KdTree {
         }*/
 
         // Testing range
-        Point2D P11 = new Point2D(0.1, 0.1);
-        Point2D P21 = new Point2D(0.2, 0.1);
-        RectHV rectHV = new RectHV(0, 0, 0.1, 0.1);
+        Point2D P66 = new Point2D(0.6, 0.6);
+        Point2D P76 = new Point2D(0.7, 0.6);
+        RectHV rectHV = new RectHV(0.5, 0.5, 0.6, 0.6);
 
-        kdTree.insert(P11);
-        kdTree.insert(P21);
+        kdTree.insert(P66);
+        kdTree.insert(P76);
 
         if (((LinkedList) kdTree.range(rectHV)).size() != 4)
             throw new RuntimeException("Should've gotten exactly 4 points but instead: " + ((LinkedList) kdTree.range(rectHV)).size());
         StdOut.println("Test: " + ++numberOfTests + " passed");
 
+        /* TODO: uncomment it when you test nearest
+        // Testing Draw
+        kdTree.draw();*/
+
+        // Creating a simpler points to debug errors
+        kdTree = new KdTree();
+        kdTree.insert(P55); // Origin
+        // kdTree.insert(P56);
+        kdTree.insert(P44); // Left
+        kdTree.insert(P66); // right
+        kdTree.insert(P76); // up
+        kdTree.insert(P65); // down
+
         // Testing Draw
         kdTree.draw();
 
+
         // Testing nearest
-        if (kdTree.nearest(new Point2D(0.2, 0.2)).compareTo(P21) != 0) throw new RuntimeException(
-                "Nearest should've been P21 but instead it is " + kdTree.nearest(P21));
+        if (kdTree.nearest(new Point2D(0.7, 0.7)).compareTo(P76) != 0) throw new RuntimeException(
+                "Nearest should've been P76 but instead it is " + kdTree.nearest(P76));
         StdOut.println("Test: " + ++numberOfTests + " passed");
 
-        if (kdTree.nearest(new Point2D(0.3, 0.1)).compareTo(P21) != 0) throw new RuntimeException(
-                "Nearest should've been P21 but instead it is " + kdTree.nearest(P21));
+        if (kdTree.nearest(new Point2D(0.8, 0.6)).compareTo(P76) != 0) throw new RuntimeException(
+                "Nearest should've been P76 but instead it is " + kdTree.nearest(P76));
         StdOut.println("Test: " + ++numberOfTests + " passed");
 
-        if (kdTree.nearest(new Point2D(0.3, 0.3)).compareTo(P21) != 0) throw new RuntimeException(
-                "Nearest should've been P21 but instead it is " + kdTree.nearest(P21));
+        if (kdTree.nearest(new Point2D(0.8, 0.8)).compareTo(P76) != 0) throw new RuntimeException(
+                "Nearest should've been P76 but instead it is " + kdTree.nearest(P76));
         StdOut.println("Test: " + ++numberOfTests + " passed");
-
     }
 }
