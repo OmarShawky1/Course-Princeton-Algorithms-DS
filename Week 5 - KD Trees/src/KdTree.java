@@ -84,8 +84,6 @@ public class KdTree {
 
     // draw all points to standard draw
     public void draw() {
-        StdDraw.setPenColor(StdDraw.BLACK);
-        StdDraw.setPenRadius(0.01);
         Iterator<Node> itr = iterator();
         while (itr.hasNext()) {
             itr.next().draw();
@@ -291,10 +289,9 @@ public class KdTree {
                 rightRect = new RectHV(point.x(), canvas.ymin(), canvas.xmax(), canvas.ymax());
                 leftRect = new RectHV(canvas.xmin(), canvas.ymin(), point.x(), canvas.ymax());
             } else {
-                //TODO: Fix critical logical mistakes
-
                 // decide if the node is left or right of parent to calculate canvas size
-                int comp = this.compareTo(parent);
+                // compare using the parent (as isVertical influences comparison) and inverse sign
+                int comp = parent.compareTo(this) * -1;
 
                 // Local variables just to shorten the line length below
                 double xmin = parent.canvas.xmin();
@@ -304,31 +301,25 @@ public class KdTree {
 
                 // if this node splits canvas vertically, means parent splits horizontally
                 if (isVertical) {
-                    if (comp > 0) canvas = new RectHV(xmin, parent.point.y(), xmax, ymax); // if this node is the up-side
-                    else canvas = new RectHV(xmin, ymin, xmax, parent.point.y()); // if this node is the down-side
+                    // if this node is the up-side
+                    if (comp > 0) canvas = new RectHV(xmin, parent.point.y(), xmax, ymax);
+                    // if this node is the down-side
+                    else canvas = new RectHV(xmin, ymin, xmax, parent.point.y());
 
-                    rightRect = new RectHV(point.x(), ymin, xmax, ymax); // right-side
-                    leftRect = new RectHV(xmin, ymin, point.x(), ymax); // left-side
+                    rightRect = new RectHV(point.x(), canvas.ymin(), canvas.xmax(), canvas.ymax()); // right-side
+                    leftRect = new RectHV(canvas.xmin(), canvas.ymin(), point.x(), canvas.ymax()); // left-side
                 } else { // else it splits canvas horizontally, means parent splits vertically
-                    if (comp > 0) canvas = new RectHV(parent.point.x(), ymin, xmax, ymax); // If this node is the right-side
-                    else canvas = new RectHV(xmin, ymin, parent.point.x(), ymax); // if this node is the left-side
+                    // If this node is the right-side
+                    if (comp > 0) canvas = new RectHV(parent.point.x(), ymin, xmax, ymax);
+                    // if this node is the left-side
+                    else canvas = new RectHV(xmin, ymin, parent.point.x(), ymax);
 
-                    rightRect = new RectHV(canvas.xmin(), point.y(), canvas.xmax(), canvas.ymax()); // up-side
-                    leftRect = new RectHV(canvas.xmin(), canvas.ymin(), canvas.xmax(), point.y()); // down-side
+                    RectHV upRect = new RectHV(canvas.xmin(), point.y(), canvas.xmax(), canvas.ymax());
+                    RectHV downRect = new RectHV(canvas.xmin(), canvas.ymin(), canvas.xmax(), point.y());
+                    rightRect = upRect;
+                    leftRect = downRect;
                 }
             }
-            /* Old logic
-            // if the point cuts canvas vertically, create right & left rectangles
-            if (isVertical) {
-                boolean isParentNull = parent == null;
-                double yMinLimit = !isParentNull ? parent.point.y() : 0;
-                double yMaxLimit = !isParentNull ? parent.point.y() : 1;
-                rightRect = new RectHV(point.x(), yMinLimit, point.x(), 1);
-                leftRect = new RectHV(point.x(), 0, point.x(), yMaxLimit);
-            } else { // otherwise, point cuts canvas horizontally, create up (right) & down (left) r
-                rightRect = new RectHV(parent.point.x(), point.y(), 1, 1);
-                leftRect = new RectHV(parent.point.x(), 0, 1, point.y());
-            }*/
         }
 
         @Override
@@ -343,20 +334,19 @@ public class KdTree {
             point.draw();
 
             StdDraw.setPenRadius();
-            if (isVertical) {
-                StdDraw.setPenColor(StdDraw.RED);
-                if (parent != null) {
-                    int comp = point.compareTo(parent.point);
-                    if (comp > 0) StdDraw.line(point.x(), parent.point.y(), point.x(), 1);
-                    else StdDraw.line(point.x(), -1, point.x(), parent.point.y());
-                } else StdDraw.line(point.x(), -1, point.x(), 1);
+            if (parent != null) {
+                int comp = parent.compareTo(this) * -1;
+                if (isVertical) {
+                    StdDraw.setPenColor(StdDraw.RED);
+                    if (comp > 0) StdDraw.line(point.x(), parent.point.y(), point.x(), canvas.ymax());
+                    else StdDraw.line(point.x(), canvas.ymin(), point.x(), parent.point.y());
 
-            } else {
-                StdDraw.setPenColor(StdDraw.BLUE);
-                int comp = point.compareTo(parent.point);
-                if (comp > 0) StdDraw.line(parent.point.x(), point.y(), 1, point.y());
-                else StdDraw.line(-1, point.y(), parent.point.x(), point.y());
-            }
+                } else {
+                    StdDraw.setPenColor(StdDraw.BLUE);
+                    if (comp > 0) StdDraw.line(parent.point.x(), point.y(), canvas.xmax(), point.y());
+                    else StdDraw.line(canvas.xmin(), point.y(), parent.point.x(), point.y());
+                }
+            } else StdDraw.line(point.x(), 0, point.x(), 1);
         }
     }
 
