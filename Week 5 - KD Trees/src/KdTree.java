@@ -302,7 +302,7 @@ public class KdTree {
                 // if this node splits canvas vertically, means parent splits horizontally
                 if (isVertical) {
                     // if this node is the up-side
-                    if (comp > 0) canvas = new RectHV(xmin, parent.point.y(), xmax, ymax);
+                    if (comp >= 0) canvas = new RectHV(xmin, parent.point.y(), xmax, ymax);
                     // if this node is the down-side
                     else canvas = new RectHV(xmin, ymin, xmax, parent.point.y());
 
@@ -310,7 +310,7 @@ public class KdTree {
                     leftRect = new RectHV(canvas.xmin(), canvas.ymin(), point.x(), canvas.ymax()); // left-side
                 } else { // else it splits canvas horizontally, means parent splits vertically
                     // If this node is the right-side
-                    if (comp > 0) canvas = new RectHV(parent.point.x(), ymin, xmax, ymax);
+                    if (comp >= 0) canvas = new RectHV(parent.point.x(), ymin, xmax, ymax);
                     // if this node is the left-side
                     else canvas = new RectHV(xmin, ymin, parent.point.x(), ymax);
 
