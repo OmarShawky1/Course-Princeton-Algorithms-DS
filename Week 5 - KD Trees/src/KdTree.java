@@ -138,10 +138,10 @@ public class KdTree {
 
         return closestPoint;*/
         Node champion = root;
-        return root != null ? discoverNearest(p, root, champion) : null;
+        return root != null ? discoverNearest(p, root, champion).point : null;
     }
 
-    private Point2D discoverNearest(Point2D p, Node current, Node champion) {
+    private Node discoverNearest(Point2D p, Node current, Node champion) {
         
         /* Code Logic
             // if rightRec is closer than champion
@@ -190,21 +190,21 @@ public class KdTree {
                         if (distToRight <= distToLeft) {
                             StdOut.println("rightRect is closer than leftRec"); //TODO: remove line
                             // discover right then left
-                            discoverNearest(p, current.right, champion);
-                            discoverNearest(p, current.left, champion);
+                            champion = discoverNearest(p, current.right, champion);
+                            champion = discoverNearest(p, current.left, champion);
                         } else {
                             // else, discover left then right
                             StdOut.println("leftRec is closer than rightRect"); //TODO: remove line
-                            discoverNearest(p, current.left, champion);
-                            discoverNearest(p, current.right, champion);
+                            champion = discoverNearest(p, current.left, champion);
+                            champion = discoverNearest(p, current.right, champion);
                         }
                     } else {
                         StdOut.println("left is null"); //TODO: remove line
-                        discoverNearest(p, current.right, champion); // else, just discover right
+                        champion = discoverNearest(p, current.right, champion); // else, just discover right
                     }
                 } else {
                     StdOut.println("leftRec is not closer than champion"); //TODO: remove line
-                    discoverNearest(p, current.right, champion); // else, just discover right(*)
+                    champion = discoverNearest(p, current.right, champion); // else, just discover right(*)
                 }
             }
             // else, if leftRec is closer than champion (*)
@@ -216,11 +216,11 @@ public class KdTree {
                     discoverNearest(p, current.left, champion); // discover left
                 } else {
                     StdOut.println("else, return champion"); //TODO: remove line
-                    return champion.point; // else, return champion (*)
+                    return champion; // else, return champion (*)
                 }
             } else {
                 StdOut.println("else, return champion"); //TODO: remove line
-                return champion.point; // else, return champion (*)
+                return champion; // else, return champion (*)
             }
         } // else, if leftRec is closer than champion (*)
         else if (distToLeftCloser) {
@@ -231,11 +231,11 @@ public class KdTree {
                 discoverNearest(p, current.left, champion); // discover left
             } else {
                 StdOut.println("else, return champion"); //TODO: remove line
-                return champion.point; // else, return champion
+                return champion; // else, return champion
             }
         }
         StdOut.println("else, return champion"); //TODO: remove line
-        return champion.point; // else, return champion
+        return champion; // else, return champion
     }
 
     /*private Point2D discoverNearestLeft(Point2D p, Node current, Node champion, double distToLeft, double distanceToChampion) {
@@ -338,12 +338,12 @@ public class KdTree {
                 int comp = parent.compareTo(this) * -1;
                 if (isVertical) {
                     StdDraw.setPenColor(StdDraw.RED);
-                    if (comp > 0) StdDraw.line(point.x(), parent.point.y(), point.x(), canvas.ymax());
+                    if (comp >= 0) StdDraw.line(point.x(), parent.point.y(), point.x(), canvas.ymax());
                     else StdDraw.line(point.x(), canvas.ymin(), point.x(), parent.point.y());
 
                 } else {
                     StdDraw.setPenColor(StdDraw.BLUE);
-                    if (comp > 0) StdDraw.line(parent.point.x(), point.y(), canvas.xmax(), point.y());
+                    if (comp >= 0) StdDraw.line(parent.point.x(), point.y(), canvas.xmax(), point.y());
                     else StdDraw.line(canvas.xmin(), point.y(), parent.point.x(), point.y());
                 }
             } else StdDraw.line(point.x(), 0, point.x(), 1);
