@@ -30,11 +30,9 @@ public class KdTree {
     public void insert(Point2D p) {
         if (p == null) throw new IllegalArgumentException("can't insert null");
 
-        Node temp = new Node(null, p, Node.VERTICAL);
-
         // make point root if list is empty
         if (root == null) {
-            root = temp;
+            root = new Node(null, p, Node.VERTICAL);;
             size++;
             return;
         }
@@ -43,12 +41,12 @@ public class KdTree {
         Node current = root;
         // Comparing temp to current; Can't compare "temp" to "current" directly because "isVertical" influences the
         // comparison, and it is fake in temp, so we invert sign
-        int comp = current.compareTo(temp) * -1;
+        int comp = current.compareTo(p) * -1;
         while (true) {
             if (comp > 0) {
                 if (current.right != null) {
                     current = current.right;
-                    comp = current.compareTo(temp) * -1;
+                    comp = current.compareTo(p) * -1;
                 } else {
                     current.right = new Node(current, p, !current.isVertical);
                     size++;
@@ -57,7 +55,7 @@ public class KdTree {
             } else if (comp < 0) {
                 if (current.left != null) {
                     current = current.left;
-                    comp = current.compareTo(temp) * -1;
+                    comp = current.compareTo(p) * -1;
                 } else {
                     current.left = new Node(current, p, !current.isVertical);
                     size++;
@@ -78,7 +76,7 @@ public class KdTree {
         Node tempNode = new Node(null, p, Node.VERTICAL); // direction doesn't matter
         while (current != null) {
             if (current.point.compareTo(p) == 0) return true;
-            if ((current.compareTo(tempNode) * -1) >= 0) current = current.right;
+            if ((current.compareTo(tempNode.point) * -1) >= 0) current = current.right;
             else current = current.left;
         }
         return false;
@@ -102,16 +100,15 @@ public class KdTree {
     private void addPointsInRange(RectHV rect, LinkedList<Point2D> list, Node current) {
         if (current == null) return;
 
-        // check if current lies within rect
-        boolean xInRange = current.point.x() >= rect.xmin() && current.point.x() <= rect.xmax();
-        boolean yInRange = current.point.y() >= rect.ymin() && current.point.y() <= rect.ymax();
-        if (xInRange && yInRange) list.add(current.point);
+        // if node canvas intersects, it is a matter of interest, otherwise do nothing
+        if (current.canvas.intersects(rect)) {
+            // if point/node  itself is in range, add it to list
+            if (rect.contains(current.point)) list.add(current.point);
 
-        // check if current.right lies within rect, if so discover it
-        if (current.rightRect.intersects(rect)) addPointsInRange(rect, list, current.right);
-
-        // check if current.left lies within rect, if so discover it
-        if (current.leftRect.intersects(rect)) addPointsInRange(rect, list, current.left);
+            // Check in leafs for other points in range
+            addPointsInRange(rect, list, current.right);
+            addPointsInRange(rect, list, current.left);
+        }
     }
 
     // a nearest neighbor in the set to point p; null if the set is empty
@@ -149,21 +146,20 @@ public class KdTree {
         */
 
         // if current node is closer than champion -so far-; assign current to champion
+        if (current.point.distanceSquaredTo(p) < champion.point.distanceSquaredTo(p)) champion = current;
         double distanceToChampion = champion.point.distanceSquaredTo(p);
-        if (current.point.distanceSquaredTo(p) < champion.point.distanceSquaredTo(p)) {
-            champion = current;
-            distanceToChampion = champion.point.distanceSquaredTo(p);
-        }
-        double distToRight = current.rightRect.distanceSquaredTo(p);
-        double distToLeft = current.leftRect.distanceSquaredTo(p);
-        boolean distToLeftCloser = distToLeft < distanceToChampion;
+
         // if rightRec is closer than champion
         // if right not null
-        if (distToRight < distanceToChampion && current.right != null) {
+        if (current.right != null && current.right.canvas.distanceSquaredTo(p) < distanceToChampion) {
+            double distToRight = current.right.canvas.distanceSquaredTo(p);
+
             // if leftRec is closer than champion
             // if left is not null
-            if (distToLeftCloser && current.left != null) {
-                    // if rightRect is closer than leftRec
+            if (current.left != null  && ((current.left.canvas.distanceSquaredTo(p)) < distanceToChampion)) {
+                double distToLeft = current.left.canvas.distanceSquaredTo(p);
+
+                // if rightRect is closer than leftRec
                     if (distToRight <= distToLeft) {
                         // discover right then left
                         champion = discoverNearest(p, current.right, champion);
@@ -176,11 +172,11 @@ public class KdTree {
                         if (distanceToChampion > distToRight) champion = discoverNearest(p, current.right, champion);
                     }
             } else champion = discoverNearest(p, current.right, champion); // else, just discover right
+        } else if (current.left != null  && ((current.left.canvas.distanceSquaredTo(p)) < distanceToChampion)) {
+            // else, if leftRec is closer than champion
+            // if left is not null
+            champion = discoverNearest(p, current.left, champion); // discover left
         }
-        // else, if leftRec is closer than champion
-        // if left is not null
-        // discover left
-        else if (distToLeftCloser && current.left != null) champion = discoverNearest(p, current.left, champion);
         return champion; // else, return champion
     }
 
@@ -197,9 +193,9 @@ public class KdTree {
         addToIteratorList(list, n.right);
     }
 
-    private static class Node implements Comparable<Node> {
+    private static class Node {
         private static final boolean VERTICAL = true;
-        private final RectHV rightRect, leftRect, canvas;
+        private final RectHV canvas;
         private final boolean isVertical;
         private final Point2D point;
         private final Node parent;
@@ -211,14 +207,11 @@ public class KdTree {
             this.isVertical = isVertical;
 
             // instantiating rectangles that will be used to find intersection in range()
-            if (parent == null) {
-                canvas = new RectHV(0, 0, 1, 1);
-                rightRect = new RectHV(point.x(), canvas.ymin(), canvas.xmax(), canvas.ymax());
-                leftRect = new RectHV(canvas.xmin(), canvas.ymin(), point.x(), canvas.ymax());
-            } else {
+            if (parent == null) canvas = new RectHV(0, 0, 1, 1);
+            else {
                 // decide if the node is left or right of parent to calculate canvas size
                 // compare using the parent (as isVertical influences comparison) and inverse sign
-                int comp = parent.compareTo(this) * -1;
+                int comp = parent.compareTo(this.point) * -1;
 
                 // Local variables just to shorten the line length below
                 double xmin = parent.canvas.xmin();
@@ -232,26 +225,17 @@ public class KdTree {
                     if (comp >= 0) canvas = new RectHV(xmin, parent.point.y(), xmax, ymax);
                     // if this node is the down-side
                     else canvas = new RectHV(xmin, ymin, xmax, parent.point.y());
-
-                    rightRect = new RectHV(point.x(), canvas.ymin(), canvas.xmax(), canvas.ymax());
-                    leftRect = new RectHV(canvas.xmin(), canvas.ymin(), point.x(), canvas.ymax());
                 } else { // else it splits canvas horizontally, means parent splits vertically
                     // If this node is the right-side
                     if (comp >= 0) canvas = new RectHV(parent.point.x(), ymin, xmax, ymax);
                     // if this node is the left-side
                     else canvas = new RectHV(xmin, ymin, parent.point.x(), ymax);
-
-                    RectHV upRect = new RectHV(canvas.xmin(), point.y(), canvas.xmax(), canvas.ymax());
-                    RectHV downRect = new RectHV(canvas.xmin(), canvas.ymin(), canvas.xmax(), point.y());
-                    rightRect = upRect;
-                    leftRect = downRect;
                 }
             }
         }
 
-        @Override
-        public int compareTo(Node node) {
-            return isVertical ? Double.compare(point.x(), node.point.x()) : Double.compare(point.y(), node.point.y());
+        public int compareTo(Point2D pt) {
+            return isVertical ? Double.compare(point.x(), pt.x()) : Double.compare(point.y(), pt.y());
         }
 
         public void draw() {
@@ -261,7 +245,7 @@ public class KdTree {
 
             StdDraw.setPenRadius();
             if (parent != null) {
-                int comp = parent.compareTo(this) * -1;
+                int comp = parent.compareTo(this.point) * -1;
                 if (isVertical) {
                     StdDraw.setPenColor(StdDraw.RED);
                     // if point is up, line is from y of (horizontal parent) till parents' ymax; x is constant
