@@ -93,6 +93,7 @@ public class KdTree {
 
     // all points that are inside the rectangle (or on the boundary)
     public Iterable<Point2D> range(RectHV rect) {
+        if (rect == null) throw new IllegalArgumentException("can't range for null");
         LinkedList<Point2D> list = new LinkedList<>();
         addPointsInRange(rect, list, root);
         return list;
