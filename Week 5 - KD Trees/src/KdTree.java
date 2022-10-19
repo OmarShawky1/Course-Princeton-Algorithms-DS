@@ -127,8 +127,12 @@ public class KdTree {
                     // if leftRec is closer than champion
                         // if left is not null
                             // if rightRect is closer than leftRec
-                                // discover right then left
+                                // discover right
+                                // if left can be closer than right
+                                    // discover left
                             // else, discover left then right
+                                // if right can be closer than left
+                                    // discover right
                         // else, just discover right
                     // else, just discover right  (*)
                 // else, if leftRec is closer than champion (*)
@@ -162,11 +166,13 @@ public class KdTree {
                     if (distToRight <= distToLeft) {
                         // discover right then left
                         champion = discoverNearest(p, current.right, champion);
-                        champion = discoverNearest(p, current.left, champion);
+                        distanceToChampion = champion.point.distanceSquaredTo(p);
+                        if (distanceToChampion > distToLeft) champion = discoverNearest(p, current.left, champion);
                     } else {
                         // else, discover left then right
                         champion = discoverNearest(p, current.left, champion);
-                        champion = discoverNearest(p, current.right, champion);
+                        distanceToChampion = champion.point.distanceSquaredTo(p);
+                        if (distanceToChampion > distToRight) champion = discoverNearest(p, current.right, champion);
                     }
             } else champion = discoverNearest(p, current.right, champion); // else, just discover right
         }
