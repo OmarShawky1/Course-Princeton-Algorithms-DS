@@ -1,5 +1,5 @@
 *.txt
-*Visualizer.java
+#*Visualizer.java
 # Compiled class file
 *.class
 
