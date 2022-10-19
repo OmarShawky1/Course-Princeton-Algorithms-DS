@@ -1,4 +1,6 @@
-import edu.princeton.cs.algs4.*;
+import edu.princeton.cs.algs4.Point2D;
+import edu.princeton.cs.algs4.RectHV;
+import edu.princeton.cs.algs4.StdDraw;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -104,7 +106,6 @@ public class KdTree {
         boolean yInRange = current.point.y() >= rect.ymin() && current.point.y() <= rect.ymax();
         if (xInRange && yInRange) list.add(current.point);
 
-        // TODO: Enhance checking speed as per FAQs advice (checking the splitting line instead of rect
         // check if current.right lies within rect, if so discover it
         if (current.rightRect.intersects(rect)) addPointsInRange(rect, list, current.right);
 
@@ -171,30 +172,31 @@ public class KdTree {
         }
         // else, if leftRec is closer than champion
         // if left is not null
-        else if (distToLeftCloser && current.left != null) discoverNearest(p, current.left, champion); // discover left
+        // discover left
+        else if (distToLeftCloser && current.left != null) champion = discoverNearest(p, current.left, champion);
         return champion; // else, return champion
     }
 
     private Iterator<Node> iterator() {
-        LinkedList<Node> l = new LinkedList<>();
-        addToIteratorList(l, root);
-        return l.iterator();
+        LinkedList<Node> list = new LinkedList<>();
+        addToIteratorList(list, root);
+        return list.iterator();
     }
 
-    private static void addToIteratorList(LinkedList<Node> l, Node n) {
+    private static void addToIteratorList(LinkedList<Node> list, Node n) {
         if (n == null) return;
-        l.add(n);
-        addToIteratorList(l, n.left);
-        addToIteratorList(l, n.right);
+        list.add(n);
+        addToIteratorList(list, n.left);
+        addToIteratorList(list, n.right);
     }
 
     private static class Node implements Comparable<Node> {
-        private final Node parent;
-        private Node right, left;
+        private static final boolean VERTICAL = true;
         private final RectHV rightRect, leftRect, canvas;
         private final boolean isVertical;
         private final Point2D point;
-        private static final boolean VERTICAL = true;
+        private final Node parent;
+        private Node right, left;
 
         public Node(Node parent, Point2D point, boolean isVertical) {
             this.parent = parent;
@@ -272,6 +274,7 @@ public class KdTree {
 
     // unit testing of the methods (optional)
     public static void main(String[] args) {
+        /*
         StdOut.println("###############KdTree Tests###############");
 
         StdOut.println("##########My Own Test Cases##########");
@@ -348,11 +351,11 @@ public class KdTree {
         if (!kdTree.contains(P56)) throw new RuntimeException("Should've contained " + P56);
         StdOut.println("Test: " + ++numberOfTests + " passed");
 
-        /*// Testing Iterator
+         Testing Iterator
         Iterator<Node> itr = kdTree.iterator();
         while (itr.hasNext()) {
             StdOut.println(itr.next().point);
-        }*/
+        }
 
         // Testing range
         Point2D P66 = new Point2D(0.6, 0.6);
@@ -389,5 +392,6 @@ public class KdTree {
         if (kdTree.nearest(new Point2D(0.8, 0.8)).compareTo(P76) != 0) throw new RuntimeException(
                 "Nearest should've been P76 but instead it is " + kdTree.nearest(P76));
         StdOut.println("Test: " + ++numberOfTests + " passed");
+        */
     }
 }

@@ -1,4 +1,7 @@
-import edu.princeton.cs.algs4.*;
+import edu.princeton.cs.algs4.Point2D;
+import edu.princeton.cs.algs4.RectHV;
+import edu.princeton.cs.algs4.SET;
+import edu.princeton.cs.algs4.StdDraw;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -47,6 +50,7 @@ public class PointSET {
 
     // all points that are inside the rectangle (or on the boundary)
     public Iterable<Point2D> range(RectHV rect) {
+        if (rect == null) throw new IllegalArgumentException("can't range null");
         LinkedList<Point2D> list = new LinkedList<>();
 
         for (Point2D currentP : rbt) {
@@ -69,11 +73,11 @@ public class PointSET {
 
         // current is root
         Point2D closestPoint = rbtIterator.next();
-        double closestDistance = closestPoint.distanceTo(p);
+        double closestDistance = closestPoint.distanceSquaredTo(p);
         for (Point2D currentPoint : rbt) {
-            if (closestDistance > currentPoint.distanceTo(p)) {
+            if (closestDistance > currentPoint.distanceSquaredTo(p)) {
                 closestPoint = currentPoint;
-                closestDistance = closestPoint.distanceTo(p);
+                closestDistance = closestPoint.distanceSquaredTo(p);
             }
         }
         return closestPoint;
@@ -81,6 +85,7 @@ public class PointSET {
 
     // unit testing of the methods (optional)
     public static void main(String[] args) {
+        /*
         StdOut.println("###############PointSET Tests###############");
 
         StdOut.println("##########My Own Test Cases##########");
@@ -136,5 +141,6 @@ public class PointSET {
 
         // Testing Draw
         pointSET.draw();
+        */
     }
 }
