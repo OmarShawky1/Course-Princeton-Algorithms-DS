@@ -35,3 +35,9 @@ The goal of the assignment is to find the shortest path between current board st
 ![8Puzzle](./Grades/8Puzzule.png)
 
 <br>
+
+# KdTrees
+
+KdTrees are the generalization of BST trees but enhances API performance when dealing with a multi-dimension space; This is illustrated via PointSET VS. KdTree when searching for nearest or points in range; The slight difference is that the tree is composed of nodes and nodes are compared to others depending on their position in the tree (Vertical or horizontal in this case). So briefly, BST's complexity is $O(n)=n^2$ VS. KdTree's complexity which is $O(n)\approx N\lg(N)$
+
+![KdTree](./Grades/KdTree.png)
