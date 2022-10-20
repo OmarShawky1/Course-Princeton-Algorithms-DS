@@ -244,22 +244,24 @@ public class KdTree {
             point.draw();
 
             StdDraw.setPenRadius();
-            if (parent != null) {
-                int comp = parent.compareTo(this.point) * -1;
-                if (isVertical) {
-                    StdDraw.setPenColor(StdDraw.RED);
+
+            if (isVertical) {
+                StdDraw.setPenColor(StdDraw.RED);
+                if (parent != null) {
                     // if point is up, line is from y of (horizontal parent) till parents' ymax; x is constant
+                    int comp = parent.compareTo(this.point) * -1;
                     if (comp >= 0) StdDraw.line(point.x(), parent.point.y(), point.x(), canvas.ymax());
-                    // if point is down, line is from parents' ymin till y of (horizontal parent); x is constant
+                        // if point is down, line is from parents' ymin till y of (horizontal parent); x is constant
                     else StdDraw.line(point.x(), canvas.ymin(), point.x(), parent.point.y());
-                } else {
-                    StdDraw.setPenColor(StdDraw.BLUE);
-                    // if point is right, line from x of (vertical parent) till parents' xmax; y is constant
-                    if (comp >= 0) StdDraw.line(parent.point.x(), point.y(), canvas.xmax(), point.y());
-                    // if point is right, line from parents' xmin till x of (vertical parent); y is constant
-                    else StdDraw.line(canvas.xmin(), point.y(), parent.point.x(), point.y());
-                }
-            } else StdDraw.line(point.x(), 0, point.x(), 1); // parent's line has main canvas size
+                } else StdDraw.line(point.x(), 0, point.x(), 1); // parent's line has main canvas size
+            } else {
+                StdDraw.setPenColor(StdDraw.BLUE);
+                // if point is right, line from x of (vertical parent) till parents' xmax; y is constant
+                int comp = parent.compareTo(this.point) * -1;
+                if (comp >= 0) StdDraw.line(parent.point.x(), point.y(), canvas.xmax(), point.y());
+                // if point is right, line from parents' xmin till x of (vertical parent); y is constant
+                else StdDraw.line(canvas.xmin(), point.y(), parent.point.x(), point.y());
+            }
         }
     }
 
