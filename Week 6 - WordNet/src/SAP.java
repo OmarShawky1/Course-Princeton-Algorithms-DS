@@ -1,4 +1,8 @@
-import edu.princeton.cs.algs4.*;
+import edu.princeton.cs.algs4.BreadthFirstDirectedPaths;
+import edu.princeton.cs.algs4.Digraph;
+import edu.princeton.cs.algs4.In;
+import edu.princeton.cs.algs4.StdIn;
+import edu.princeton.cs.algs4.StdOut;
 
 public class SAP {
 
@@ -68,13 +72,13 @@ public class SAP {
         }
 
         private boolean inRange(int i, int V) {
-            return 0 < i && i < V;
+            return 0 <= i && i < V;
         }
 
         // Signature: (list of int * list of int * Digraph) --> (int * int) (where int is "vertex")
         // provides distance between w & v and the nearest vertex between them
         public ClosestAncestor(Iterable<Integer> v, Iterable<Integer> w, Digraph di) {
-            if (v == null || w == null) throw new IllegalArgumentException("you inputted null!");
+            if (v == null || w == null) throw new IllegalArgumentException("you inputted wrong range");
             for (int i : v) {
                 for (int j : w) {
                     ClosestAncestor currentAncestor = new ClosestAncestor(i, j, di);
