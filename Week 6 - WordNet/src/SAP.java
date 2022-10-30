@@ -51,16 +51,20 @@ public class SAP {
         // provides distance between w & v and the nearest vertex between them
         public ClosestAncestor(Iterable<Integer> v, Iterable<Integer> w, Digraph di) {
             if (v == null || w == null) throw new IllegalArgumentException("you inputted wrong range");
-            BreadthFirstDirectedPaths vBFS = new BreadthFirstDirectedPaths(di, v);
-            BreadthFirstDirectedPaths wBFS = new BreadthFirstDirectedPaths(di, w);
-            FindClosest(vBFS, wBFS, di);
+
+            // Check non-zero list size
+            if (v.iterator().hasNext() && w.iterator().hasNext()) {
+                BreadthFirstDirectedPaths vBFS = new BreadthFirstDirectedPaths(di, v);
+                BreadthFirstDirectedPaths wBFS = new BreadthFirstDirectedPaths(di, w);
+                FindClosest(vBFS, wBFS, di);
+            }
         }
 
         private void FindClosest(BreadthFirstDirectedPaths vBFS, BreadthFirstDirectedPaths wBFS, Digraph di) {
             for (int i = 0; i < di.V(); i++) {
                 // Using Breadth First search
 
-                // if i has path to both v & w
+                // if "i" has path to both v & w
                 if (!vBFS.hasPathTo(i) || !wBFS.hasPathTo(i)) continue; // skip loop if they don't
                 // and distance from i-->v + i-->w is less than old distance
                 int currentDist = vBFS.distTo(i) + wBFS.distTo(i);
