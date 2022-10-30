@@ -12,34 +12,35 @@ public class SAP {
 
     // length of shortest ancestral path between v and w; -1 if no such path
     public int length(int v, int w) {
-        return (new SAPAncestor(v, w, digraph)).distance;
+        return (new ClosestAncestor(v, w, digraph)).distance;
     }
 
     // a common ancestor of v and w that participates in a shortest ancestral path; -1 if no such path
     public int ancestor(int v, int w) {
-        return (new SAPAncestor(v, w, digraph)).commonAncestor; //TODO: Later, enhance it by storing ancestor to avoid recomputing in length()
+        return (new ClosestAncestor(v, w, digraph)).commonAncestor; //TODO: Later, enhance it by storing ancestor to avoid recomputing in length()
     }
 
     // length of shortest ancestral path between any vertex in v and any vertex in w; -1 if no such path
     public int length(Iterable<Integer> v, Iterable<Integer> w) {
-        return 0; // TODO
+        return (new ClosestAncestor(v, w, digraph)).distance;
     }
 
     // a common ancestor that participates in shortest ancestral path; -1 if no such path
     public int ancestor(Iterable<Integer> v, Iterable<Integer> w) {
-        return 0; // TODO
+        return (new ClosestAncestor(v, w, digraph)).commonAncestor;
     }
 
-    // Signature: (int * int * Digraph) --> (int * int) (where int is "vertex")
-    // provides distance between w & v and the nearest vertex between them
-    private static class SAPAncestor {
+    private static class ClosestAncestor {
         public int distance = -1;
         public int commonAncestor = -1;
 
-        public SAPAncestor (int v, int w, Digraph digraph) {
-            BreadthFirstDirectedPaths vBFS = new BreadthFirstDirectedPaths(digraph, v);
-            BreadthFirstDirectedPaths wBFS = new BreadthFirstDirectedPaths(digraph, w);
-            for (int i = 0; i < digraph.V(); i++) {
+        // Signature: (int * int * Digraph) --> (int * int) (where int is "vertex")
+        // provides distance between w & v and the nearest vertex between them
+        public ClosestAncestor(int v, int w, Digraph di) {
+            if (!inRange(v, di.V()) && !inRange(w, di.V())) throw new IllegalArgumentException("you inputted null!");
+            BreadthFirstDirectedPaths vBFS = new BreadthFirstDirectedPaths(di, v);
+            BreadthFirstDirectedPaths wBFS = new BreadthFirstDirectedPaths(di, w);
+            for (int i = 0; i < di.V(); i++) {
                 // Using Breadth First search
 
                 // if i has path to both v & w
@@ -63,6 +64,25 @@ public class SAP {
                         commonAncestor = i;
                     }
                 */
+            }
+        }
+
+        private boolean inRange(int i, int V) {
+            return 0 < i && i < V;
+        }
+
+        // Signature: (list of int * list of int * Digraph) --> (int * int) (where int is "vertex")
+        // provides distance between w & v and the nearest vertex between them
+        public ClosestAncestor(Iterable<Integer> v, Iterable<Integer> w, Digraph di) {
+            if (v == null || w == null) throw new IllegalArgumentException("you inputted null!");
+            for (int i : v) {
+                for (int j : w) {
+                    ClosestAncestor currentAncestor = new ClosestAncestor(i, j, di);
+                    if (currentAncestor.distance >= distance && distance != -1) continue; // skip if currentDist farther
+                    // save current distance and ancestor to be the nearest vertex so far
+                    distance = currentAncestor.distance;
+                    commonAncestor = currentAncestor.commonAncestor;
+                }
             }
         }
     }
