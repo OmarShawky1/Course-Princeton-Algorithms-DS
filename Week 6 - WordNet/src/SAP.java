@@ -11,7 +11,7 @@ public class SAP {
 
     // constructor takes a digraph (not necessarily a DAG)
     public SAP(Digraph G) {
-        this.digraph = G;
+        this.digraph = new Digraph(G); // Make it immutable instead of passing by reference
     }
 
     // length of shortest ancestral path between v and w; -1 if no such path
@@ -71,10 +71,6 @@ public class SAP {
             }
         }
 
-        private boolean inRange(int i, int V) {
-            return 0 <= i && i < V;
-        }
-
         // Signature: (list of int * list of int * Digraph) --> (int * int) (where int is "vertex")
         // provides distance between w & v and the nearest vertex between them
         public ClosestAncestor(Iterable<Integer> v, Iterable<Integer> w, Digraph di) {
@@ -88,6 +84,10 @@ public class SAP {
                     commonAncestor = currentAncestor.commonAncestor;
                 }
             }
+        }
+
+        private boolean inRange(int i, int V) {
+            return 0 <= i && i < V;
         }
     }
 
