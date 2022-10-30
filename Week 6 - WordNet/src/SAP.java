@@ -44,7 +44,7 @@ public class SAP {
             if (!inRange(v, di.V()) && !inRange(w, di.V())) throw new IllegalArgumentException("you inputted null!");
             BreadthFirstDirectedPaths vBFS = new BreadthFirstDirectedPaths(di, v);
             BreadthFirstDirectedPaths wBFS = new BreadthFirstDirectedPaths(di, w);
-            FindClosest(vBFS, wBFS, di);
+            findClosest(vBFS, wBFS, di);
         }
 
         // Signature: (list of int * list of int * Digraph) --> (int * int) (where int is "vertex")
@@ -56,11 +56,11 @@ public class SAP {
             if (v.iterator().hasNext() && w.iterator().hasNext()) {
                 BreadthFirstDirectedPaths vBFS = new BreadthFirstDirectedPaths(di, v);
                 BreadthFirstDirectedPaths wBFS = new BreadthFirstDirectedPaths(di, w);
-                FindClosest(vBFS, wBFS, di);
+                findClosest(vBFS, wBFS, di);
             }
         }
 
-        private void FindClosest(BreadthFirstDirectedPaths vBFS, BreadthFirstDirectedPaths wBFS, Digraph di) {
+        private void findClosest(BreadthFirstDirectedPaths vBFS, BreadthFirstDirectedPaths wBFS, Digraph di) {
             for (int i = 0; i < di.V(); i++) {
                 // Using Breadth First search
 
@@ -88,8 +88,8 @@ public class SAP {
             }
         }
 
-        private boolean inRange(int i, int V) {
-            return 0 <= i && i < V;
+        private boolean inRange(int i, int graphLength) {
+            return 0 <= i && i < graphLength;
         }
     }
 
