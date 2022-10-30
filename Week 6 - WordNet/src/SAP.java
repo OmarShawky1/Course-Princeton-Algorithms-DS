@@ -1,5 +1,4 @@
-import edu.princeton.cs.algs4.Digraph;
-import edu.princeton.cs.algs4.Queue;
+import edu.princeton.cs.algs4.*;
 
 public class SAP {
 
@@ -13,38 +12,12 @@ public class SAP {
 
     // length of shortest ancestral path between v and w; -1 if no such path
     public int length(int v, int w) {
-
-        // Using Breadth First search
-        // enqueue all adjacent -that are not visited- if they are not (node to find)
-        // deque and repeat above step
-
-        int counter = 0;
-        boolean[] marked = new boolean[digraph.V()];
-        Queue<Integer> queue = new Queue<>();
-
-        // enqueue item and iterate until its empty
-        queue.enqueue(v);
-        while (!queue.isEmpty()) {
-            // int current = queue.dequeue(); // Use it in case queue dequeues each time its called
-            // iterate over adjacent of current node
-            for (int i : digraph.adj(queue.dequeue())) {
-                // return current adjacent if it is w
-                if (i == w) return counter;
-
-                // else if they are not marked, enqueue it and mark that its enqueued
-                if (!marked[i]) {
-                    queue.enqueue(i);
-                    marked[i] = true;
-                }
-            }
-            counter++; // Increase distance as we finished current node and will move to next
-        }
-        return -1; // return not found, if code reached this points means it never found w
+        return (new SAPAncestor(v, w, digraph)).distance;
     }
 
     // a common ancestor of v and w that participates in a shortest ancestral path; -1 if no such path
     public int ancestor(int v, int w) {
-        return 0; // TODO
+        return (new SAPAncestor(v, w, digraph)).commonAncestor; //TODO: Later, enhance it by storing ancestor to avoid recomputing in length()
     }
 
     // length of shortest ancestral path between any vertex in v and any vertex in w; -1 if no such path
@@ -57,8 +30,54 @@ public class SAP {
         return 0; // TODO
     }
 
+    // Signature: (int * int * Digraph) --> (int * int) (where int is "vertex")
+    // provides distance between w & v and the nearest vertex between them
+    private static class SAPAncestor {
+        public int distance = -1;
+        public int commonAncestor = -1;
+
+        public SAPAncestor (int v, int w, Digraph digraph) {
+            BreadthFirstDirectedPaths vBFS = new BreadthFirstDirectedPaths(digraph, v);
+            BreadthFirstDirectedPaths wBFS = new BreadthFirstDirectedPaths(digraph, w);
+            for (int i = 0; i < digraph.V(); i++) {
+                // Using Breadth First search
+
+                // if i has path to both v & w
+                if (!vBFS.hasPathTo(i) || !wBFS.hasPathTo(i)) continue; // skip loop if they don't
+                // and distance from i-->v + i-->w is less than old distance
+                int currentDist = vBFS.distTo(i) + wBFS.distTo(i);
+                if (currentDist >= distance && distance != -1) continue; // skip loop if its farther
+                // save current distance and ancestor to be the nearest vertex so far
+                distance = currentDist;
+                commonAncestor = i;
+
+                /*
+                // Same code logic as above yet has so much nesting
+                // if i has path to both v & w
+                if (vBFS.hasPathTo(i) && wBFS.hasPathTo(i)) {
+                    // and distance from i-->v + i-->w is less than old distance
+                    int currentDist = vBFS.distTo(i) + wBFS.distTo(i);
+                    if (currentDist < distance || distance == -1){
+                        // save current distance and ancestor to be the nearest vertex so far
+                        distance = currentDist;
+                        commonAncestor = i;
+                    }
+                */
+            }
+        }
+    }
+
     // do unit testing of this class
     public static void main(String[] args) {
-
+        In in = new In(args[0]);
+        Digraph G = new Digraph(in);
+        SAP sap = new SAP(G);
+        while (!StdIn.isEmpty()) {
+            int v = StdIn.readInt();
+            int w = StdIn.readInt();
+            int length = sap.length(v, w);
+            int ancestor = sap.ancestor(v, w);
+            StdOut.printf("length = %d, ancestor = %d\n", length, ancestor);
+        }
     }
 }
