@@ -8,6 +8,8 @@ public class SAP {
 
     // Global variables
     private final Digraph digraph;
+    // If you want to speed things up (according to the FAQs, use a Hash-table and store every Closest Ancestor
+    // You need to implement hash which is tedious job for little reward in case of Iterable
 
     // constructor takes a digraph (not necessarily a DAG)
     public SAP(Digraph G) {
@@ -21,7 +23,7 @@ public class SAP {
 
     // a common ancestor of v and w that participates in a shortest ancestral path; -1 if no such path
     public int ancestor(int v, int w) {
-        return (new ClosestAncestor(v, w, digraph)).commonAncestor; //TODO: Later, enhance it by storing ancestor to avoid recomputing in length()
+        return (new ClosestAncestor(v, w, digraph)).commonAncestor;
     }
 
     // length of shortest ancestral path between any vertex in v and any vertex in w; -1 if no such path
