@@ -44,6 +44,19 @@ public class SAP {
             if (!inRange(v, di.V()) && !inRange(w, di.V())) throw new IllegalArgumentException("you inputted null!");
             BreadthFirstDirectedPaths vBFS = new BreadthFirstDirectedPaths(di, v);
             BreadthFirstDirectedPaths wBFS = new BreadthFirstDirectedPaths(di, w);
+            FindClosest(vBFS, wBFS, di);
+        }
+
+        // Signature: (list of int * list of int * Digraph) --> (int * int) (where int is "vertex")
+        // provides distance between w & v and the nearest vertex between them
+        public ClosestAncestor(Iterable<Integer> v, Iterable<Integer> w, Digraph di) {
+            if (v == null || w == null) throw new IllegalArgumentException("you inputted wrong range");
+            BreadthFirstDirectedPaths vBFS = new BreadthFirstDirectedPaths(di, v);
+            BreadthFirstDirectedPaths wBFS = new BreadthFirstDirectedPaths(di, w);
+            FindClosest(vBFS, wBFS, di);
+        }
+
+        private void FindClosest(BreadthFirstDirectedPaths vBFS, BreadthFirstDirectedPaths wBFS, Digraph di) {
             for (int i = 0; i < di.V(); i++) {
                 // Using Breadth First search
 
@@ -68,21 +81,6 @@ public class SAP {
                         commonAncestor = i;
                     }
                 */
-            }
-        }
-
-        // Signature: (list of int * list of int * Digraph) --> (int * int) (where int is "vertex")
-        // provides distance between w & v and the nearest vertex between them
-        public ClosestAncestor(Iterable<Integer> v, Iterable<Integer> w, Digraph di) {
-            if (v == null || w == null) throw new IllegalArgumentException("you inputted wrong range");
-            for (int i : v) {
-                for (int j : w) {
-                    ClosestAncestor currentAncestor = new ClosestAncestor(i, j, di);
-                    if (currentAncestor.distance >= distance && distance != -1) continue; // skip if currentDist farther
-                    // save current distance and ancestor to be the nearest vertex so far
-                    distance = currentAncestor.distance;
-                    commonAncestor = currentAncestor.commonAncestor;
-                }
             }
         }
 
