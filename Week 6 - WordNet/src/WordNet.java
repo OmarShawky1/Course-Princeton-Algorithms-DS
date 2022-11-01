@@ -16,13 +16,16 @@ public class WordNet {
     public WordNet(String synsets, String hypernyms) {
         parseSynsets(readLines(synsets));
         parseHypernyms(readLines(hypernyms));
+        if (!isDAG()) throw new IllegalArgumentException("Not DAG");
         sap = new SAP(digraph);
     }
 
-    // Signature ((los) --> (list of los) --> (list of integers)) --> digraph
+    // Signature: ((los) --> (list of los) --> (list of integers)) --> digraph
     // Draws digraph from numbers
     private void parseHypernyms(String[] lines) {
         digraph = new Digraph(lines.length);
+
+        // (list of los) --> (list of integers)
         for (String s : lines) {
             String[] splitted = s.split(",");
             int id = Integer.parseInt(splitted[0]);
@@ -30,6 +33,8 @@ public class WordNet {
         }
     }
 
+    // Signature: ((los) --> (list of los)) --> (HashMap<String, SET<Integer>> * HashMap<Integer, String>))
+    // Stores id and synset in the first hashmap, stores id and each noun in the second hashmap
     private void parseSynsets(String[] lines) {
         synsets = new HashMap<>(lines.length);
         nouns = new HashMap<>(lines.length);
@@ -39,7 +44,7 @@ public class WordNet {
             String tempSynsets = fields[1];
 
             synsets.put(id, tempSynsets);
-            for (String noun: tempSynsets.split(" ")) {
+            for (String noun : tempSynsets.split(" ")) {
                 SET<Integer> knownIds = nouns.get(noun);
                 if (knownIds == null) {
                     knownIds = new SET<>();
@@ -47,16 +52,6 @@ public class WordNet {
                 }
                 knownIds.add(id);
             }
-
-            /* Old code when i decided that synsets is SET<String>
-            SET<String> nounsSet = new SET<>();
-
-            for (String noun: tempSynsets.split(" ")) {
-                nouns.put(noun, id);
-                nounsSet.add(noun);
-            }
-            synsets.put(id, nounsSet);
-            */
         }
     }
 
@@ -67,6 +62,11 @@ public class WordNet {
         return lines;
     }
 
+    private boolean isDAG() {
+        for (int i = 0, roots = 0; i < digraph.V(); i++) if (digraph.outdegree(i) == 0 && ++roots >= 2) return false;
+        return true;
+    }
+
     // returns all WordNet nouns
     public Iterable<String> nouns() {
         return nouns.keySet();
@@ -74,21 +74,25 @@ public class WordNet {
 
     // is the word a WordNet noun?
     public boolean isNoun(String word) {
+        checkInput(word);
         return nouns.containsKey(word);
     }
 
     // distance between nounA and nounB (defined below)
     public int distance(String nounA, String nounB) {
+        checkInput(nounA, nounB);
         return sap.length(nouns.get(nounA), nouns.get(nounB));
+    }
+
+    private static void checkInput(String... words) {
+        for(String word : words) if (word == null) throw new IllegalArgumentException("word is null");
     }
 
     // a synset (second field of synsets.txt) that is the common ancestor of nounA and nounB
     // in a shortest ancestral path (defined below)
     public String sap(String nounA, String nounB) {
-        SET<Integer> a = nouns.get(nounA);
-        SET<Integer> b = nouns.get(nounB);
-        int ans = sap.ancestor(a, b);
-        return synsets.get(ans);
+        checkInput(nounA, nounB);
+        return synsets.get(sap.ancestor(nouns.get(nounA), nouns.get(nounB)));
     }
 
     // do unit testing of this class
