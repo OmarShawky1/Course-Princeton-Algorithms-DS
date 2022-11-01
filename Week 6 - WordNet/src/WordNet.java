@@ -1,8 +1,9 @@
 import edu.princeton.cs.algs4.Digraph;
+import edu.princeton.cs.algs4.DirectedCycle;
 import edu.princeton.cs.algs4.In;
-import edu.princeton.cs.algs4.StdIn;
-import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.SET;
+import edu.princeton.cs.algs4.StdOut;
+import edu.princeton.cs.algs4.StdIn;
 
 import java.util.HashMap;
 
@@ -16,7 +17,7 @@ public class WordNet {
     public WordNet(String synsets, String hypernyms) {
         parseSynsets(readLines(synsets));
         parseHypernyms(readLines(hypernyms));
-        if (!isDAG()) throw new IllegalArgumentException("Not DAG");
+        if ((new DirectedCycle(this.digraph)).hasCycle()) throw new IllegalArgumentException("Not DAG");
         sap = new SAP(digraph);
     }
 
@@ -55,16 +56,11 @@ public class WordNet {
         }
     }
 
-    private String[] readLines(String synsets) {
-        In in = new In(synsets);
+    private String[] readLines(String synsetsFile) {
+        In in = new In(synsetsFile);
         String[] lines = in.readAllLines();
         in.close();
         return lines;
-    }
-
-    private boolean isDAG() {
-        for (int i = 0, roots = 0; i < digraph.V(); i++) if (digraph.outdegree(i) == 0 && ++roots >= 2) return false;
-        return true;
     }
 
     // returns all WordNet nouns
@@ -85,7 +81,7 @@ public class WordNet {
     }
 
     private static void checkInput(String... words) {
-        for(String word : words) if (word == null) throw new IllegalArgumentException("word is null");
+        for (String word : words) if (word == null) throw new IllegalArgumentException("word is null");
     }
 
     // a synset (second field of synsets.txt) that is the common ancestor of nounA and nounB
