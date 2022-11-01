@@ -2,13 +2,14 @@ import edu.princeton.cs.algs4.Digraph;
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdIn;
 import edu.princeton.cs.algs4.StdOut;
+import edu.princeton.cs.algs4.SET;
 
 import java.util.HashMap;
 
 public class WordNet {
     private final SAP sap;
     private Digraph digraph;
-    private HashMap<String, Integer> nouns;
+    private HashMap<String, SET<Integer>> nouns;
     private HashMap<Integer, String> synsets;
 
     // constructor takes the name of the two input files
@@ -35,11 +36,27 @@ public class WordNet {
         for (String s : lines) {
             String[] fields = s.split(",");
             Integer id = Integer.valueOf(fields[0]);
-
             String tempSynsets = fields[1];
-            synsets.put(id, tempSynsets);
 
-            for (String noun: tempSynsets.split(" ")) nouns.put(noun, id);
+            synsets.put(id, tempSynsets);
+            for (String noun: tempSynsets.split(" ")) {
+                SET<Integer> knownIds = nouns.get(noun);
+                if (knownIds == null) {
+                    knownIds = new SET<>();
+                    nouns.put(noun, knownIds);
+                }
+                knownIds.add(id);
+            }
+
+            /* Old code when i decided that synsets is SET<String>
+            SET<String> nounsSet = new SET<>();
+
+            for (String noun: tempSynsets.split(" ")) {
+                nouns.put(noun, id);
+                nounsSet.add(noun);
+            }
+            synsets.put(id, nounsSet);
+            */
         }
     }
 
@@ -68,7 +85,10 @@ public class WordNet {
     // a synset (second field of synsets.txt) that is the common ancestor of nounA and nounB
     // in a shortest ancestral path (defined below)
     public String sap(String nounA, String nounB) {
-        return synsets.get(sap.ancestor(nouns.get(nounA), nouns.get(nounB)));
+        SET<Integer> a = nouns.get(nounA);
+        SET<Integer> b = nouns.get(nounB);
+        int ans = sap.ancestor(a, b);
+        return synsets.get(ans);
     }
 
     // do unit testing of this class
