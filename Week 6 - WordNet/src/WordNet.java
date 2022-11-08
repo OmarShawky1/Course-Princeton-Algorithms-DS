@@ -47,10 +47,7 @@ public class WordNet {
             synsets.put(id, tempSynsets);
             for (String noun : tempSynsets.split(" ")) {
                 SET<Integer> knownIds = nouns.get(noun);
-                if (knownIds == null) {
-                    knownIds = new SET<>();
-                    nouns.put(noun, knownIds);
-                }
+                if (knownIds == null) nouns.put(noun, knownIds = new SET<>());
                 knownIds.add(id);
             }
         }
