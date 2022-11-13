@@ -50,7 +50,7 @@ public class SeamCarver {
     // calculate Energy Matrix
     private void energyMatrix() {
         double dx, dy, rR, rG, rB, cR, cG, cB;
-        energyMatrix = new double[p.width()][p.height()];
+        energyMatrix = new double[p.height()][p.width()];
 
         // width is column is x; height is row is y
         for (int row = 0; row < p.height(); row++) {
@@ -58,10 +58,10 @@ public class SeamCarver {
             energyMatrix[row][p.width() - 1] = 1000;
         }
 
-        for (int col = 1; col < p.height() - 1; col++) {
+        for (int col = 1; col < p.width() - 1; col++) {
             // most left pixel
             energyMatrix[0][col] = 1000;
-            for (int row = 1; row < p.width() - 1; row++) {
+            for (int row = 1; row < p.height() - 1; row++) {
                 // compute energy of pixel
                 Color rightPixel = p.get(col, row + 1);
                 Color leftPixel = p.get(col, row - 1);
@@ -82,7 +82,7 @@ public class SeamCarver {
                 energyMatrix[row][col] = Math.sqrt(dx + dy);
             }
             // most left pixel
-            energyMatrix[p.width() - 1][col] = 1000;
+            energyMatrix[p.height() - 1][col] = 1000;
         }
     }
 
