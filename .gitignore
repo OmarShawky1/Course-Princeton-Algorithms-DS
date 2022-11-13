@@ -1,5 +1,8 @@
-*.txt
+# Testing Files
+#*.txt
+#/Tests/
 #*Visualizer.java
+
 # Compiled class file
 *.class
 
