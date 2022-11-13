@@ -80,10 +80,24 @@ public class SeamCarver {
 
     // calculate color gradient between two single pixels
     private static double colorGrad(Color highPixel, Color lowPixel) {
-        double red = highPixel.getRed() - lowPixel.getRed();
-        double green = highPixel.getGreen() - lowPixel.getGreen();
-        double blue = highPixel.getBlue() - lowPixel.getBlue();
+        int highRGB = highPixel.getRGB();
+        int lowRGB = lowPixel.getRGB();
+        double red = getRed(highRGB) - getRed(lowRGB);
+        double green = getGreen(highRGB) - getGreen(lowRGB);
+        double blue = getBlue(highRGB) - getBlue(lowRGB);
         return (red * red) + (green * green) + (blue * blue);
+    }
+
+    private static double getRed(int rgb) {
+        return (rgb >> 16) & 0xFF;
+    }
+
+    private static double getGreen(int rgb) {
+        return (rgb >> 8) & 0xFF;
+    }
+
+    private static double getBlue(int rgb) {
+        return rgb & 0xFF;
     }
 
     // remove horizontal seam from current picture
