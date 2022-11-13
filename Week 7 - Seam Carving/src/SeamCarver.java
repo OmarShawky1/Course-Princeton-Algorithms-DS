@@ -49,7 +49,7 @@ public class SeamCarver {
 
     // calculate Energy Matrix
     private void energyMatrix() {
-        double dx, dy, rR, rG, rB, cR, cG, cB;
+        double dx, dy;
         energyMatrix = new double[p.height()][p.width()];
 
         // width is column is x; height is row is y
@@ -65,19 +65,11 @@ public class SeamCarver {
                 // compute energy of pixel
                 Color rightPixel = p.get(col, row + 1);
                 Color leftPixel = p.get(col, row - 1);
-
-                rR = colorGrad(rightPixel, leftPixel, RED);
-                rG = colorGrad(rightPixel, leftPixel, GREEN);
-                rB = colorGrad(rightPixel, leftPixel, BLUE);
-                dx = rR * rR + rG * rG + rB * rB;
-
+                dx = colorGrad(rightPixel, leftPixel);
 
                 Color lowerPixel = p.get(col + 1, row);
                 Color upperPixel = p.get(col - 1, row);
-                cR = colorGrad(lowerPixel, upperPixel, RED);
-                cG = colorGrad(lowerPixel, upperPixel, GREEN);
-                cB = colorGrad(lowerPixel, upperPixel, BLUE);
-                dy = cR*cR + cG*cG + cB*cB;
+                dy = colorGrad(lowerPixel, upperPixel);
 
                 energyMatrix[row][col] = Math.sqrt(dx + dy);
             }
@@ -86,16 +78,12 @@ public class SeamCarver {
         }
     }
 
-    // Calculate color difference between two single pixels
-    private static int colorGrad(Color highPixel, Color lowPixel, int option) {
-        // High pixel is either right or down; Low pixel is either left or up
-
-        // TODO: use this instead of creating Color object
-        // https://stackoverflow.com/questions/2615522/java-bufferedimage-getting-red-green-and-blue-individually
-
-        if (option == RED) return (highPixel.getRed() - lowPixel.getRed());
-        if (option == GREEN) return highPixel.getGreen() - lowPixel.getGreen();
-        return highPixel.getBlue() - lowPixel.getBlue();
+    // calculate color gradient between two single pixels
+    private static double colorGrad(Color highPixel, Color lowPixel) {
+        double red = highPixel.getRed() - lowPixel.getRed();
+        double green = highPixel.getGreen() - lowPixel.getGreen();
+        double blue = highPixel.getBlue() - lowPixel.getBlue();
+        return (red * red) + (green * green) + (blue * blue);
     }
 
     // remove horizontal seam from current picture
