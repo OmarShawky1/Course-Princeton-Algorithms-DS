@@ -5,7 +5,7 @@ import java.awt.*;
 public class SeamCarver {
 
     // Global Variables
-    private final Picture p;
+    private Picture p;
     private static final int RED = 0;
     private static final int GREEN = 1;
     private static final int BLUE = 2;
@@ -19,7 +19,7 @@ public class SeamCarver {
 
     // current picture
     public Picture picture() {
-        return p;
+        return new Picture(p);
     }
 
     // width of current picture
@@ -35,16 +35,6 @@ public class SeamCarver {
     // energy of pixel at column x and row y
     public double energy(int x, int y) {
         return energyMatrix[y][x];
-    }
-
-    // sequence of indices for horizontal seam
-    public int[] findHorizontalSeam() {
-        return (new int[0]); //TODO
-    }
-
-    // sequence of indices for vertical seam
-    public int[] findVerticalSeam() {
-        return (new int[0]); //TODO
     }
 
     // calculate Energy Matrix
@@ -98,6 +88,16 @@ public class SeamCarver {
 
     private static double getBlue(int rgb) {
         return rgb & 0xFF;
+    }
+
+    // sequence of indices for horizontal seam
+    public int[] findHorizontalSeam() {
+        return (new int[0]); //TODO
+    }
+
+    // sequence of indices for vertical seam
+    public int[] findVerticalSeam() {
+        return (new int[0]); //TODO
     }
 
     // remove horizontal seam from current picture
