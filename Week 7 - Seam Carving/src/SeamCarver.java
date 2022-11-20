@@ -184,21 +184,24 @@ public class SeamCarver {
     public void removeHorizontalSeam(int[] seam) {
         if (seam == null || height() < 1 || seam.length != width()) throw new IllegalArgumentException();
 
-        Picture newPicture = new Picture(p.width(), height() - 1);
-        int prevSeam = seam[0];
-        for (int col = 0; col < p.width(); col++) {
+        Picture newPicture = new Picture(width(), height() - 1); // new picture with 1 less row
+        int prevY = seam[0]; // previous y that is used to check if the seam has "dy"> 1
+        for (int col = 0; col < width(); col++) {
             int seamCol = seam[col];
-            if (Math.abs(seamCol - prevSeam) > 1 || !(0 < seamCol && seamCol < height()))
+            if (Math.abs(seamCol - prevY) > 1 || !(0 < seamCol && seamCol < height())) // check dy>1 or y out of canvas
                 throw new IllegalArgumentException();
 
+            // copy every pixel from y=0 till "y = seam[col]"
             for (int row = 0; row < seamCol; row++) {
                 newPicture.set(col, row, p.get(col, row));
             }
-            for (int row = seamCol; row < p.height() - 2; row++) {
+
+            // shift pixels up from "y = seam[col]" till "y=height"
+            for (int row = seamCol; row < height() - 2; row++) {
                 newPicture.set(col, row, p.get(col, row + 1));
             }
 
-            prevSeam = seamCol;
+            prevY = seamCol;
         }
         p = newPicture;
     }
@@ -207,21 +210,24 @@ public class SeamCarver {
     public void removeVerticalSeam(int[] seam) {
         if (seam == null || width() < 1 || seam.length != height()) throw new IllegalArgumentException();
 
-        Picture newPicture = new Picture(p.width() - 1, height());
-        int prevSeam = seam[0];
-        for (int row = 0; row < p.height(); row++) {
+        Picture newPicture = new Picture(width() - 1, height()); // new picture with 1 less column
+        int prevX = seam[0]; // previous x that is used to check if the seam has "dx"> 1
+        for (int row = 0; row < height(); row++) {
             int seamRow = seam[row];
-            if (Math.abs(seamRow - prevSeam) > 1 || !(0 < seamRow && seamRow < width()))
+            if (Math.abs(seamRow - prevX) > 1 || !(0 < seamRow && seamRow < width())) // check dx > 1 or x out of canvas
                 throw new IllegalArgumentException();
 
+            // copy every pixel from x=0 till "x = seam[row]"
             for (int col = 0; col < seamRow; col++) {
                 newPicture.set(col, row, p.get(col, row));
             }
-            for (int col = seamRow; col < p.width() - 2; col++) {
+
+            // shift pixels to left from "x = seam[row]" till "x=width"
+            for (int col = seamRow; col < width() - 2; col++) {
                 newPicture.set(col, row, p.get(col + 1, row));
             }
 
-            prevSeam = seamRow;
+            prevX = seamRow;
         }
         p = newPicture;
     }
