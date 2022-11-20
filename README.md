@@ -49,3 +49,20 @@ KdTrees are the generalization of BST trees but enhances API performance when de
 WordNet assignement is about graphing relations between english words which is essentially Directed & Undirected graphs; WordNet is a semantic lexicon for English Language that computational linguists and cognitive scientist use extensively. It ggroups words into sets of synonyms called *synsets*; it relates *synsets* to each other; a *hypernym* (more specific synset) points to *hypernym* (more general synset); E.g., synset { *gate*, *logic gate*} is a hypernym of {*AND cirrcuit*, *AND gate*} because *AND* gate is a kind of logic gate. To draw WordNet digraph, set an id -which is an integer- to each synset and draw the digraph using the ids. In this way, we can conclude distance between word and other or even a cluster and other.
 
 ![WordNet](./Grades/WordNet.png)
+
+<br>
+
+# Seam Carving
+
+Seam-carving is a content-aware image resizing technique where the image is reduced in size by one pixel of
+height (or width) at a time. A vertical seam in an image is a path of pixels connected from the top to the
+bottom with one pixel in each row; a horizontal seam is a path of pixels connected from the left to the right
+with one pixel in each column. Check [this Youtube Video](https://www.youtube.com/watch?v=6NcIJXTlugc) for visualization. The complexity of such algorithm is $O(n)=V+E$ where each vertex is visited only once. The algorithm used is Acyclic Shortest Path for Edge Weighted Directed Acyclic Graphs with slight modification; the procedures of the algorithm can be described as following:
+1. Assign energy for each vertex/pixel; Energy function is: $e_p(c) = |C'| \hat{x}+|C'| \hat{y} = |\frac{\partial}{\partial x} C|+|\frac{\partial}{\partial y} C| = e_p(x,y)=\sqrt{{\triangle_x}^2(x,y)+{\triangle_y}^2(x,y)}$ 
+2. Find seam; Seam will be top to bottom if we want the vertical seam; Seam will be left to right if we want the horizontal seam. The seam is the shortest path connecting high (bottom, right) to low (left, up) where the pixel itself has a weight instead of the edge itself.
+	1. For vertical seam, for each row, compare each pixel in each column with the three pixels above it, that connects to this pixel, and relax (I.e., find the least distance to this pixel from pixels (row-1, col), (row-1, col), (row-1, col+1) and store this least distance and the least pixel in distTo and edgeTo respectively).
+	2. For horizontal seam, for each column, compare each pixel in each row with the three pixels on its left, that connects to this pixel, and relax (I.e., find the least distance to this pixel from pixels (row-1, col-1), (row, col-1), (row+1, col-1).
+	3. Find least distTo item when reaching last row (if vertical) or column (if horizontal) and trace back the route to it via tracing edgeTo until we reach first row or column.
+3. Remove/insert least energetic seam from picture and reconstruct picture.
+
+![Seam Carving](./Grades/SeamCarving.png)
