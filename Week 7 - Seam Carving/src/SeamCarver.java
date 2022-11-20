@@ -182,16 +182,47 @@ public class SeamCarver {
 
     // remove horizontal seam from current picture
     public void removeHorizontalSeam(int[] seam) {
-        //TODO
+        if (seam == null || height() < 1 || seam.length != width()) throw new IllegalArgumentException();
+
+        Picture newPicture = new Picture(p.width(), height() - 1);
+        int prevSeam = seam[0];
+        for (int col = 0; col < p.width(); col++) {
+            int seamCol = seam[col];
+            if (Math.abs(seamCol - prevSeam) > 1 || !(0 < seamCol && seamCol < height()))
+                throw new IllegalArgumentException();
+
+            for (int row = 0; row < seamCol; row++) {
+                newPicture.set(col, row, p.get(col, row));
+            }
+            for (int row = seamCol; row < p.height() - 2; row++) {
+                newPicture.set(col, row, p.get(col, row + 1));
+            }
+
+            prevSeam = seamCol;
+        }
+        p = newPicture;
     }
 
     // remove vertical seam from current picture
     public void removeVerticalSeam(int[] seam) {
-        //TODO
-    }
+        if (seam == null || width() < 1 || seam.length != height()) throw new IllegalArgumentException();
 
-    // unit testing (optional)
-    public static void main(String[] args) {
+        Picture newPicture = new Picture(p.width() - 1, height());
+        int prevSeam = seam[0];
+        for (int row = 0; row < p.height(); row++) {
+            int seamRow = seam[row];
+            if (Math.abs(seamRow - prevSeam) > 1 || !(0 < seamRow && seamRow < width()))
+                throw new IllegalArgumentException();
 
+            for (int col = 0; col < seamRow; col++) {
+                newPicture.set(col, row, p.get(col, row));
+            }
+            for (int col = seamRow; col < p.width() - 2; col++) {
+                newPicture.set(col, row, p.get(col + 1, row));
+            }
+
+            prevSeam = seamRow;
+        }
+        p = newPicture;
     }
 }
