@@ -182,7 +182,7 @@ public class SeamCarver {
 
     // remove horizontal seam from current picture
     public void removeHorizontalSeam(int[] seam) {
-        if (seam == null || height() <= 1 || seam.length != width()) throw new IllegalArgumentException();
+        if (seam == null || height() < 1 || seam.length != width()) throw new IllegalArgumentException();
 
         Picture newPicture = new Picture(width(), height() - 1); // new picture with 1 less row
         int prevY = seam[0]; // previous y that is used to check if the seam has "dy"> 1
@@ -207,7 +207,7 @@ public class SeamCarver {
 
     // remove vertical seam from current picture
     public void removeVerticalSeam(int[] seam) {
-        if (seam == null || width() <= 1 || seam.length != height()) throw new IllegalArgumentException();
+        if (seam == null || width() < 1 || seam.length != height()) throw new IllegalArgumentException();
 
         Picture newPicture = new Picture(width() - 1, height()); // new picture with 1 less column
         int prevX = seam[0]; // previous x that is used to check if the seam has "dx"> 1
