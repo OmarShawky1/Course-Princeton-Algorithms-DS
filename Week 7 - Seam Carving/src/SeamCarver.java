@@ -1,6 +1,6 @@
 import edu.princeton.cs.algs4.Picture;
 
-import java.awt.*;
+import java.awt.Color;
 
 public class SeamCarver {
 
@@ -182,14 +182,15 @@ public class SeamCarver {
 
     // remove horizontal seam from current picture
     public void removeHorizontalSeam(int[] seam) {
-        if (seam == null || height() < 1 || seam.length != width()) throw new IllegalArgumentException();
+        if (seam == null || height() <= 1 || seam.length != width()) throw new IllegalArgumentException();
 
         Picture newPicture = new Picture(width(), height() - 1); // new picture with 1 less row
         int prevY = seam[0]; // previous y that is used to check if the seam has "dy"> 1
         for (int col = 0; col < width(); col++) {
             int seamCol = seam[col];
-            if (Math.abs(seamCol - prevY) > 1 || !(0 < seamCol && seamCol < height())) // check dy>1 or y out of canvas
+            if (Math.abs(seamCol - prevY) > 1 || !(0 <= seamCol && seamCol < height())) // check dy>1 or y out of canvas
                 throw new IllegalArgumentException();
+            prevY = seamCol;
 
             // copy every pixel from y=0 till "y = seam[col]"
             for (int row = 0; row < seamCol; row++) {
@@ -197,25 +198,24 @@ public class SeamCarver {
             }
 
             // shift pixels up from "y = seam[col]" till "y=height"
-            for (int row = seamCol; row < height() - 2; row++) {
+            for (int row = seamCol; row < height() - 1; row++) {
                 newPicture.set(col, row, p.get(col, row + 1));
             }
-
-            prevY = seamCol;
         }
         p = newPicture;
     }
 
     // remove vertical seam from current picture
     public void removeVerticalSeam(int[] seam) {
-        if (seam == null || width() < 1 || seam.length != height()) throw new IllegalArgumentException();
+        if (seam == null || width() <= 1 || seam.length != height()) throw new IllegalArgumentException();
 
         Picture newPicture = new Picture(width() - 1, height()); // new picture with 1 less column
         int prevX = seam[0]; // previous x that is used to check if the seam has "dx"> 1
         for (int row = 0; row < height(); row++) {
             int seamRow = seam[row];
-            if (Math.abs(seamRow - prevX) > 1 || !(0 < seamRow && seamRow < width())) // check dx > 1 or x out of canvas
+            if (Math.abs(seamRow - prevX) > 1 || !(0 <= seamRow && seamRow < width())) // check dx > 1 or x out of canvas
                 throw new IllegalArgumentException();
+            prevX = seamRow;
 
             // copy every pixel from x=0 till "x = seam[row]"
             for (int col = 0; col < seamRow; col++) {
@@ -223,11 +223,9 @@ public class SeamCarver {
             }
 
             // shift pixels to left from "x = seam[row]" till "x=width"
-            for (int col = seamRow; col < width() - 2; col++) {
+            for (int col = seamRow; col < width() - 1; col++) {
                 newPicture.set(col, row, p.get(col + 1, row));
             }
-
-            prevX = seamRow;
         }
         p = newPicture;
     }
