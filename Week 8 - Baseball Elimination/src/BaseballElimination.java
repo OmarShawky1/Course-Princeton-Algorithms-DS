@@ -6,42 +6,44 @@ import java.util.LinkedList;
 public class BaseballElimination {
 
     // Global Variables
-    private final int[][] gamesLeft; // games left between team i and team j
-    private final int[] wins, loses;
+    private final int[][] against; // games left between team i and team j
+    private final int[] wins, losses;
     private final int[] remaining; // games left for team x in general
     private final String[] teams;
+    private final int numberOfTeams;
 
     // create a baseball division from given filename in format specified below
     public BaseballElimination(String filename) {
-        //TODO
-
         //Open file
         In in = new In(filename);
 
-        int size = in.readInt(); // read number of teams
+        numberOfTeams = in.readInt(); // read number of teams
 
-        gamesLeft = new int[size][size];
-        wins = new int[size];
-        loses = new int[size];
-        remaining = new int[size];
-        teams = new String[size];
+        against = new int[numberOfTeams][numberOfTeams];
+        wins = new int[numberOfTeams];
+        losses = new int[numberOfTeams];
+        remaining = new int[numberOfTeams];
+        teams = new String[numberOfTeams];
 
         // register each teams name, wins, loses, remaining
         for (int i = 0; !in.isEmpty(); i++) {
             teams[i] = in.readString();
             wins[i] = in.readInt();
-            loses[i] = in.readInt();
+            losses[i] = in.readInt();
             remaining[i] = in.readInt();
 
             // register games left for team i against every other team
-            for (int j = 0; j < size; j++) gamesLeft[i][j] = in.readInt();
+            for (int j = 0; j < numberOfTeams; j++) against[i][j] = in.readInt();
         }
+        
         in.close();
+
+        //TODO: Construct Flow Network graph
     }
 
     // number of teams
     public int numberOfTeams() {
-        return 0; //TODO
+        return numberOfTeams;
     }
 
 
@@ -53,22 +55,29 @@ public class BaseballElimination {
 
     // number of wins for given team
     public int wins(String team) {
-        return 0; //TODO
+        return wins[indexOf(team)];
     }
 
     // number of losses for given team
     public int losses(String team) {
-        return 0; //TODO
+        return losses[indexOf(team)];
     }
 
     // number of remaining games for given team
     public int remaining(String team) {
-        return 0; //TODO
+        return remaining[indexOf(team)];
     }
 
     // number of remaining games between team1 and team2
     public int against(String team1, String team2) {
-        return 0; //TODO
+        return against[indexOf(team1)][indexOf(team2)];
+    }
+
+    private int indexOf(String team1) {
+        for (int i = 0; i < numberOfTeams; i++) {
+            if (team1.equals(teams[i])) return i;
+        }
+        return -1; // team not found
     }
 
     // is given team eliminated?
