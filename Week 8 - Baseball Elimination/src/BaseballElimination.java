@@ -1,5 +1,4 @@
-import edu.princeton.cs.algs4.In;
-import edu.princeton.cs.algs4.StdOut;
+import edu.princeton.cs.algs4.*;
 
 import java.util.LinkedList;
 
@@ -26,6 +25,37 @@ public class BaseballElimination {
         in.close();
 
         //TODO: Construct Flow Network graph
+
+        FlowNetwork flowNetwork = new FlowNetwork(2 * (1 + 4) + 6); // source + 4 vertex + sink + 4 vertex + 6 games
+
+        // adding edges
+
+        // connecting source to teams
+        for (int i = 1; i < numberOfTeams + 1; i++) flowNetwork.addEdge(new FlowEdge(0, i, teams[i - 1].remaining));
+
+        // connecting cut s to games remaining
+        // all games are combination of (numberOfTeams) choose 2
+        int numberOfGames = factorial(numberOfTeams) / (factorial(numberOfTeams - 2) * 2); // 2! is 2
+        for (int i = 1; i <= numberOfTeams + numberOfGames; i++) {
+            //TODO: connect vertex with games to be played
+        }
+
+        // connecting games remaining to cut s-compliment
+        for (int i = numberOfTeams + numberOfGames; i < flowNetwork.V() - 1; i++) {
+            //TODO: connect games to be played with games vertex
+        }
+
+        // connecting sink to teams
+        for (int i = flowNetwork.V() - 5; i < flowNetwork.V() - 1; i++)
+            flowNetwork.addEdge(new FlowEdge(flowNetwork.V() - 1, i, 1)); // TODO: Cap should be w_i+r_i-w_x
+
+        StdOut.println(flowNetwork);
+    }
+
+    private int factorial(int numberOfTeams) {
+        int acc = 1;
+        while (numberOfTeams > 1) acc *= (numberOfTeams--);
+        return acc;
     }
 
     // number of teams
