@@ -66,3 +66,21 @@ with one pixel in each column. Check [this Youtube Video](https://www.youtube.co
 3. Remove/insert least energetic seam from picture and reconstruct picture.
 
 ![Seam Carving](./Grades/SeamCarving.png)
+
+<br>
+
+# Baseball Elimination
+
+It is one of many applications of maxflow-mincut-theorem applications for anticipating destined/undoubtable consequences from current scenario circumstances. The trick about this assignment is that it doesn't clearly appear, from the beginning, that there is any relation between graphs and anticipating an elimination of a team in a sport game and that is what this assignment hardwires in one's brain. Baseball elimination problem is a specific case of a general case called Sports Elimination Problem where one trys all possible scenarios for a certain team to win or tie with another winning team and if it is not the case, then the algorithm detects such thing via finding mincut from maxflow.
+
+Despite the assignment implementation, there are better implementations of the Baseball Elimination Problem where there is no need to study each team independtly as they are essentially the same problem, with the same scenario, and there exissts a *win* constant that a team is to be eliminated if it didn't pass it under the most optimistic value (current wins so far + remaining games under the assumption that the team will win them all)
+
+To begin, solving the problem consists of 3 main stages; Constructing the flow network, Finding the maxflow & computing the mincut from the maxflow. We construct the flow network by connecting network vertices and edges as the following:
+
+<img src='./Week 8 - Baseball Elimination/Miscellaneous/Baseball Elimination.png'/>
+
+Second, We run Ford-Fulkerson algorithm that computes maxflow with complexity of $O(n) \approx n^2$ as the current princeton implementation uses BFS which means that the `hasAugmentingPath()` will have worst case scenario $\propto EV$ but it does not matter as the number of teams studied are relatively small and doesn't need further optimization.
+
+Finally, we compute mincut via following the augmenting path (Forward edge that is not full and backward edge that is not empty) and any vertex inside of the mincut is the team that eliminates current team *i*. Each vertex represents a team that can't play further games than $m_x=wins_{team\ i} + remaingingGames_{team\ i}$.
+
+![Baseball Elimination](./Grades/BaseballElimination.png)
