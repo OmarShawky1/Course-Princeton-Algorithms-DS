@@ -38,7 +38,9 @@ The goal of the assignment is to find the shortest path between current board st
 
 # KdTrees
 
-KdTrees are the generalization of BST trees but enhances API performance when dealing with a multi-dimension space; This is illustrated via PointSET VS. KdTree when searching for nearest or points in range; The slight difference is that the tree is composed of nodes and nodes are compared to others depending on their position in the tree (Vertical or horizontal in this case). So briefly, BST's complexity is $O(n)=n^2$ VS. KdTree's complexity which is $O(n)\approx N\lg(N)$
+The assignment requirements are to search effictively multi-dimensional data via (finding nearest point to neighbor and finding points in specific range).
+
+KdTrees are the generalization of BST trees but enhances API performance when dealing with a multi-dimension space; This is illustrated via PointSET VS. KdTree when searching for nearest or points in range; The slight difference is that the tree is composed of nodes and nodes are compared to others depending on their position in the tree (Vertical or horizontal in this case). So briefly, BST's complexity is $O(n)=n^2$ VS. KdTree's complexity which is $O(n) \approx N \lg(N)$
 
 ![KdTree](./Grades/KdTree.png)
 
@@ -46,7 +48,9 @@ KdTrees are the generalization of BST trees but enhances API performance when de
 
 # WordNet
 
-WordNet assignement is about graphing relations between english words which is essentially Directed & Undirected graphs; WordNet is a semantic lexicon for English Language that computational linguists and cognitive scientist use extensively. It ggroups words into sets of synonyms called *synsets*; it relates *synsets* to each other; a *hypernym* (more specific synset) points to *hypernym* (more general synset); E.g., synset { *gate*, *logic gate*} is a hypernym of {*AND cirrcuit*, *AND gate*} because *AND* gate is a kind of logic gate. To draw WordNet digraph, set an id -which is an integer- to each synset and draw the digraph using the ids. In this way, we can conclude distance between word and other or even a cluster and other.
+WordNet assignement is about graphing relations between English words which is essentially Directed & Undirected graphs. We are required to find similar words to a specific word or find "set" of similar words to a "set" of specific words; So for example, the SAP (Shortest Ancestor Path) for "worm" and "bird" is "animal animate_being beast brute creature fauna" with a distance of 5. Other common ancestors of worm and bird with longer distances are: "person individual someone somebody mortal soul" and "instrumentality instrumentation".
+
+WordNet is a semantic lexicon for English Language that computational linguists and cognitive scientist use extensively. It groups words into sets of synonyms called *synsets*; it relates *synsets* to each other; a *hypernym* (more specific synset) points to *hypernym* (more general synset); E.g., synset { *gate*, *logic gate*} is a hypernym of {*AND cirrcuit*, *AND gate*} because *AND* gate is a kind of logic gate. To draw WordNet digraph, set an id -which is an integer- to each synset and draw the digraph using the ids. In this way, we can conclude distance between word and another or even a cluster and another.
 
 ![WordNet](./Grades/WordNet.png)
 
