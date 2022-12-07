@@ -1,3 +1,12 @@
+# What is the course about?
+
+Simply, about learning various datastructure and algorithms and trying to practically implement the best algorithm for the stated problem in the required assingment of the week. For example, you learn sorting and search (insertion sort, shell sort,... mergesort, quicksort)  and you learn the best algorithm for linear datastructures and learn why/when to use each.
+
+Compared to other available courses out there especially Stanford, MIT & UC Sandiego, This course has an autograder, isn't all about theory and the homework isn't just a regular problem solving question but instead an entire API that makes use of everything you learned in real life problems and practical situations.
+
+Bottom line is, every week you are required to implement a mini API, that is popular or exciting like picture retargeting, by using the learned DS & algorithm.
+
+
 # Percolation
 
 This is the first Homework; It is about utilizing Union Find Algorithm & Weighted Quick Find in specific. We use the algorithm to calculate numerically the probability *p* that can make a system percolate (any top cell connected to any bottom cell); We are required to proof the claim that $p\approx 0.5931$ and the homework does exactly that. The percolation symbolisis a lot of real world applications such as insulating material in a conducting material (or vise versa) or finding a connection between two persons in a large social network and so on.
