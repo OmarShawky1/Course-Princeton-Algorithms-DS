@@ -1,11 +1,22 @@
 # What is the course about?
 
-Simply, about learning various datastructure and algorithms and trying to practically implement the best algorithm for the stated problem in the required assingment of the week. For example, you learn sorting and search (insertion sort, shell sort,... mergesort, quicksort)  and you learn the best algorithm for linear datastructures and learn why/when to use each.
+Simply, about learning various datastructure and algorithms and trying to practically implement the best algorithm for the stated problem of every weeks' assignment. For example, consider assignment "Collinear" below:
+1. You learn sorting and search (insertion sort, shell sort,... mergesort, quicksort).
+2. And, you learn the best algorithm for linear datastructures and learn why & when to use each.
+3. Then you are required to solve a problem that one of its requirements is sorting in a linearithmic time.
+4. You implement the problem and write your own pre-tests.
+5. You test your code against provided pre-written tests
+6. And finally, test it via autograder (to provide validity and test style via checkstyle and so on).
+7. Solve occuring bugs at each testing stage  until you get 100% which means you fully understand the subject.
 
-Compared to other available courses out there especially Stanford, MIT & UC Sandiego, This course has an autograder, isn't all about theory and the homework isn't just a regular problem solving question but instead an entire API that makes use of everything you learned in real life problems and practical situations.
+Compared to other available courses out there (especially Stanford, MIT & UC Sandiego):
+1. This course has an autograder.
+2. Isn't just theoretical like all other courses, and not just about "problem solving", but instead it is also about practical problems; Assignments aren't a regular problems to solve but rather building an API.
+3. Supported/Backed up by a book (Prof. Robert has written an algorithms & DS book).
+4. Content provided quality is always the same, the greatest (each and every lecture is the best explained all over the internet in my opinion).
+5. Lecturer (Prof. Robert Sedgewick) has been teaching this course since the 90's which made him master the topic; the content of the course has been heavily revised and updated to be kept concise and clear for nearly 30 years.
 
-Bottom line is, every week you are required to implement a mini API, that is popular or exciting like picture retargeting, by using the learned DS & algorithm.
-
+Bottom line is, course is heavily revised, covers theoretical, problem solving & practical aspects of algorithms and DS, Every assignment is a project of itself... not just a 30 line problem solving question.
 
 # Percolation
 
