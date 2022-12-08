@@ -85,7 +85,7 @@ with one pixel in each column. Check [this Youtube Video](https://www.youtube.co
 1. Assign energy for each vertex/pixel; Energy function is: $e_p(c) = |C'| \hat{x}+|C'| \hat{y} = |\frac{\partial}{\partial x} C|+|\frac{\partial}{\partial y} C| = e_p(x,y)=\sqrt{{\triangle_x}^2(x,y)+{\triangle_y}^2(x,y)}$ 
 2. Find seam; Seam will be top to bottom if we want the vertical seam; Seam will be left to right if we want the horizontal seam. The seam is the shortest path connecting high (bottom, right) to low (left, up) where the pixel itself has a weight instead of the edge itself.
 	1. For vertical seam, for each row, compare each pixel in each column with the three pixels above it, that connects to this pixel, and relax (I.e., find the least distance to this pixel from pixels (row-1, col), (row-1, col), (row-1, col+1) and store this least distance and the least pixel in distTo and edgeTo respectively).
-	2. For horizontal seam, for each column, compare each pixel in each row with the three pixels on its left, that connects to this pixel, and relax (I.e., find the least distance to this pixel from pixels (row-1, col-1), (row, col-1), (row+1, col-1).
+	2. For horizontal seam, for each column, compare each pixel in each row with the three pixels on its left, that connects to this pixel, and relax (I.e., find the least distance to this pixel from pixels (row-1, col-1), (row, col-1), (row+1, col-1)).
 	3. Find least distTo item when reaching last row (if vertical) or column (if horizontal) and trace back the route to it via tracing edgeTo until we reach first row or column.
 3. Remove/insert least energetic seam from picture and reconstruct picture.
 
