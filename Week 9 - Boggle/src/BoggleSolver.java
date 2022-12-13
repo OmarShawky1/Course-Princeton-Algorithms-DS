@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.Objects;
 
 public class BoggleSolver {
-    private final TST<Object> trie = new TST<>();
+    private final TST<Integer> trie = new TST<>();
 
     public BoggleSolver(String[] dictionary) {
         if (dictionary == null) throw new IllegalArgumentException();
@@ -21,14 +21,14 @@ public class BoggleSolver {
 
         for (int x = 0; x < board.cols(); ++x)
             for (int y = 0; y < board.rows(); ++y)
-                navAdjTiles(board, new Position(x, y), validWords, new HashSet<>(), "");
+                navAdjTiles(board, new Position(x, y), validWords, new boolean[board.cols()][board.rows()], "");
 
         return validWords;
     }
 
     // Navigate all 8 neighboring tiles; right, left, down, up and 4 diagonals respectively
-    private void navAdjTiles(BoggleBoard board, Position p, HashSet<String> validWords, HashSet<Position> path, String word) {
-        if (p.x >= 0 && p.x < board.cols() && p.y >= 0 && p.y < board.rows() && !path.contains(p)) {
+    private void navAdjTiles(BoggleBoard board, Position p, HashSet<String> validWords, boolean[][] path, String word) {
+        if (p.x >= 0 && p.x < board.cols() && p.y >= 0 && p.y < board.rows() && !path[p.x][p.y]) {
             String letter = String.valueOf(board.getLetter(p.y, p.x));
             if (letter.equals("Q")) letter = letter + "U";
             word += letter;
@@ -46,13 +46,15 @@ public class BoggleSolver {
             // Precompute the Boggle graph, i.e., the set of cubes adjacent to each cube. But don't necessarily use a
             // heavyweight Graph object.
             */
-            
+
             // No need to check if the word is already added, "add" already does so.
             if (word.length() > 2 && trie.get(word) != null) validWords.add(word);
 
 
-            HashSet<Position> newPath = new HashSet<>(path);
-            newPath.add(p);
+
+            boolean[][] newPath = new boolean[board.cols()][board.rows()];
+            for (int col = 0; col < board.cols(); col++) newPath[col] = path[col].clone();
+            newPath[p.x][p.y] = true;
             navAdjTiles(board, new Position(p.x + 1, p.y), validWords, newPath, word);
             navAdjTiles(board, new Position(p.x - 1, p.y), validWords, newPath, word);
             navAdjTiles(board, new Position(p.x, p.y + 1), validWords, newPath, word);
