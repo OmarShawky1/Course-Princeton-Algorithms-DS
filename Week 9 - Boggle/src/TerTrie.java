@@ -26,7 +26,7 @@ public class TerTrie<Value> {
     private int n;              // size
     private Node<Value> root;   // root of TST
 
-    private static class Node<Value> {
+    public static class Node<Value> {
         private char c;                        // character
         private Node<Value> left, mid, right;  // left, middle, and right subtries
         private Value val;                     // value associated with string
@@ -83,16 +83,6 @@ public class TerTrie<Value> {
         Node<Value> x = get(root, key, 0);
         if (x == null) return null;
         return x.val;
-    }
-
-    public Node<Value> getSubTrie(String key) {
-        if (key == null) {
-            throw new IllegalArgumentException("calls get() with null argument");
-        }
-        if (key.length() == 0) throw new IllegalArgumentException("key must have length >= 1");
-        Node<Value> x = get(root, key, 0);
-        if (x == null) return null;
-        return x;
     }
 
     // return subtrie corresponding to given key
@@ -219,7 +209,7 @@ public class TerTrie<Value> {
         collect(root, new StringBuilder(), 0, pattern, queue);
         return queue;
     }
- 
+
     private void collect(Node<Value> x, StringBuilder prefix, int i, String pattern, Queue<String> queue) {
         if (x == null) return;
         char c = pattern.charAt(i);

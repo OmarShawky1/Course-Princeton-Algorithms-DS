@@ -1,12 +1,11 @@
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdOut;
-import edu.princeton.cs.algs4.TST;
 
 import java.util.HashSet;
 import java.util.Objects;
 
 public class BoggleSolver {
-    private final TST<Integer> trie = new TST<>();
+    private final TerTrie<Integer> trie = new TerTrie<>();
 
     public BoggleSolver(String[] dictionary) {
         if (dictionary == null) throw new IllegalArgumentException();
@@ -40,11 +39,6 @@ public class BoggleSolver {
             * TODO: Enhancement suggestions by FAQs
             // Exploit that fact that when you perform a prefix query operation, it is usually almost identical to the
             // previous prefix query, except that it is one letter longer.
-
-            // Consider a nonrecursive implementation of the prefix query operation.
-
-            // Precompute the Boggle graph, i.e., the set of cubes adjacent to each cube. But don't necessarily use a
-            // heavyweight Graph object.
             */
 
             // No need to check if the word is already added, "add" already does so.
