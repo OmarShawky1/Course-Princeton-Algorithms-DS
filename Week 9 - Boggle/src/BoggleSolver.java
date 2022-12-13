@@ -32,11 +32,13 @@ public class BoggleSolver {
             String letter = String.valueOf(board.getLetter(p.y, p.x));
             if (letter.equals("Q")) letter = letter + "U";
             word += letter;
+
+            // Backtracking optimization, check if this word exists in the dictionary
+            if (!trie.keysWithPrefix(word).iterator().hasNext()) return;
+
             // No need to check if the word is already added, "add" already does so.
             if (word.length() > 2 && trie.get(word) != null) validWords.add(word);
 
-            // Backtracking optimization
-            if (!trie.keysWithPrefix(word).iterator().hasNext()) return;
 
             HashSet newPath = new HashSet<>(path);
             newPath.add(p);
@@ -75,10 +77,6 @@ public class BoggleSolver {
         }
         return 0;*/
         switch (word.length()) {
-            case 0:
-            case 1:
-            case 2:
-                return 0;
             case 3:
             case 4:
                 return 1;
