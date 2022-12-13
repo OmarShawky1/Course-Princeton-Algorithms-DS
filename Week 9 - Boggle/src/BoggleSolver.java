@@ -36,6 +36,8 @@ public class BoggleSolver {
             // Backtracking optimization, check if this word exists in the dictionary
             if (!trie.keysWithPrefix(word).iterator().hasNext()) return;
 
+            /*
+            * TODO: Enhancement suggestions by FAQs
             // Exploit that fact that when you perform a prefix query operation, it is usually almost identical to the
             // previous prefix query, except that it is one letter longer.
 
@@ -43,7 +45,8 @@ public class BoggleSolver {
 
             // Precompute the Boggle graph, i.e., the set of cubes adjacent to each cube. But don't necessarily use a
             // heavyweight Graph object.
-
+            */
+            
             // No need to check if the word is already added, "add" already does so.
             if (word.length() > 2 && trie.get(word) != null) validWords.add(word);
 
@@ -112,15 +115,6 @@ public class BoggleSolver {
         In in = new In(args[0]);
         String[] dictionary = in.readAllStrings();
         BoggleSolver solver = new BoggleSolver(dictionary);
-
-        // Temp test
-        // board that provides only two words, ACER & ACERS
-        /*
-        char[][] customChar = {{'S', 'S', 'S', 'S'},
-                {'A', 'C', 'E', 'R'},
-                {'S', 'S', 'S', 'S'}};
-        BoggleBoard board = new BoggleBoard(customChar);
-        */
         BoggleBoard board = new BoggleBoard(args[1]);
         int score = 0;
         for (String word : solver.getAllValidWords(board)) {
