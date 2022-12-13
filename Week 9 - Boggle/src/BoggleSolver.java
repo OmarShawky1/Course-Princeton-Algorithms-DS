@@ -45,16 +45,13 @@ public class BoggleSolver {
             if (word.length() > 2 && trie.get(word) != null) validWords.add(word);
 
 
-
             path[p.y][p.x] = true;
-            navAdjTiles(board, new Position(p.x + 1, p.y), validWords, path, word);
-            navAdjTiles(board, new Position(p.x - 1, p.y), validWords, path, word);
-            navAdjTiles(board, new Position(p.x, p.y + 1), validWords, path, word);
-            navAdjTiles(board, new Position(p.x, p.y - 1), validWords, path, word);
-            navAdjTiles(board, new Position(p.x + 1, p.y + 1), validWords, path, word);
-            navAdjTiles(board, new Position(p.x + 1, p.y - 1), validWords, path, word);
-            navAdjTiles(board, new Position(p.x - 1, p.y + 1), validWords, path, word);
-            navAdjTiles(board, new Position(p.x - 1, p.y - 1), validWords, path, word);
+            for (int i = -1; i <= 1; i++) {
+                for (int j = -1; j <= 1; j++) {
+                    if (i == 0 && j == 0) continue;
+                    navAdjTiles(board, new Position(p.x + i, p.y + j), validWords, path, word);
+                }
+            }
             path[p.y][p.x] = false;
         }
     }
