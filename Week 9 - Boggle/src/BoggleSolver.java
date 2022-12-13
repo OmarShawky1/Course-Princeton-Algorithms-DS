@@ -32,9 +32,8 @@ public class BoggleSolver {
             String letter = String.valueOf(board.getLetter(p.y, p.x));
             if (letter.equals("Q")) letter = letter + "U";
             word += letter;
-            // No need to check for length as the words provided by the library is already > 2 length
             // No need to check if the word is already added, "add" already does so.
-            if (trie.get(word) != null) validWords.add(word);
+            if (word.length() > 2 && trie.get(word) != null) validWords.add(word);
 
             // Backtracking optimization
             if (!trie.keysWithPrefix(word).iterator().hasNext()) return;
