@@ -4,7 +4,14 @@ import edu.princeton.cs.algs4.StdOut;
 import java.util.HashSet;
 
 public class BoggleSolver {
-    private final RT trie = new RT();
+    /*
+     Don't use TST or TrieST; The first will take a lot of time putting or getting (both for dictionary and validWords),
+     while the second has radix=256 which takes quite a lot of time to initialize and even if you modified it to be 26,
+     you need to modify all of its unnecessary functions to the assignment requirement.
+     */
+
+    // Global Variables
+    private final RT trie = new RT(); // Modified version of R-Trie where it is not recursive and returns nodes
     private BoggleBoard b;
 
     public BoggleSolver(String[] dictionary) {
@@ -19,7 +26,7 @@ public class BoggleSolver {
         HashSet<String> validWords = new HashSet<>();
         boolean[][] path = new boolean[board.rows()][board.cols()];
         this.b = board;
-        for (int x = 0; x < board.cols(); x++) for (int y = 0; y < board.rows(); y++) navAdjTiles(x, y, path, trie.getRoot(), validWords, "");
+        for (int x = 0; x < b.cols(); x++) for (int y = 0; y < b.rows(); y++) navAdjTiles(x, y, path, trie.getRoot(), validWords, "");
 
         return validWords;
     }
