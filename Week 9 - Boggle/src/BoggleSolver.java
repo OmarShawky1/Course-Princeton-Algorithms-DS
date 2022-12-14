@@ -30,9 +30,9 @@ public class BoggleSolver {
     private void navAdjTiles(BoggleBoard board, Position p, HashSet<String> validWords, boolean[][] path, String word) {
         if (p.x < 0 || p.x >= board.cols() || p.y < 0 || p.y >= board.rows() || path[p.y][p.x]) return;
 
-        String letter = String.valueOf(board.getLetter(p.y, p.x));
-        if (letter.equals("Q")) letter += "U";
-        word += letter;
+        char letter = board.getLetter(p.y, p.x);
+        word += (letter == 'Q')? "QU": String.valueOf(letter);
+
 
         // Backtracking optimization, check if this word exists in the dictionary
         if (!trie.keysWithPrefix(word).iterator().hasNext()) return;
