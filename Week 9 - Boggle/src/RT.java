@@ -2,6 +2,10 @@ public class RT {
 
     private Node root = new Node();
 
+    public Node getRoot() {
+        return root;
+    }
+
     public void put(String word) {
         put(word, 0);
     }
@@ -35,7 +39,12 @@ public class RT {
         return contains(root, word);
     }
 
-    private class Node {
+    public boolean hasPrefix(Node node, char letter) {
+        for (int i = 0; i < 26; i++) if (node.next[i].val) return true;
+        return false;
+    }
+
+    public class Node {
         private boolean val;
         private final Node[] next = new Node[26];
     }

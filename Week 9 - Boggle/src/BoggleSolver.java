@@ -5,6 +5,7 @@ import java.util.HashSet;
 
 public class BoggleSolver {
     private final RT trie = new RT();
+    private BoggleBoard board;
 
     public BoggleSolver(String[] dictionary) {
         if (dictionary == null) throw new IllegalArgumentException();
@@ -18,15 +19,16 @@ public class BoggleSolver {
         HashSet<String> validWords = new HashSet<>();
 
         boolean[][] path = new boolean[board.rows()][board.cols()];
+        this.board = board;
         for (int x = 0; x < board.cols(); ++x)
             for (int y = 0; y < board.rows(); ++y)
-                navAdjTiles(board, x, y, validWords, path, "");
+                navAdjTiles(x, y, path, trie.getRoot(), validWords, "");
 
         return validWords;
     }
 
     // Navigate all 8 neighboring tiles; right, left, down, up and 4 diagonals respectively
-    private void navAdjTiles(BoggleBoard board, int x, int y, HashSet<String> validWords, boolean[][] path, String word) {
+    private void navAdjTiles(int x, int y, boolean[][] path, RT.Node node, HashSet<String> validWords, String word) {
         if (x < 0 || x >= board.cols() || y < 0 || y >= board.rows() || path[y][x]) return;
 
         char letter = board.getLetter(y, x);
@@ -34,7 +36,7 @@ public class BoggleSolver {
 
 
         // Backtracking optimization, check if this word exists in the dictionary
-        if (!trie.keysWithPrefix(word).iterator().hasNext()) return;
+        if (!trie.hasPrefix(node, letter)) return;
 
         // No need to check if the word is already added, "add" already does so.
         if (word.length() > 2 && trie.contains(node, word)) validWords.add(word);
@@ -43,7 +45,7 @@ public class BoggleSolver {
         for (int i = -1; i <= 1; i++) {
             for (int j = -1; j <= 1; j++) {
                 if (i == 0 && j == 0) continue;
-                navAdjTiles(board, x + i, y + j, validWords, path, word);
+                navAdjTiles(x + i, y + j, path, node, validWords, word);
             }
         }
         path[y][x] = false;
