@@ -1,19 +1,15 @@
 public class RT {
 
-    private Node root = new Node();
+    private final Node root = new Node();
 
     public Node getRoot() {
         return root;
     }
 
-    public void put(String word) {
-        put(word, 0);
-    }
-
-    private void put(String key, int d) {
+    public void put(String key) {
         // FAQ suggestion: make call not recursive
         Node node = root;
-        for (; d < key.length(); d++) {
+        for (int d = 0; d < key.length(); d++) {
             int i = key.charAt(d) - 'A'; // getting index that is shifted by 'A' or 65
             if (node.next[i] == null) node.next[i] = new Node();
             node = node.next[i];
@@ -43,12 +39,12 @@ public class RT {
         return get(node, letter) != null;
     }
 
-    public class Node {
+    public static class Node {
         private boolean val;
         private final Node[] next = new Node[26];
 
         public Node getNext(char c) {
-            return next[c - 'A'];
+            return next[c - 'A']; // getting index that is shifted by 'A' or 65
         }
     }
 
