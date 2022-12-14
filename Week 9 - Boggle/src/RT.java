@@ -17,6 +17,24 @@ public class RT {
         node.val = true;
     }
 
+    private Node get(Node x, String key) {
+        // FAQ suggestion: make call not recursive
+        for (int d = 0; d < key.length(); d++) {
+            if (x == null) return null;
+            x = x.next[key.charAt(d) - 'A']; // getting index that is shifted by 'A' or 65
+        }
+        return x;
+    }
+
+    public boolean contains(Node node, String word) {
+        Node x = get(root, word);
+        return x != null && x.val;
+    }
+
+    public boolean dictionaryContains(String word) {
+        return contains(root, word);
+    }
+
     private class Node {
         private boolean val;
         private final Node[] next = new Node[26];

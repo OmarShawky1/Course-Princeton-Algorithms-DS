@@ -36,14 +36,8 @@ public class BoggleSolver {
         // Backtracking optimization, check if this word exists in the dictionary
         if (!trie.keysWithPrefix(word).iterator().hasNext()) return;
 
-        /*
-        * TODO: Enhancement suggestions by FAQs
-        // Exploit that fact that when you perform a prefix query operation, it is usually almost identical to the
-        // previous prefix query, except that it is one letter longer.
-        */
-
         // No need to check if the word is already added, "add" already does so.
-        if (word.length() > 2 && trie.get(word) != null) validWords.add(word);
+        if (word.length() > 2 && trie.contains(node, word)) validWords.add(word);
 
         path[y][x] = true;
         for (int i = -1; i <= 1; i++) {
@@ -58,7 +52,7 @@ public class BoggleSolver {
     public int scoreOf(String word) {
         if (word == null) throw new IllegalArgumentException();
 
-        if (trie.get(word) != null) {
+        if (trie.dictionaryContains(word)) {
             switch (word.length()) {
                 case 0:
                 case 1:
