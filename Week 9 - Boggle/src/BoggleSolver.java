@@ -31,21 +31,21 @@ public class BoggleSolver {
     private void navAdjTiles(int x, int y, boolean[][] path, RT.Node node, HashSet<String> validWords, String word) {
         if (x < 0 || x >= board.cols() || y < 0 || y >= board.rows() || path[y][x]) return;
 
-        char letter = board.getLetter(y, x);
-        word += (letter == 'Q') ? "QU" : String.valueOf(letter);
-
+        char l = board.getLetter(y, x);
+        String letter = String.valueOf(l);
+        word += (l == 'Q') ? "QU" : letter;
 
         // Backtracking optimization, check if this word exists in the dictionary
         if (!trie.hasPrefix(node, letter)) return;
 
         // No need to check if the word is already added, "add" already does so.
-        if (word.length() > 2 && trie.contains(node, word)) validWords.add(word);
+        if (word.length() > 2 && trie.contains(trie.getRoot(), word)) validWords.add(word);
 
         path[y][x] = true;
         for (int i = -1; i <= 1; i++) {
             for (int j = -1; j <= 1; j++) {
                 if (i == 0 && j == 0) continue;
-                navAdjTiles(x + i, y + j, path, node, validWords, word);
+                navAdjTiles(x + i, y + j, path, node.getNext(l), validWords, word);
             }
         }
         path[y][x] = false;

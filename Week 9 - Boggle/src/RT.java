@@ -31,7 +31,7 @@ public class RT {
     }
 
     public boolean contains(Node node, String word) {
-        Node x = get(root, word);
+        Node x = get(node, word);
         return x != null && x.val;
     }
 
@@ -39,14 +39,17 @@ public class RT {
         return contains(root, word);
     }
 
-    public boolean hasPrefix(Node node, char letter) {
-        for (int i = 0; i < 26; i++) if (node.next[i].val) return true;
-        return false;
+    public boolean hasPrefix(Node node, String letter) {
+        return get(node, letter) != null;
     }
 
     public class Node {
         private boolean val;
         private final Node[] next = new Node[26];
+
+        public Node getNext(char c) {
+            return next[c - 'A'];
+        }
     }
 
 
