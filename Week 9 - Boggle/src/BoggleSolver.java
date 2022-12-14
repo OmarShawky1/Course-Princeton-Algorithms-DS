@@ -2,7 +2,6 @@ import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdOut;
 
 import java.util.HashSet;
-import java.util.Objects;
 
 public class BoggleSolver {
     private final TerTrie<Integer> trie = new TerTrie<>();
@@ -18,20 +17,20 @@ public class BoggleSolver {
 
         HashSet<String> validWords = new HashSet<>();
 
-        boolean[][] path  = new boolean[board.rows()][board.cols()];
+        boolean[][] path = new boolean[board.rows()][board.cols()];
         for (int x = 0; x < board.cols(); ++x)
             for (int y = 0; y < board.rows(); ++y)
-                navAdjTiles(board, new Position(x, y), validWords, path, "");
+                navAdjTiles(board, x, y, validWords, path, "");
 
         return validWords;
     }
 
     // Navigate all 8 neighboring tiles; right, left, down, up and 4 diagonals respectively
-    private void navAdjTiles(BoggleBoard board, Position p, HashSet<String> validWords, boolean[][] path, String word) {
-        if (p.x < 0 || p.x >= board.cols() || p.y < 0 || p.y >= board.rows() || path[p.y][p.x]) return;
+    private void navAdjTiles(BoggleBoard board, int x, int y, HashSet<String> validWords, boolean[][] path, String word) {
+        if (x < 0 || x >= board.cols() || y < 0 || y >= board.rows() || path[y][x]) return;
 
-        char letter = board.getLetter(p.y, p.x);
-        word += (letter == 'Q')? "QU": String.valueOf(letter);
+        char letter = board.getLetter(y, x);
+        word += (letter == 'Q') ? "QU" : String.valueOf(letter);
 
 
         // Backtracking optimization, check if this word exists in the dictionary
@@ -46,14 +45,14 @@ public class BoggleSolver {
         // No need to check if the word is already added, "add" already does so.
         if (word.length() > 2 && trie.get(word) != null) validWords.add(word);
 
-        path[p.y][p.x] = true;
+        path[y][x] = true;
         for (int i = -1; i <= 1; i++) {
             for (int j = -1; j <= 1; j++) {
                 if (i == 0 && j == 0) continue;
-                navAdjTiles(board, new Position(p.x + i, p.y + j), validWords, path, word);
+                navAdjTiles(board, x + i, y + j, validWords, path, word);
             }
         }
-        path[p.y][p.x] = false;
+        path[y][x] = false;
     }
 
     public int scoreOf(String word) {
@@ -79,28 +78,6 @@ public class BoggleSolver {
             }
         }
         return 0;
-    }
-
-    private static class Position {
-        private final int x, y;
-
-        public Position(int x, int y) {
-            this.x = x;
-            this.y = y;
-        }
-
-        @Override
-        public int hashCode() {
-            // return x * 997 + y; // 997 is a large prime number provided in lecture 21 Substring search
-            return Objects.hash(x, y);
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (o == null || getClass() != o.getClass()) return false;
-            Position p = (Position) o;
-            return p.x == x && p.y == y;
-        }
     }
 
     public static void main(String[] args) {
