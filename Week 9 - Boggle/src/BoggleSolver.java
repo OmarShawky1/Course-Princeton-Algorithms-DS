@@ -43,10 +43,10 @@ public class BoggleSolver {
 
         // No need to check if the word is already added, "add" already does so.
         if (lt == 'Q') {
-            word = word.concat("QU");
+            word += "QU";
             if (word.length() > 2 && trie.contains(node, "QU")) validWords.add(word);
         } else {
-            word = word.concat(letter);
+            word += letter;
             if (word.length() > 2 && trie.contains(node, letter)) validWords.add(word);
         }
 
