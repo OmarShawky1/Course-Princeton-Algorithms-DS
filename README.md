@@ -108,3 +108,20 @@ Second, We run Ford-Fulkerson algorithm that computes maxflow with complexity of
 Finally, we compute mincut via following the augmenting path (Forward edge that is not full and backward edge that is not empty) and any vertex inside of the mincut is the team that eliminates current team *i*. Each vertex represents a team that can't play further games than $m_x=wins_{team\ i} + remaingingGames_{team\ i}$.
 
 ![Baseball Elimination](./Grades/BaseballElimination.png)
+
+<br>
+
+# Boggle
+
+This assignment was about finding string patterns; More precisely, building a Trie out of a dictionary, traverse it to find multiple thousand words. The assignment was all about performance; Mine was able to provide $\approx 7700$ solutions in 5 secods as compared to the references' $\approx 8000$ (solution is all valid words in a Boggle board that can reach up to 26K words). Memory was not as important as the speed. 
+
+A key solution to the assignment is understanding Tries,and its variants, working principle, why and when to use each. I, personally, tried to use Ternary Search Tries and it provided $\approx 38$ solutions per 5 seconds. Tried 256-Tries and it even exceeded the time limit constraint. I needed to re-implement R-Tries for $R=26$ and that can support backtracking search, thus, I needed to return back nodes, instead of entire trees, to process them while running.
+
+The Boggle game. Boggle is a word game designed by Allan Turoff and distributed by Hasbro. It involves a board made up of 16
+cubic dice, where each die has a letter printed on each of its 6 sides. At the beginning of the game, the 16 dice are shaken and randomly distributed into a 4-by-4 tray, with only the top sides of the dice visible.
+
+Most important aspect of this assignment is to understand when, and when not to, use Hash Tables; Using hashtables to search for strings in a half million words means hashing and comparing million times per each search! meanwhile, using Tries just compares as much characters as needed by structuring all words and relating them with each other in a Trie.
+
+![Boggle Speed](./Grades/BoggleSpeed.png)
+![Boggle Grade](./Grades/Boggle.png)
+
