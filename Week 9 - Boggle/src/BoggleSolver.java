@@ -4,12 +4,12 @@ import edu.princeton.cs.algs4.StdOut;
 import java.util.HashSet;
 
 public class BoggleSolver {
-    private final TerTrie<Integer> trie = new TerTrie<>();
+    private final RT trie = new RT();
 
     public BoggleSolver(String[] dictionary) {
         if (dictionary == null) throw new IllegalArgumentException();
 
-        for (int i = 0; i < dictionary.length; ++i) trie.put(dictionary[i], i);
+        for (String word: dictionary) trie.put(word);
     }
 
     public Iterable<String> getAllValidWords(BoggleBoard board) {
