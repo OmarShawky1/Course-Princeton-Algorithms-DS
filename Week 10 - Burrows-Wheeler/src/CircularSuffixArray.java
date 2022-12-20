@@ -1,35 +1,49 @@
+import edu.princeton.cs.algs4.StdOut;
+
+import java.util.Arrays;
+
 public class CircularSuffixArray {
-    private int length;
-    private int[] index;
+    private Integer[] indices;
 
     // circular suffix array of s
     public CircularSuffixArray(String s) {
-        if (s == null) throw new IllegalArgumentException("s is null");
+        if (s == null) throw new IllegalArgumentException();
 
-        char[] c = s.toCharArray(); //TODO: no need for toChar, remove it after finishing
-        char[][] suffixArr = new char[c.length][c.length];
+        Integer[] ind = new Integer[s.length()];
+        for (int i = 0; i < ind.length; i++) ind[i] = i;
 
-        // store suffixes
-        for (int i = 0; i < c.length; i++) {
-            for (int j = i; j < c.length; j++) suffixArr[i][j-i] = c[j];
-            for (int k = 0; k < i; k++) suffixArr[i][c.length-i+k] = c[k];
-        }
-
-        // TODO: Merge sort
+        // Merge sort using Java's implementation
+        // passing lambda comparator consumer to sort (instead of implementing one)
+        // (first, second) are parameters for compareTo().
+        Arrays.sort(ind, (first, second) -> {
+            // first/second is suffix_i which is s.charAt(first)
+            for (int i = 0; i < s.length(); i++) {
+                // suffix starts is from i --> s.length(); so if i > 0, s.length = i-1
+                int firInd = (first + i) % s.length(); // if first+i >= length, restart at 0
+                int secInd = (second + i) % s.length();
+                int result = s.charAt(firInd) - s.charAt(secInd);
+                if (result != 0) return result;
+            }
+            return 0;
+        });
+        this.indices = ind;
     }
-    
+
     // length of s
     public int length() {
-        return length;
+        return indices.length;
     }
 
     // returns index of ith sorted suffix
     public int index(int i) {
-        return index[i];
+        if (i < 0 || i >= indices.length) throw new IllegalArgumentException();
+        return indices[i];
     }
-    
+
     // unit testing (required)
     public static void main(String[] args) {
-        CircularSuffixArray cir = new CircularSuffixArray("ABRACADABRA!");
+        CircularSuffixArray cir = new CircularSuffixArray("ABRACADABRA!"); //instead of args[0]
+        for (int i = 0; i < cir.length(); i++) StdOut.print(cir.index(i) + " ");
+        StdOut.println("");
     }
 }
