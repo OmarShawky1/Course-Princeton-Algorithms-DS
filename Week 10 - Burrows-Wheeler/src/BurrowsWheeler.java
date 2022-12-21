@@ -1,5 +1,6 @@
 import edu.princeton.cs.algs4.BinaryStdIn;
 import edu.princeton.cs.algs4.BinaryStdOut;
+import edu.princeton.cs.algs4.Queue;
 
 public class BurrowsWheeler {
 
@@ -26,14 +27,30 @@ public class BurrowsWheeler {
             BinaryStdOut.write(first);
             for (int i = 0; i < t.length; i++) BinaryStdOut.write(t[i]);
 
-            BinaryStdIn.close();
-            BinaryStdOut.close();
         }
+        BinaryStdIn.close();
+        BinaryStdOut.close();
     }
-    
+
     // apply Burrows-Wheeler inverse transform, reading from standard input and writing to standard output
     public static void inverseTransform() {
 
+        // Read "first"
+        if (BinaryStdIn.isEmpty()) return;
+        int first = BinaryStdIn.readInt();
+
+        //TODO:  Read t[]
+        Queue<Character> tQ = new Queue<>();
+        while (!BinaryStdIn.isEmpty()) tQ.enqueue(BinaryStdIn.readChar());
+
+        //TODO: create tOrdered[] and clone it from t[] after ordering
+
+        //TODO: Follow Case 1 & 2 to induce next[]
+
+        //TODO: obtain string "message"
+
+        BinaryStdIn.close();
+        BinaryStdOut.close();
     }
 
     // if args[0] is "-", apply Burrows-Wheeler transform
