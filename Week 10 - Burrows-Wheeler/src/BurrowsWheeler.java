@@ -1,6 +1,8 @@
 import edu.princeton.cs.algs4.BinaryStdIn;
 import edu.princeton.cs.algs4.BinaryStdOut;
-import edu.princeton.cs.algs4.Queue;
+import edu.princeton.cs.algs4.StdOut;
+
+import java.util.Arrays;
 
 public class BurrowsWheeler {
 
@@ -37,14 +39,18 @@ public class BurrowsWheeler {
 
         while (!BinaryStdIn.isEmpty()) {
             // Read "first"
-            int first = BinaryStdIn.readInt(); //TODO
+            int first = BinaryStdIn.readInt();
+            StdOut.println("first: " + first); //TODO: remove it
 
             // Read t[]
             String tS = BinaryStdIn.readString();
+            StdOut.println("tS: " + tS); //TODO: remove it
             char[] t = tS.toCharArray();
 
-            //TODO: create tOrdered[] and clone it from t[] after ordering
-
+            // create tOrdered[] and clone it from t[] after ordering
+            char[] tOrdered = tS.toCharArray();
+            Arrays.sort(tOrdered);
+            StdOut.println("tOrdered: " + Arrays.toString(tOrdered)); //TODO: remove it
             //TODO: Follow Case 1 & 2 to induce next[]
 
             //TODO: obtain string "message"
@@ -57,10 +63,8 @@ public class BurrowsWheeler {
     // if args[0] is "-", apply Burrows-Wheeler transform
     // if args[0] is "+", apply Burrows-Wheeler inverse transform
     public static void main(String[] args) {
-        /*if (args[0].charAt(0) == '-') transform();
+        if (args[0].charAt(0) == '-') transform();
         else if (args[0].charAt(0) == '+') inverseTransform();
-        else throw new IllegalArgumentException();*/
-        transform();
-        inverseTransform();
+        else throw new IllegalArgumentException();
     }
 }
