@@ -35,19 +35,20 @@ public class BurrowsWheeler {
     // apply Burrows-Wheeler inverse transform, reading from standard input and writing to standard output
     public static void inverseTransform() {
 
-        // Read "first"
-        if (BinaryStdIn.isEmpty()) return;
-        int first = BinaryStdIn.readInt();
+        while (!BinaryStdIn.isEmpty()) {
+            // Read "first"
+            int first = BinaryStdIn.readInt(); //TODO
 
-        //TODO:  Read t[]
-        Queue<Character> tQ = new Queue<>();
-        while (!BinaryStdIn.isEmpty()) tQ.enqueue(BinaryStdIn.readChar());
+            // Read t[]
+            String tS = BinaryStdIn.readString();
+            char[] t = tS.toCharArray();
 
-        //TODO: create tOrdered[] and clone it from t[] after ordering
+            //TODO: create tOrdered[] and clone it from t[] after ordering
 
-        //TODO: Follow Case 1 & 2 to induce next[]
+            //TODO: Follow Case 1 & 2 to induce next[]
 
-        //TODO: obtain string "message"
+            //TODO: obtain string "message"
+        }
 
         BinaryStdIn.close();
         BinaryStdOut.close();
@@ -56,8 +57,10 @@ public class BurrowsWheeler {
     // if args[0] is "-", apply Burrows-Wheeler transform
     // if args[0] is "+", apply Burrows-Wheeler inverse transform
     public static void main(String[] args) {
-        if (args[0].charAt(0) == '-') transform();
+        /*if (args[0].charAt(0) == '-') transform();
         else if (args[0].charAt(0) == '+') inverseTransform();
-        else throw new IllegalArgumentException();
+        else throw new IllegalArgumentException();*/
+        transform();
+        inverseTransform();
     }
 }
