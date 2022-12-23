@@ -26,7 +26,21 @@ public class MoveToFront {
 
     // apply move-to-front decoding, reading from standard input and writing to standard output
     public static void decode() {
-        //TODO:
+        char[] seq = initSequence(); // 1. Initialize a sequence
+
+        while (!BinaryStdIn.isEmpty()) {
+            int i = BinaryStdIn.readChar(); // 2. Read int i (but treat it as an int 0-->256 (char))
+
+            // 3. write the ith character in the sequence
+            char cRead = seq[i];
+            BinaryStdOut.write(cRead);
+
+            // 4. move to front
+            moveToFront(seq, cRead, i);
+        }
+
+        BinaryStdIn.close();
+        BinaryStdOut.close();
     }
 
     // create ASCII char sequence
