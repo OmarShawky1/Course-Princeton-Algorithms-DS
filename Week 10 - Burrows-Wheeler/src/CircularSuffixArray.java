@@ -3,7 +3,7 @@ import edu.princeton.cs.algs4.StdOut;
 import java.util.Arrays;
 
 public class CircularSuffixArray {
-    private Integer[] indices;
+    private final Integer[] indices;
 
     // circular suffix array of s
     public CircularSuffixArray(String s) {
