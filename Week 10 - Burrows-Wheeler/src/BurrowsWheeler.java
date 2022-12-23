@@ -5,6 +5,9 @@ import java.util.Arrays;
 
 public class BurrowsWheeler {
 
+    // Global variables
+    private static final int R = 256; // ASCII number of chars
+
     // apply Burrows-Wheeler transform,
     // reading from standard input and writing to standard output
     public static void transform() {
@@ -15,12 +18,12 @@ public class BurrowsWheeler {
             CircularSuffixArray cir = new CircularSuffixArray(input);
 
             // find "first" & t
-            int l = input.length();
-            char[] t = new char[l];
+            int len = input.length();
+            char[] t = new char[len];
             int first = 0;
             for (int i = 0; i < input.length(); i++) {
                 int temp = cir.index(i);
-                t[i] = input.charAt((temp + l - 1) % l);
+                t[i] = input.charAt((temp + len - 1) % len);
                 if (temp == 0) first = i;
             }
 
@@ -44,7 +47,7 @@ public class BurrowsWheeler {
 
             // Obtaining sorted[] via cloning t[] in sorted[] and sorting it
             char[] sorted = tS.toCharArray();
-            Arrays.sort(sorted);
+            Arrays.sort(sorted); // gives checkstyle warning but ignore it as the alternative imp is below.
             /*
             // Alternative way to obtain sorted[] (just like obtaining next[] below)
 
@@ -73,7 +76,7 @@ public class BurrowsWheeler {
             int[] next = new int[t.length];
 
             // Count frequencies (each characters' occurrences)
-            int R = 256; // ASCII number of chars
+
             int[] counts = new int[R + 1];
             /**
              * Code from lecture:
