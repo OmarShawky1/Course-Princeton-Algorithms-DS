@@ -12,7 +12,7 @@ public class CircularSuffixArray {
         Integer[] ind = new Integer[s.length()];
         for (int i = 0; i < ind.length; i++) ind[i] = i;
 
-        // Merge sort using Java's implementation
+        // Merge sort using Java's implementation (MSD is faster but no need for the effort)
         // passing lambda comparator consumer to sort (instead of implementing one)
         // (first, second) are parameters for compareTo().
         Arrays.sort(ind, (first, second) -> {
