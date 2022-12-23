@@ -125,3 +125,21 @@ Most important aspect of this assignment is to understand when, and when not to,
 ![Boggle Speed](./Grades/BoggleSpeed.png)
 ![Boggle Grade](./Grades/Boggle.png)
 
+# Burrows-Wheel
+
+This assignement wasn't as assignment but rather a course project; Essentially, it is a compression Program API much like *gzip* and *PKZIP*. Burrows-Wheeler data compression algorithm is a revolutionary one that outcompresses *gzip* and *PKZIP* yet it is relatively easy to implement. It forms the basis of *bzip2* (Unix compression utility).
+
+Burrows-Wheeler loseless data compression algorithm is faster than Huffman and LZW (and most of its variations like LZ77) by $\approx 2$ the speed.
+
+The Burrows–Wheeler data compression algorithm consists of three algorithmic components, which are applied in succession:
+1. Burrows–Wheeler transform. Given a typical English text file, transform it into a text file in which sequences of the same
+character occur near each other many times.
+2. Move-to-front encoding. Given a text file in which sequences of the same character occur near each other many times, convert it into a text file in which certain characters appear much more frequently than others.
+3. Huffman compression. Given a text file in which certain characters appear much more frequently than others, compress it by
+encoding frequently occurring characters with short codewords and infrequently occurring characters with long codewords.
+
+Huffman step is the only step that performs compression; it is particularly effective because Steps 1 and 2 produce a text file in which certain characters appear much more frequently than others. o expand a message, apply the inverse operations in reverse order: first apply the Huffman expansion, then the move-to-front decoding, and finally the inverse Burrows–Wheeler transform.
+
+This assignment was particularly challenging because, at each task we were supposed to implemement something from scratch. For example, we were supposed to implement Burrows-Wheeler using a circular suffix array datastructure. Throughout implementing it, we where supposed to initialize a 2D suffix array and sort them via MSD or 3-way string sorting or any fast sorting algorithm. 
+
+![BurrowsWheeler](./Grades/BurrowsWheeler.png)
