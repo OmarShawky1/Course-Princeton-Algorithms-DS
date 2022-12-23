@@ -1,6 +1,5 @@
 import edu.princeton.cs.algs4.BinaryStdIn;
 import edu.princeton.cs.algs4.BinaryStdOut;
-import edu.princeton.cs.algs4.StdOut;
 
 import java.util.Arrays;
 
@@ -38,22 +37,72 @@ public class BurrowsWheeler {
     public static void inverseTransform() {
 
         while (!BinaryStdIn.isEmpty()) {
-            // Read "first"
-            int first = BinaryStdIn.readInt();
-            StdOut.println("first: " + first); //TODO: remove it
+            int first = BinaryStdIn.readInt(); // Read "first"
 
-            // Read t[]
-            String tS = BinaryStdIn.readString();
-            StdOut.println("tS: " + tS); //TODO: remove it
+            String tS = BinaryStdIn.readString(); // Read t[]
             char[] t = tS.toCharArray();
 
-            // create tOrdered[] and clone it from t[] after ordering
-            char[] tOrdered = tS.toCharArray();
-            Arrays.sort(tOrdered);
-            StdOut.println("tOrdered: " + Arrays.toString(tOrdered)); //TODO: remove it
-            //TODO: Follow Case 1 & 2 to induce next[]
+            // Obtaining sorted[] via cloning t[] in sorted[] and sorting it
+            char[] sorted = tS.toCharArray();
+            Arrays.sort(sorted);
+            /*
+            // Alternative way to obtain sorted[] (just like obtaining next[] below)
 
-            //TODO: obtain string "message"
+            // Key Indexed sorting
+            char[] sorted = new char[t.length];
+
+            // Count frequencies (each characters' occurrences)
+            // Code from lecture:
+            for (int i = 0; i < t.length; i++) counts[t[i] + 1]++; // counts is the chars' count, [t[i] + 1] is a char
+            // My code:
+            for (char c : t) counts[c + 1]++;
+
+            // move items
+            // Code from lecture:
+
+            // t[i] is char c
+            // counts[c] is char c freq + offset (freq cumulates)
+            for (int i = 0; i < t.length; i++) sorted[counts[t[i]]++] = t[i];
+
+            // My code:
+            for (char c : t) sorted[counts[c]++] = c; // access sorted[counts[c]] then counts[c]++
+             */
+
+            // obtaining next[]
+            // Key Indexed sorting
+            int[] next = new int[t.length];
+
+            // Count frequencies (each characters' occurrences)
+            int R = 256; // ASCII number of chars
+            int[] counts = new int[R + 1];
+            /**
+             * Code from lecture:
+             * for (int i = 0; i < t.length; i++) counts[sorted[i] + 1]++;
+             * below is alternative implementation
+             */
+            for (char c : sorted) counts[c + 1]++; // t & sorted can be used interchangeably
+
+            // compute cumulates
+            for (int r = 0; r < R; r++) counts[r + 1] += counts[r];
+
+            // move items
+            /**
+             * How it works: you can read it simply as "where is char t[i] in sorted[]? it is in sorted[j] then make
+             * next[j] point to "i". Sorted & next here are the same and can be used interchangeably.
+             * counts[] stores & points to each character -in sorted[]- in order. So, counts[c] means get current chars'
+             * position and increment it by 1 (so that when called again, it points to the next same char occurrence).
+             * look at the PDF for further illustration.
+             * Alternative code:
+             * for (int i = 0; i < t.length; i++) {
+             *     char c = t[i];
+             *     int j = counts[c]++;
+             *     next[j] = i;
+             * }
+             */
+            for (int i = 0; i < t.length; i++) next[counts[t[i]]++] = i;
+
+            // Outputting string to standard output stream
+            for (int i = 0, index = first; i < t.length; i++, index = next[index]) BinaryStdOut.write(sorted[index]);
         }
 
         BinaryStdIn.close();
