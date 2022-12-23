@@ -14,7 +14,7 @@ public class MoveToFront {
             // could've copy/pasted quicksort implementation from lecture 6 but too much lines of code
             int i;
             for (i = 0; i < seq.length; i++) if (seq[i] == cRead) break;
-            BinaryStdOut.write(i);
+            BinaryStdOut.write((char) i);
 
             // 4. move to front
             moveToFront(seq, cRead, i);
@@ -26,7 +26,7 @@ public class MoveToFront {
 
     // apply move-to-front decoding, reading from standard input and writing to standard output
     public static void decode() {
-        // TODO:
+        //TODO:
     }
 
     // create ASCII char sequence
