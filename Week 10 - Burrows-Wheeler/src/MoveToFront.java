@@ -5,14 +5,19 @@ public class MoveToFront {
 
     // apply move-to-front encoding, reading from standard input and writing to standard output
     public static void encode() {
-        // TODO: Initialize a sequence
-        char[] seq = initSequence();
+        char[] seq = initSequence(); // 1. Initialize a sequence
+
         while (!BinaryStdIn.isEmpty()) {
-            // TODO: Read char c from STDIn
+            char cRead = BinaryStdIn.readChar(); // 2. Read char c from StdIn
 
-            // TODO: write c's index
+            // 3. write c's index
+            // could've copy/pasted quicksort implementation from lecture 6 but too much lines of code
+            int i;
+            for (i = 0; i < seq.length; i++) if (seq[i] == cRead) break;
+            BinaryStdOut.write(i);
 
-            // TODO: move to front
+            // 4. move to front
+            moveToFront(seq, cRead, i);
         }
 
         BinaryStdIn.close();
@@ -27,10 +32,13 @@ public class MoveToFront {
     // create ASCII char sequence
     private static char[] initSequence() {
         char[] sequence = new char[256];
-        for (int i = 0; i < sequence.length; i++) {
-            sequence[i] = (char) i;
-        }
+        for (int i = 0; i < sequence.length; i++) sequence[i] = (char) i;
         return sequence;
+    }
+
+    private static void moveToFront(char[] sequence, char c, int i) {
+        for (int j = i; j > 0; j--) sequence[j] = sequence[j - 1];
+        sequence[0] = c;
     }
 
 
