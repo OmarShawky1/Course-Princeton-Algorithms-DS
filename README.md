@@ -1,6 +1,10 @@
 # What is the course about?
 
-Simply, about learning various datastructure and algorithms and trying to practically implement the best algorithm for the stated problem of every weeks' assignment. For example, consider assignment "Collinear" below:
+Simply, about learning various datastructure and algorithms that will be used to reducing the problems into a set of procedures/problems that we know a solution for it hence we can practically implement the best algorithm for the stated problem of every weeks' assignment.
+
+The difference between knowing an algorithm and not knowing it is the difference between the ability to solve a problem or not solve it at all! (Robert Sedgewick).
+
+For example, consider assignment "Collinear" below:
 1. You learn sorting and search (insertion sort, shell sort,... mergesort, quicksort).
 2. And, you learn the best algorithm for linear datastructures and learn why & when to use each.
 3. Then you are required to solve a problem that one of its requirements is sorting in a linearithmic time.
