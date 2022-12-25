@@ -129,7 +129,7 @@ Most important aspect of this assignment is to understand when, and when not to,
 ![Boggle Speed](./Grades/BoggleSpeed.png)
 ![Boggle Grade](./Grades/Boggle.png)
 
-# Burrows-Wheel
+# Burrows-Wheeler
 
 This assignement wasn't as assignment but rather a course project; Essentially, it is a compression Program API much like *gzip* and *PKZIP*. Burrows-Wheeler data compression algorithm is a revolutionary one that outcompresses *gzip* and *PKZIP* yet it is relatively easy to implement. It forms the basis of *bzip2* (Unix compression utility).
 
