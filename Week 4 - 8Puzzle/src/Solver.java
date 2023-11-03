@@ -19,8 +19,8 @@ public class Solver {
             1. Initialize local & global variables.
             2. Creating a twin board (to detect if it is solvable).
             3. Find solution -if any-.
-            4. store solution/solutions
-         */
+            4. Store solution/solutions.
+        */
 
         // Initializing default values
         solution = new Stack<>();
@@ -32,24 +32,14 @@ public class Solver {
         MinPQ<SearchNode> twinMinPQ = new MinPQ<>();
         twinMinPQ.insert(new SearchNode(initial.twin(), 0, null));
 
-        // int solutionPriority = 0; // Diff
         int movesTemp = 0;
         // Finding a solution
         while (!minPQ.isEmpty()) {
             SearchNode min = minPQ.min();
 
-            /* Diff
-            // Code that causes 81/100
-            // Add solutions that only has the same priority as previous goal
-            if (!solution.isEmpty() && min.priority > solutionPriority) {
-                break;
-            }
-            */
-
             // Add solution steps to solution Stack
             if (min.board.isGoal()) {
                 isSolvable = true;
-                // solutionPriority = min.priority; // Diff
                 movesTemp = min.moves;
                 solutionInst(min);
                 break; // Diff
