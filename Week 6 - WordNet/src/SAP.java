@@ -8,7 +8,7 @@ public class SAP {
 
     // Global variables
     private final Digraph digraph;
-    // If you want to speed things up (according to the FAQs, use a Hash-table and store every Closest Ancestor
+    // If you want to speed things up (according to the FAQs), use a Hash-table and store every Closest Ancestor
     // You need to implement hash which is tedious job for little reward in case of Iterable
 
     // constructor takes a digraph (not necessarily a DAG)

@@ -93,7 +93,7 @@ public class SeamCarver {
 
         /*
         Logic:
-        1. compute distance to each pixel at last row (if is vertical) or last column (if is horizontal).
+        1. Compute distance to each pixel at last row (if is vertical) or last column (if is horizontal).
         2. Find the index of the minimum distance pixel.
         3. Store coordinates of seam.
          */
